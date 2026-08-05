@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الشروط والأحكام – Ramzplay</title>
+    <!-- خط Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== إعادة ضبط ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            line-height: 1.8;
+            direction: rtl;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* ===== الهيدر ===== */
+        .header {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .header .logo i {
+            color: #4CAF50;
+            font-size: 1.6rem;
+        }
+
+        .header .logo span {
+            color: #4CAF50;
+        }
+
+        .header .back-link {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .header .back-link:hover {
+            background: #388E3C;
+            transform: translateY(-2px);
+        }
+
+        /* ===== المحتوى ===== */
+        .content-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 36px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .content-card .hero-icon {
+            text-align: center;
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 4px;
+        }
+
+        .content-card h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #0f172a;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .content-card .sub-headline {
+            text-align: center;
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 16px;
+        }
+
+        .content-card .last-updated {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        .content-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 28px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-card h2 i {
+            color: #4CAF50;
+            width: 28px;
+            text-align: center;
+        }
+
+        .content-card p {
+            color: #475569;
+            margin-bottom: 12px;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .content-card ul li {
+            padding: 4px 0 4px 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #475569;
+        }
+
+        .content-card ul li::before {
+            content: "•";
+            color: #4CAF50;
+            font-weight: 700;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            line-height: 1.2;
+        }
+
+        .content-card .highlight-box {
+            background: #f0fdf4;
+            border-right: 4px solid #4CAF50;
+            padding: 16px 22px;
+            border-radius: 16px;
+            margin: 16px 0;
+        }
+
+        .content-card .highlight-box p {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .content-card .highlight-box strong {
+            color: #0f172a;
+        }
+
+        /* ===== التذييل ===== */
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            padding: 16px 0;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 8px;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== التجاوب ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .header .back-link {
+                justify-content: center;
+            }
+
+            .content-card {
+                padding: 20px 16px;
+            }
+
+            .content-card h1 {
+                font-size: 1.5rem;
+            }
+
+            .content-card .sub-headline {
+                font-size: 0.95rem;
+            }
+
+            .content-card h2 {
+                font-size: 1.05rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .logo {
+                font-size: 1.2rem;
+                justify-content: center;
+            }
+
+            .content-card {
+                padding: 16px 12px;
+            }
+
+            .content-card .hero-icon {
+                font-size: 2.2rem;
+            }
+
+            .content-card h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== الهيدر ===== -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>Ramz</span>play
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-right"></i> العودة إلى المتجر
+            </a>
+        </header>
+
+        <!-- ===== محتوى الشروط والأحكام ===== -->
+        <div class="content-card">
+            <div class="hero-icon">
+                <i class="fas fa-file-contract"></i>
+            </div>
+            <h1>الشروط والأحكام</h1>
+            <div class="sub-headline">
+                <i class="fas fa-gavel" style="color:#4CAF50; margin-left:6px;"></i>
+                يرجى قراءة هذه الشروط بعناية قبل استخدام منصة Ramzplay.
+                <i class="fas fa-gavel" style="color:#4CAF50; margin-right:6px;"></i>
+            </div>
+            <div class="last-updated">
+                <i class="fas fa-calendar-alt"></i> آخر تحديث: 4 أغسطس 2026
+            </div>
+
+            <p>
+                مرحباً بك في <strong>Ramzplay</strong>. باستخدامك لمنصتنا، فإنك توافق على الالتزام بالشروط والأحكام التالية. إذا كنت لا توافق على أي من هذه البنود، يُرجى عدم استخدام المنصة.
+            </p>
+
+            <!-- ===== البند 1 ===== -->
+            <h2><i class="fas fa-check-circle"></i> 1. قبول الشروط</h2>
+            <p>
+                باستخدامك لموقع Ramzplay وتطبيقاتنا، فإنك تقر بأنك قرأت وفهمت ووافقت على هذه الشروط والأحكام، بالإضافة إلى سياسة الخصوصية الخاصة بنا. نحتفظ بحق تعديل هذه الشروط في أي وقت، وسيتم إعلامك بأي تغييرات جوهرية عبر البريد الإلكتروني أو من خلال إشعار على المنصة.
+            </p>
+
+            <!-- ===== البند 2 ===== -->
+            <h2><i class="fas fa-user-circle"></i> 2. الحسابات والتسجيل</h2>
+            <ul>
+                <li><strong>إنشاء الحساب:</strong> قد تحتاج إلى إنشاء حساب للاستفادة من بعض الخدمات. يجب أن تقدم معلومات صحيحة وكاملة.</li>
+                <li><strong>المسؤولية:</strong> أنت المسؤول الوحيد عن الحفاظ على سرية بيانات حسابك وكلمة المرور. نحن لسنا مسؤولين عن أي خسائر ناتجة عن اختراق حسابك بسبب إهمالك.</li>
+                <li><strong>عمر المستخدم:</strong> يتيح استخدام المنصة للأفراد الذين تزيد أعمارهم عن 13 عامًا. إذا كنت دون 13 عامًا، فيجب عليك استخدام المنصة تحت إشراف ولي أمرك.</li>
+                <li><strong>إلغاء الحساب:</strong> يمكنك طلب إلغاء حسابك في أي وقت من خلال التواصل معنا، وسنقوم بحذف بياناتك وفقاً لسياسة الخصوصية.</li>
+            </ul>
+
+            <!-- ===== البند 3 ===== -->
+            <h2><i class="fas fa-gem"></i> 3. الملكية الفكرية</h2>
+            <p>
+                جميع المحتويات المعروضة على المنصة، بما في ذلك النصوص، الصور، الشعارات، الأيقونات، التصميمات، والبرمجيات، هي ملكية خاصة لـ Ramzplay أو لمرخصيها، وتحميها قوانين الملكية الفكرية وحقوق النشر.
+            </p>
+            <ul>
+                <li><strong>الاستخدام الشخصي:</strong> يُسمح لك بتصفح المحتوى وتحميل التطبيقات للاستخدام الشخصي غير التجاري فقط.</li>
+                <li><strong>النسخ والتوزيع:</strong> يُمنع نسخ، تعديل، إعادة نشر، بيع، أو استغلال أي جزء من المحتوى دون إذن خطي مسبق منا.</li>
+            </ul>
+
+            <!-- ===== البند 4 ===== -->
+            <h2><i class="fas fa-list-check"></i> 4. استخدام المنصة</h2>
+            <p>
+                أنت توافق على استخدام المنصة بطريقة قانونية وأخلاقية، وتتعهد بعدم القيام بأي من الأفعال التالية:
+            </p>
+            <ul>
+                <li>استخدام المنصة بطرق تضر أو تعطل أو تسبب ضرراً للخوادم أو الشبكات أو المستخدمين الآخرين.</li>
+                <li>محاولة الوصول غير المصرح به إلى حسابات المستخدمين أو الأنظمة الداخلية.</li>
+                <li>نشر أي محتوى مسيء، عنصري، إباحي، أو مخالف للقوانين.</li>
+                <li>استخدام المنصة لنشر البرمجيات الضارة أو الفيروسات.</li>
+                <li>انتحال شخصية أخرى أو التضليل حول هويتك.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p>
+                    <i class="fas fa-exclamation-triangle" style="color:#f59e0b; margin-left:8px;"></i>
+                    <strong>تنبيه هام:</strong> أي انتهاك لهذه البنود قد يؤدي إلى تعليق أو إلغاء حسابك دون سابق إنذار، واتخاذ الإجراءات القانونية المناسبة.
+                </p>
+            </div>
+
+            <!-- ===== البند 5 ===== -->
+            <h2><i class="fas fa-download"></i> 5. تحميل التطبيقات</h2>
+            <ul>
+                <li><strong>المصادر:</strong> التطبيقات المتاحة على المنصة يتم توفيرها إما بواسطة المطورين الخارجيين أو بواسطة فريقنا. نحن نبذل قصارى جهدنا لفحصها، لكننا لا نضمن خلوها من الأخطاء أو الضرر.</li>
+                <li><strong>الاستخدام الشخصي:</strong> يُسمح لك بتحميل التطبيقات للاستخدام الشخصي على أجهزتك، ولا يحق لك إعادة توزيعها أو تعديلها دون ترخيص مسبق.</li>
+                <li><strong>التطبيقات المدفوعة:</strong> إذا كان التطبيق مدفوعاً، فستتم عملية الشراء عبر بوابات الدفع المتاحة لدينا. نلتزم بتوفير آليات استرداد وفقاً للسياسات المعلنة.</li>
+                <li><strong>تحديثات التطبيقات:</strong> قد نقوم بتحديث التطبيقات المتاحة بشكل دوري لتحسين الأداء والأمان. قد لا تكون التحديثات متاحة لجميع الإصدارات القديمة.</li>
+            </ul>
+
+            <!-- ===== البند 6 ===== -->
+            <h2><i class="fas fa-comment-dots"></i> 6. المراجعات والتفاعل</h2>
+            <p>
+                نرحب بتعليقاتك ومراجعاتك حول التطبيقات. من خلال إرسال مراجعة، فإنك تمنحنا حقاً غير حصري لنشر واستخدام هذه المراجعات على المنصة. يجب أن تكون مراجعاتك محايدة وصادقة، وخالية من الإساءة أو المعلومات المضللة.
+            </p>
+
+            <!-- ===== البند 7 ===== -->
+            <h2><i class="fas fa-link"></i> 7. الروابط الخارجية</h2>
+            <p>
+                قد تحتوي المنصة على روابط لمواقع أو خدمات تابعة لأطراف ثالثة. هذه الروابط مقدمة لتسهيل الوصول إلى معلومات إضافية، ونحن لسنا مسؤولين عن محتوى أو ممارسات الخصوصية لتلك المواقع. يُنصح بقراءة سياسات الخصوصية والشروط الخاصة بكل موقع تزوره.
+            </p>
+
+            <!-- ===== البند 8 ===== -->
+            <h2><i class="fas fa-shield-alt"></i> 8. إخلاء المسؤولية</h2>
+            <p>
+                نقدم المنصة والخدمات “كما هي” دون أي ضمانات صريحة أو ضمنية. نحن لا نضمن:
+            </p>
+            <ul>
+                <li>خلو المنصة من الأخطاء أو الانقطاعات.</li>
+                <li>ملاءمة التطبيقات لاستخدامك المحدد.</li>
+                <li>صحة أو دقة المعلومات المعروضة.</li>
+            </ul>
+            <p>
+                نعمل باستمرار على تحسين المنصة، لكننا لا نتحمل مسؤولية أي أضرار مباشرة أو غير مباشرة تنشأ عن استخدامك للمنصة أو التطبيقات التي تم تحميلها من خلالها.
+            </p>
+
+            <!-- ===== البند 9 ===== -->
+            <h2><i class="fas fa-gavel"></i> 9. التعويض</h2>
+            <p>
+                أنت توافق على تعويض شركة Ramzplay، فريقها، شركائها، وموظفيها عن أي مطالبات، خسائر، أو أضرار (بما في ذلك الأتعاب القانونية) تنشأ عن مخالفتك لهذه الشروط، أو انتهاكك لحقوق أي طرف ثالث، أو إساءة استخدامك للمنصة.
+            </p>
+
+            <!-- ===== البند 10 ===== -->
+            <h2><i class="fas fa-ban"></i> 10. الإلغاء والتعليق</h2>
+            <p>
+                نحتفظ بالحق في تعليق أو إلغاء حسابك أو وصولك إلى المنصة في أي وقت، مع أو بدون إشعار مسبق، إذا رأينا أنك انتهكت هذه الشروط أو قمت بأي نشاط غير قانوني أو ضار بالمنصة أو المستخدمين الآخرين. في حالة الإلغاء، قد تظل بعض الأحكام (مثل الملكية الفكرية، التعويض، وإخلاء المسؤولية) سارية المفعول.
+            </p>
+
+            <!-- ===== البند 11 ===== -->
+            <h2><i class="fas fa-edit"></i> 11. تعديلات الشروط</h2>
+            <p>
+                قد نقوم بتعديل هذه الشروط والأحكام من وقت لآخر. سنخطرك بأي تغييرات جوهرية عبر البريد الإلكتروني (إذا كنت مسجلاً) أو من خلال إشعار على المنصة. يُنصح بمراجعة هذه الصفحة بشكل دوري للاطلاع على أي تحديثات. استمرارك في استخدام المنصة بعد التعديلات يعني موافقتك على الشروط الجديدة.
+            </p>
+
+            <!-- ===== البند 12 ===== -->
+            <h2><i class="fas fa-phone-alt"></i> 12. التواصل والدعم</h2>
+            <p>
+                إذا كانت لديك أي استفسارات حول هذه الشروط، يمكنك التواصل معنا عبر القنوات التالية:
+            </p>
+            <ul>
+                <li><strong>البريد الإلكتروني:</strong> <a href="mailto:legal@ramzplay.com" style="color:#4CAF50; text-decoration:none;">legal@ramzplay.com</a></li>
+                <li><strong>النموذج الإلكتروني:</strong> عبر صفحة <a href="contact.html" style="color:#4CAF50; text-decoration:none;">اتصل بنا</a>.</li>
+                <li><strong>واتساب:</strong> <a href="https://wa.me/966500000000" target="_blank" style="color:#4CAF50; text-decoration:none;">+966 50 000 0000</a></li>
+            </ul>
+
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #f1f5f9; text-align: center; color: #94a3b8; font-size: 0.85rem;">
+                <i class="fas fa-check-circle" style="color:#4CAF50;"></i>
+                باستخدامك لمنصة Ramzplay، فإنك توافق على هذه الشروط بالكامل.
+            </div>
+        </div>
+
+        <!-- ===== التذييل ===== -->
+        <div class="footer">
+            &copy; 2026 <a href="index.html">Ramzplay</a> – جميع الحقوق محفوظة.
+            <br>
+            <span style="font-size:0.75rem; color:#cbd5e1;">
+                <i class="fas fa-shield-alt"></i>
+                <a href="privacy.html" style="color:#4CAF50;">سياسة الخصوصية</a> &bull;
+                <a href="terms.html" style="color:#4CAF50;">الشروط والأحكام</a>
+            </span>
+        </div>
+
+    </div>
+
+</body>
+</html>

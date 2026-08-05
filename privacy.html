@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>سياسة الخصوصية – Ramzplay</title>
+    <!-- خط Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== إعادة ضبط ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            line-height: 1.7;
+            direction: rtl;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* ===== الهيدر ===== */
+        .header {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .header .logo i {
+            color: #4CAF50;
+            font-size: 1.6rem;
+        }
+
+        .header .logo span {
+            color: #4CAF50;
+        }
+
+        .header .back-link {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .header .back-link:hover {
+            background: #388E3C;
+            transform: translateY(-2px);
+        }
+
+        /* ===== المحتوى ===== */
+        .content-card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .content-card h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-card h1 i {
+            color: #4CAF50;
+        }
+
+        .content-card .last-updated {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .content-card h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+
+        .content-card h2 i {
+            color: #4CAF50;
+            margin-left: 6px;
+        }
+
+        .content-card p {
+            color: #475569;
+            margin-bottom: 12px;
+        }
+
+        .content-card ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        .content-card ul li {
+            padding: 6px 0 6px 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #475569;
+        }
+
+        .content-card ul li::before {
+            content: "✓";
+            color: #4CAF50;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .content-card .highlight-box {
+            background: #f8fafc;
+            border-right: 4px solid #4CAF50;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .content-card .highlight-box p {
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .content-card .highlight-box strong {
+            color: #0f172a;
+        }
+
+        /* ===== التذييل ===== */
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            padding: 16px 0;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 8px;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== التجاوب ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .header .back-link {
+                justify-content: center;
+            }
+
+            .content-card {
+                padding: 20px 16px;
+            }
+
+            .content-card h1 {
+                font-size: 1.4rem;
+            }
+
+            .content-card h2 {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .logo {
+                font-size: 1.2rem;
+                justify-content: center;
+            }
+
+            .content-card {
+                padding: 16px 12px;
+            }
+
+            .content-card ul li {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== الهيدر ===== -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>Ramz</span>play
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-right"></i> العودة إلى المتجر
+            </a>
+        </header>
+
+        <!-- ===== محتوى سياسة الخصوصية ===== -->
+        <div class="content-card">
+            <h1><i class="fas fa-shield-alt"></i> سياسة الخصوصية</h1>
+            <div class="last-updated">
+                <i class="fas fa-calendar-alt"></i> آخر تحديث: 4 أغسطس 2026
+            </div>
+
+            <p>
+                نحن في <strong>Ramzplay</strong> نضع خصوصيتك في مقدمة أولوياتنا. هذه الصفحة توضح كيفية جمعنا، استخدامنا، وحماية معلوماتك الشخصية عند استخدامك لتطبيقنا وموقعنا الإلكتروني.
+            </p>
+
+            <h2><i class="fas fa-database"></i> المعلومات التي نجمعها</h2>
+            <ul>
+                <li><strong>معلومات الحساب:</strong> الاسم، البريد الإلكتروني، رقم الهاتف (عند التسجيل).</li>
+                <li><strong>بيانات الاستخدام:</strong> التطبيقات التي تتصفحها، التنزيلات، التقييمات، والمراجعات التي تتركها.</li>
+                <li><strong>معلومات الجهاز:</strong> نوع الجهاز، نظام التشغيل، الإصدار، ومعرف الجهاز الفريد (لتحسين الأداء).</li>
+                <li><strong>الموقع الجغرافي:</strong> قد نجمع موقعك التقريبي (بناءً على عنوان IP) لتقديم محتوى مناسب لمنطقتك.</li>
+            </ul>
+
+            <h2><i class="fas fa-cogs"></i> كيف نستخدم معلوماتك</h2>
+            <ul>
+                <li>تقديم وتحسين خدماتنا وميزات التطبيق.</li>
+                <li>تخصيص المحتوى والتوصيات بناءً على اهتماماتك.</li>
+                <li>التواصل معك بشأن التحديثات والعروض الجديدة (إذا وافقت).</li>
+                <li>تحليل أداء التطبيق وحل المشكلات التقنية.</li>
+                <li>منع الاحتيال وتعزيز الأمان.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>ملاحظة مهمة:</strong> نحن لا نبيع أو نشارك معلوماتك الشخصية مع أطراف ثالثة لأغراض تسويقية دون موافقتك الصريحة.
+                </p>
+            </div>
+
+            <h2><i class="fas fa-cookie-bite"></i> ملفات تعريف الارتباط (Cookies)</h2>
+            <p>
+                نستخدم ملفات تعريف الارتباط لتحسين تجربتك، مثل تذكر تفضيلاتك وجلسة الدخول. يمكنك التحكم في إعدادات ملفات الارتباط من متصفحك في أي وقت.
+            </p>
+
+            <h2><i class="fas fa-shield-virus"></i> أمان البيانات</h2>
+            <p>
+                نطبق إجراءات أمنية مشددة لحماية بياناتك من الوصول غير المصرح به، التغيير، أو التدمير. جميع البيانات المنقولة بين جهازك وخوادمنا مشفرة باستخدام تقنية SSL/TLS.
+            </p>
+
+            <h2><i class="fas fa-user-cog"></i> حقوقك</h2>
+            <ul>
+                <li><strong>حق الوصول:</strong> يمكنك طلب نسخة من بياناتك المخزنة لدينا.</li>
+                <li><strong>حق التعديل:</strong> يمكنك تحديث أو تصحيح معلوماتك الشخصية.</li>
+                <li><strong>حق الحذف:</strong> يمكنك طلب حذف حسابك وبياناتك المرتبطة به (مع مراعاة الالتزامات القانونية).</li>
+                <li><strong>حق الاعتراض:</strong> يمكنك الاعتراض على استخدام بياناتك لأغراض التسويق المباشر.</li>
+            </ul>
+            <p>
+                لممارسة أي من هذه الحقوق، يرجى التواصل معنا عبر البريد الإلكتروني: <strong>privacy@ramzplay.com</strong>
+            </p>
+
+            <h2><i class="fas fa-child"></i> خصوصية الأطفال</h2>
+            <p>
+                خدمتنا لا تستهدف الأطفال دون سن 13 عامًا. نحن لا نجمع عن قصد معلومات شخصية من الأطفال. إذا اكتشفنا أننا جمعنا بيانات من طفل دون موافقة الوالدين، سنقوم بحذفها فورًا.
+            </p>
+
+            <h2><i class="fas fa-link"></i> روابط خارجية</h2>
+            <p>
+                قد يحتوي تطبيقنا على روابط لمواقع خارجية. نحن لسنا مسؤولين عن ممارسات الخصوصية لهذه المواقع، وننصحك بقراءة سياسات الخصوصية الخاصة بها.
+            </p>
+
+            <h2><i class="fas fa-edit"></i> تحديثات السياسة</h2>
+            <p>
+                قد نقوم بتحديث سياسة الخصوصية من وقت لآخر. سنخطرك بأي تغييرات جوهرية عبر البريد الإلكتروني أو من خلال إشعار في التطبيق. يُرجى مراجعة هذه الصفحة بشكل دوري للاطلاع على أي تحديثات.
+            </p>
+
+            <h2><i class="fas fa-phone-alt"></i> تواصل معنا</h2>
+            <p>
+                إذا كان لديك أي استفسارات حول سياسة الخصوصية هذه، يمكنك التواصل معنا عبر:
+            </p>
+            <ul>
+                <li><strong>البريد الإلكتروني:</strong> privacy@ramzplay.com</li>
+                <li><strong>رقم الواتساب:</strong> <a href="https://wa.me/966500000000" target="_blank" style="color:#4CAF50; text-decoration:none;">+966 50 000 0000</a></li>
+                <li><strong>النموذج الإلكتروني:</strong> متاح في صفحة "اتصل بنا".</li>
+            </ul>
+
+            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #f1f5f9; text-align: center; color: #94a3b8; font-size: 0.85rem;">
+                <i class="fas fa-check-circle" style="color:#4CAF50;"></i>
+                نحن ملتزمون بحماية خصوصيتك وضمان تجربة آمنة وشفافة.
+            </div>
+        </div>
+
+        <!-- ===== التذييل ===== -->
+        <div class="footer">
+            &copy; 2026 <a href="index.html">Ramzplay</a> – جميع الحقوق محفوظة.
+            <br>
+            <span style="font-size:0.75rem; color:#cbd5e1;">
+                <i class="fas fa-shield-alt"></i> 
+                <a href="privacy.html" style="color:#4CAF50;">سياسة الخصوصية</a> &bull;
+                <a href="terms.html" style="color:#4CAF50;">الشروط والأحكام</a>
+            </span>
+        </div>
+
+    </div>
+
+</body>
+</html>

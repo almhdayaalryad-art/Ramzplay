@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>من نحن – Ramzplay</title>
+    <!-- خط Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== إعادة ضبط ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            line-height: 1.8;
+            direction: rtl;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* ===== الهيدر ===== */
+        .header {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .header .logo i {
+            color: #4CAF50;
+            font-size: 1.6rem;
+        }
+
+        .header .logo span {
+            color: #4CAF50;
+        }
+
+        .header .back-link {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .header .back-link:hover {
+            background: #388E3C;
+            transform: translateY(-2px);
+        }
+
+        /* ===== المحتوى ===== */
+        .content-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 36px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .content-card .hero-icon {
+            text-align: center;
+            font-size: 3.5rem;
+            color: #4CAF50;
+            margin-bottom: 6px;
+        }
+
+        .content-card h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .content-card .sub-headline {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 16px;
+        }
+
+        .content-card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-card h2 i {
+            color: #4CAF50;
+            width: 28px;
+            text-align: center;
+        }
+
+        .content-card p {
+            color: #475569;
+            margin-bottom: 14px;
+        }
+
+        .content-card .highlight-box {
+            background: #f0fdf4;
+            border-right: 4px solid #4CAF50;
+            padding: 18px 24px;
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+
+        .content-card .highlight-box p {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        /* ===== بطاقات القيم ===== */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 16px 0 8px;
+        }
+
+        .value-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 18px 14px;
+            text-align: center;
+            border: 1px solid #f1f5f9;
+            transition: 0.2s;
+        }
+
+        .value-card:hover {
+            border-color: #4CAF50;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .value-card .v-icon {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 6px;
+        }
+
+        .value-card .v-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0f172a;
+        }
+
+        .value-card .v-desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* ===== إحصائيات ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 16px 0 8px;
+        }
+
+        .stat-item {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 16px 12px;
+            text-align: center;
+            border: 1px solid #f1f5f9;
+        }
+
+        .stat-item .s-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #4CAF50;
+            line-height: 1.2;
+        }
+
+        .stat-item .s-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* ===== دعوة للتواصل ===== */
+        .cta-section {
+            background: linear-gradient(145deg, #0f172a, #1e293b);
+            border-radius: 20px;
+            padding: 30px 24px;
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .cta-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+
+        .cta-section p {
+            color: #cbd5e1;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+
+        .cta-section .cta-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+
+        .cta-section .cta-btn:hover {
+            background: #388E3C;
+            transform: scale(1.03);
+        }
+
+        /* ===== التذييل ===== */
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            padding: 16px 0;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 8px;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== التجاوب ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .header .back-link {
+                justify-content: center;
+            }
+
+            .content-card {
+                padding: 20px 16px;
+            }
+
+            .content-card h1 {
+                font-size: 1.5rem;
+            }
+
+            .content-card .sub-headline {
+                font-size: 0.95rem;
+            }
+
+            .content-card h2 {
+                font-size: 1.1rem;
+            }
+
+            .values-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .logo {
+                font-size: 1.2rem;
+                justify-content: center;
+            }
+
+            .content-card {
+                padding: 16px 12px;
+            }
+
+            .content-card .hero-icon {
+                font-size: 2.5rem;
+            }
+
+            .content-card h1 {
+                font-size: 1.3rem;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stat-item .s-number {
+                font-size: 1.5rem;
+            }
+
+            .cta-section {
+                padding: 20px 16px;
+            }
+
+            .cta-section h3 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== الهيدر ===== -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>Ramz</span>play
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-right"></i> العودة إلى المتجر
+            </a>
+        </header>
+
+        <!-- ===== محتوى "من نحن" ===== -->
+        <div class="content-card">
+            <div class="hero-icon">
+                <i class="fas fa-flag-checkered"></i>
+            </div>
+            <h1>من نحن؟</h1>
+            <div class="sub-headline">
+                <i class="fas fa-quote-right" style="color:#4CAF50; margin-left:6px;"></i>
+                نبني جسراً بين المبدعين والمستخدمين في عالم التطبيقات الرقمي.
+                <i class="fas fa-quote-left" style="color:#4CAF50; margin-right:6px;"></i>
+            </div>
+
+            <p>
+                <strong>Ramzplay</strong> هي منصة رقمية متكاملة انطلقت بهدف إحداث نقلة نوعية في طريقة اكتشاف وتحميل التطبيقات والألعاب في العالم العربي. نحن نؤمن بأن التكنولوجيا يجب أن تكون سهلة، آمنة، وممتعة للجميع.
+            </p>
+            <p>
+                من خلال واجهتنا البسيطة والمباشرة، نوفر للمستخدمين تجربة فريدة لاستكشاف آلاف التطبيقات والألعاب المصنفة بدقة، مع ضمان أعلى معايير الأمان والجودة. وفي الجانب الآخر، نفتح المجال للمطورين لعرض إبداعاتهم والوصول إلى جمهور واسع من المهتمين.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <i class="fas fa-bullseye" style="color:#4CAF50; margin-left:8px;"></i>
+                    <strong>هدفنا:</strong> أن نكون الوجهة الأولى للمستخدم العربي الباحث عن التطبيقات المميزة، والمطور الطموح الباحث عن منصة عادلة لعرض أعماله.
+                </p>
+            </div>
+
+            <!-- ===== الرؤية والرسالة ===== -->
+            <h2><i class="fas fa-eye"></i> رؤيتنا</h2>
+            <p>
+                أن نتربع على قمة منصات التطبيقات في المنطقة العربية، لنصبح المعيار الذهبي للجودة والثقة والابتكار، ونصنع بيئة رقمية تلهم الملايين وتحفز المبدعين على تقديم الأفضل.
+            </p>
+
+            <h2><i class="fas fa-bullhorn"></i> رسالتنا</h2>
+            <p>
+                تمكين المستخدمين من الوصول السهل والآمن إلى محتوى تقني متميز، وتوفير فضاء تفاعلي يساهم في نمو مجتمع المطورين العرب، مع الالتزام الدائم بالشفافية وتجربة المستخدم السلسة.
+            </p>
+
+            <!-- ===== القيم الأساسية ===== -->
+            <h2><i class="fas fa-gem"></i> قيمنا الأساسية</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="v-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="v-title">الأمان والثقة</div>
+                    <div class="v-desc">نحمي بياناتك ونوفر بيئة رقمية آمنة للجميع.</div>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon"><i class="fas fa-lightbulb"></i></div>
+                    <div class="v-title">الابتكار</div>
+                    <div class="v-desc">نتبنى أحدث الحلول التقنية لنقدم لك الأفضل دوماً.</div>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon"><i class="fas fa-users"></i></div>
+                    <div class="v-title">المجتمع</div>
+                    <div class="v-desc">نبني مجتمعاً تفاعلياً يجمع المستخدمين والمطورين.</div>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="v-title">الجودة</div>
+                    <div class="v-desc">نختار بعناية كل تطبيق نقدمه لنضمن لك تجربة استثنائية.</div>
+                </div>
+            </div>
+
+            <!-- ===== لماذا Ramzplay؟ ===== -->
+            <h2><i class="fas fa-question-circle"></i> لماذا Ramzplay؟</h2>
+            <p>
+                اخترنا اسم <strong>Ramzplay</strong> ليكون مزيجاً بين <i>"الرمز"</i> الذي يحمل الدلالة والمعنى، و <i>"play"</i> التي تعكس روح المتعة والاستكشاف. نحن نؤمن بأن التطبيقات ليست مجرد أدوات، بل هي نوافذ لعوالم جديدة من الإبداع والمعرفة، ونعمل يومياً على جعل رحلة اكتشافها أكثر سهولة وإلهاماً.
+            </p>
+            <p>
+                منذ انطلاقتنا، وضعنا نصب أعيننا تقديم تجربة مستخدم استثنائية تبدأ من لحظة تصفحك للتطبيقات وصولاً إلى لحظة تحميلها واستخدامها. فريقنا المتخصص يعمل باستمرار على تطوير المنصة وإضافة ميزات جديدة تلبي احتياجاتكم وتتجاوز توقعاتكم.
+            </p>
+
+            <!-- ===== إحصائيات سريعة ===== -->
+            <h2><i class="fas fa-chart-line"></i> أرقام من رحلتنا</h2>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="s-number">+٢٥٠</div>
+                    <div class="s-label">تطبيق مميز</div>
+                </div>
+                <div class="stat-item">
+                    <div class="s-number">+١٠٠٠٠</div>
+                    <div class="s-label">مستخدم نشط</div>
+                </div>
+                <div class="stat-item">
+                    <div class="s-number">+٥٠</div>
+                    <div class="s-label">مطور وشركاء</div>
+                </div>
+                <div class="stat-item">
+                    <div class="s-number">٤.٨ ★</div>
+                    <div class="s-label">متوسط تقييم المستخدمين</div>
+                </div>
+            </div>
+
+            <!-- ===== دعوة للتواصل ===== -->
+            <div class="cta-section">
+                <h3><i class="fas fa-handshake" style="color:#4CAF50;"></i> كن جزءاً من قصتنا</h3>
+                <p>
+                    سواء كنت مستخدماً يبحث عن التطبيق المثالي، أو مطوراً يريد نشر إبداعه، نحن هنا لدعمك.
+                    تواصل معنا اليوم ودعنا نبني معاً مستقبلاً رقمياً أفضل.
+                </p>
+                <a href="contact.html" class="cta-btn">
+                    <i class="fas fa-envelope"></i> تواصل معنا الآن
+                </a>
+            </div>
+        </div>
+
+        <!-- ===== التذييل ===== -->
+        <div class="footer">
+            &copy; 2026 <a href="index.html">Ramzplay</a> – جميع الحقوق محفوظة.
+            <br>
+            <span style="font-size:0.75rem; color:#cbd5e1;">
+                <i class="fas fa-shield-alt"></i>
+                <a href="privacy.html" style="color:#4CAF50;">سياسة الخصوصية</a> &bull;
+                <a href="terms.html" style="color:#4CAF50;">الشروط والأحكام</a>
+            </span>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Play Ramz - متجر التطبيقات</title>
+
+    <!-- ===== تحسينات السرعة ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://vpwqitvprtbwtgeuwjcs.supabase.co" />
+
+    <!-- ===== الخطوط ===== -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- ===== Font Awesome ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- ===== ملف الثيمات الموحد ===== -->
+    <link rel="stylesheet" href="themes.css" />
+
+    <style>
+        /* ============================================================
+           الأنماط الأساسية (تستخدم متغيرات CSS من themes.css)
+           ============================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg-body); color: var(--text-color); padding-bottom: 70px; direction: rtl; overflow-x: hidden; transition: background 0.4s ease, color 0.4s ease; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+        /* ===== الهيدر ===== */
+        .navbar { background: var(--nav-bg); padding: 12px 0; box-shadow: 0 2px 8px var(--shadow-color); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color); }
+        .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 8px; font-size: 1.5rem; font-weight: 800; color: var(--text-color); }
+        .logo i { color: var(--primary-color); font-size: 1.8rem; }
+        .logo .logo-text1 { color: var(--text-color); }
+        .logo .logo-text2 { color: var(--primary-color); }
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+        .nav-actions img#logoImageHeader {
+            height: 45px;
+            width: auto;
+            max-width: 180px;
+            object-fit: contain;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+            background: transparent;
+        }
+        .nav-actions img#logoImageHeader:hover { transform: scale(1.05); }
+
+        /* ===== كاروسيل ===== */
+        .carousel-section { padding: 16px 0 8px; background: var(--bg-card); }
+        .carousel-wrapper { position: relative; border-radius: var(--border-radius, 16px); overflow: hidden; box-shadow: 0 4px 12px var(--shadow-color); max-width: 100%; margin: 0 auto; }
+        .carousel-slides { display: flex; transition: transform 0.4s ease; }
+        .carousel-slide { min-width: 100%; height: 180px; background: var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-light); }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; font-size: 1.5rem; padding: 6px 12px; cursor: pointer; border-radius: 50%; z-index: 5; }
+        .carousel-btn:hover { background: rgba(0,0,0,0.7); }
+        .carousel-btn.prev { left: 8px; }
+        .carousel-btn.next { right: 8px; }
+        .carousel-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
+        .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.6); border: none; cursor: pointer; padding: 0; }
+        .carousel-dot.active { background: white; transform: scale(1.2); }
+
+        /* ===== شريط إعلاني متحرك ===== */
+        .marquee-section { background: var(--bg-card); padding: 8px 0; border-bottom: 1px solid var(--border-color); overflow: hidden; }
+        .marquee-track { display: flex; gap: 20px; animation: marquee 20s linear infinite; width: max-content; }
+        .marquee-item { display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 4px 16px 4px 12px; border-radius: 30px; box-shadow: 0 2px 8px var(--shadow-color); white-space: nowrap; font-size: 0.85rem; border: 1px solid var(--border-color); }
+        .marquee-item img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: var(--border-color); }
+        .marquee-item .marquee-btn { background: var(--primary-color); color: white; border: none; padding: 2px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* ===== الأقسام ===== */
+        .section-block { margin: 20px 0; background: var(--bg-card); border-radius: var(--border-radius, 16px); padding: 12px 0 8px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 16px 8px; border-bottom: 1px solid var(--border-color); }
+        .section-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-color); }
+        .section-header a { color: var(--primary-color); font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+
+        /* ===== الفئات ===== */
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; padding: 12px 16px; }
+        .category-card { background: var(--bg-card); border-radius: 12px; padding: 12px; text-align: center; box-shadow: 0 1px 4px var(--shadow-color); border: 1px solid var(--border-color); transition: 0.2s; cursor: pointer; }
+        .category-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow-hover); }
+        .category-card i { font-size: 2rem; color: var(--primary-color); }
+        .category-card .cat-name { font-weight: 600; margin-top: 4px; color: var(--text-color); }
+        .category-card .cat-count { font-size: 0.7rem; color: var(--text-light); }
+
+        /* ===== المطورين (صفين) ===== */
+        .horizontal-scroll-2rows { display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, auto); gap: 14px; padding: 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .horizontal-scroll-2rows::-webkit-scrollbar { display: none; }
+
+        /* ===== التطبيقات (3 صفوف) ===== */
+        .horizontal-scroll-3rows { display: grid; grid-auto-flow: column; grid-template-rows: repeat(3, auto); gap: 14px; padding: 12px 8px 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; margin: 0 -8px 0 0; }
+        .horizontal-scroll-3rows::-webkit-scrollbar { display: none; }
+        .horizontal-scroll-3rows .card-horizontal { width: 380px; flex-shrink: 0; }
+        .horizontal-scroll-3rows .card-horizontal:last-child { margin-left: 16px; }
+
+        /* ===== آراء المستخدمين (صف واحد مع دوران تلقائي) ===== */
+        .horizontal-scroll-1row { display: flex; flex-wrap: nowrap; gap: 14px; padding: 12px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .horizontal-scroll-1row::-webkit-scrollbar { display: none; }
+
+        /* ===== البطاقة الأفقية الموحدة ===== */
+        .card-horizontal { background: var(--bg-card); border-radius: var(--border-radius, 16px); padding: 12px 14px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); transition: all 0.25s ease; cursor: pointer; display: flex; flex-direction: row; align-items: center; gap: 12px; flex-shrink: 0; width: 280px; }
+        .card-horizontal:hover { transform: translateY(-4px); box-shadow: 0 8px 20px var(--shadow-hover); border-color: var(--primary-color); }
+        .card-horizontal .card-icon { flex: 0 0 72px; width: 72px; height: 72px; border-radius: 16px; background: var(--border-color); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: var(--text-light); box-shadow: 0 2px 6px var(--shadow-color); flex-shrink: 0; }
+        .card-horizontal .card-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .card-horizontal .card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+        .card-horizontal .card-info .row1 { font-weight: 700; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color); line-height: 1.3; }
+        .card-horizontal .card-info .row2 { font-size: 0.8rem; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; gap: 6px; align-items: center; }
+        .card-horizontal .card-info .row2 .badge { background: var(--border-color); padding: 0 8px; border-radius: 12px; font-size: 0.65rem; color: var(--text-color); font-weight: 600; white-space: nowrap; }
+        .card-horizontal .card-info .row3 { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-light); flex-wrap: wrap; }
+        .card-horizontal .card-info .row3 .rating-stars { color: #f59e0b; font-weight: 600; display: flex; align-items: center; gap: 2px; }
+        .card-horizontal .card-info .row3 .action-btn { margin-right: auto; }
+        .card-horizontal .card-info .row3 .action-btn button { background: var(--primary-color); color: white; border: none; padding: 4px 16px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .card-horizontal .card-info .row3 .action-btn button:hover { opacity: 0.85; background: var(--primary-dark); }
+        .card-horizontal .card-info .row3 .action-btn button.installed { background: var(--border-color); color: var(--text-color); }
+        .card-horizontal .card-info .row3 .action-btn button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .card-horizontal .card-info .row3 .action-btn button.payment-required { background: #f59e0b; }
+        .card-horizontal .card-info .row3 .action-btn button.payment-required:hover { background: #d97706; }
+
+        /* ===== المدونة ===== */
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; padding: 12px 16px; }
+        .blog-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); transition: 0.2s; }
+        .blog-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px var(--shadow-hover); }
+        .blog-card img { width: 100%; height: 120px; object-fit: cover; }
+        .blog-card .blog-body { padding: 10px; }
+        .blog-card .blog-title { font-weight: 700; font-size: 1rem; color: var(--text-color); margin-bottom: 4px; }
+        .blog-card .blog-excerpt { font-size: 0.85rem; color: var(--text-light); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .blog-card .blog-footer { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 0; border-top: 1px solid var(--border-color); margin-top: 8px; }
+        .blog-card .blog-footer .share-btns { display: flex; gap: 6px; }
+        .blog-card .blog-footer .share-btns button { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 0.9rem; transition: 0.2s; padding: 2px; }
+        .blog-card .blog-footer .share-btns button:hover { color: var(--primary-color); }
+
+        /* ===== صفحة التطبيقات ===== */
+        #appsPage { display: none; padding: 0 0 20px 0; animation: fadeIn 0.3s ease; }
+        #appsPage.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== شاشة تفاصيل التطبيق ===== */
+        .app-detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; justify-content: center; align-items: center; padding: 16px; animation: fadeIn 0.3s ease; }
+        .app-detail-overlay.open { display: flex; }
+        .app-detail-container { background: var(--bg-card); border-radius: 28px; max-width: 500px; width: 100%; max-height: 95vh; overflow-y: auto; padding: 0; box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; scrollbar-width: none; -ms-overflow-style: none; }
+        .app-detail-container::-webkit-scrollbar { display: none; }
+        .app-detail-close { position: sticky; top: 12px; left: 16px; background: rgba(0,0,0,0.5); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; z-index: 10; float: left; margin: 12px 12px 0 0; backdrop-filter: blur(4px); transition: 0.2s; }
+        .app-detail-close:hover { background: rgba(0,0,0,0.8); transform: scale(1.1); }
+
+        .app-detail-top { padding: 20px 20px 16px; text-align: center; background: var(--gradient-primary); border-radius: 28px 28px 0 0; }
+        .app-detail-top .detail-icon { width: 100px; height: 100px; border-radius: 24px; background: var(--border-color); overflow: hidden; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--text-light); box-shadow: 0 4px 16px var(--shadow-color); }
+        .app-detail-top .detail-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .app-detail-top .detail-name { font-size: 1.4rem; font-weight: 800; color: var(--text-color); }
+        .app-detail-top .detail-desc { font-size: 0.9rem; color: var(--text-light); margin: 4px 0 8px; }
+        .app-detail-top .detail-status { display: inline-block; padding: 2px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: var(--primary-color); color: white; margin-bottom: 6px; }
+        .app-detail-top .detail-status.restricted { background: #ef4444; }
+        .app-detail-top .detail-status.payment { background: #f59e0b; }
+        .app-detail-top .detail-price { font-size: 1.1rem; font-weight: 700; color: var(--text-color); margin: 4px 0 10px; }
+        .app-detail-top .detail-price .old-price { text-decoration: line-through; color: var(--text-light); font-size: 0.9rem; margin-left: 8px; }
+        .app-detail-top .detail-install-btn { background: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 40px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; width: 100%; max-width: 280px; margin: 0 auto; }
+        .app-detail-top .detail-install-btn:hover { background: var(--primary-dark); }
+        .app-detail-top .detail-install-btn:disabled { background: var(--border-color); color: var(--text-light); cursor: not-allowed; }
+        .app-detail-top .detail-install-btn.payment-required { background: #f59e0b; }
+        .app-detail-top .detail-install-btn.payment-required:hover { background: #d97706; }
+
+        .app-detail-middle { padding: 16px 20px; background: var(--bg-body); }
+        .app-detail-middle .detail-images-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 12px; scrollbar-width: none; -ms-overflow-style: none; }
+        .app-detail-middle .detail-images-scroll::-webkit-scrollbar { display: none; }
+        .app-detail-middle .detail-images-scroll img { flex: 0 0 auto; width: 130px; height: 90px; border-radius: 12px; object-fit: cover; background: var(--border-color); border: 2px solid var(--bg-card); box-shadow: 0 2px 8px var(--shadow-color); }
+        .app-detail-middle .detail-about-btn { display: block; width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 40px; background: var(--bg-card); font-weight: 600; color: var(--text-color); cursor: pointer; transition: 0.2s; font-family: inherit; font-size: 0.9rem; margin-top: 4px; }
+        .app-detail-middle .detail-about-btn:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+        .app-detail-bottom { padding: 16px 20px 20px; }
+        .app-detail-bottom .share-section { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+        .app-detail-bottom .share-section .share-label { font-weight: 600; font-size: 0.9rem; color: var(--text-color); }
+        .app-detail-bottom .share-section .share-btn { background: var(--primary-color); color: white; border: none; padding: 6px 18px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .app-detail-bottom .share-section .share-btn:hover { background: var(--primary-dark); }
+        .app-detail-bottom .rating-filter { display: flex; gap: 8px; margin: 10px 0 14px; flex-wrap: wrap; }
+        .app-detail-bottom .rating-filter .star-btn { background: var(--border-color); border: 2px solid transparent; padding: 4px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: inherit; color: var(--text-color); }
+        .app-detail-bottom .rating-filter .star-btn:hover { background: var(--shadow-color); }
+        .app-detail-bottom .rating-filter .star-btn.active { background: #f59e0b; color: white; border-color: #f59e0b; }
+
+        .app-detail-bottom .detail-reviews-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 8px 0 12px; scrollbar-width: none; -ms-overflow-style: none; }
+        .app-detail-bottom .detail-reviews-scroll::-webkit-scrollbar { display: none; }
+        .app-detail-bottom .detail-reviews-scroll .review-card { flex: 0 0 auto; width: 200px; background: var(--bg-card); border-radius: 16px; padding: 12px; text-align: center; border: 1px solid var(--border-color); }
+        .app-detail-bottom .detail-reviews-scroll .review-card .review-name { font-weight: 600; font-size: 0.85rem; color: var(--text-color); }
+        .app-detail-bottom .detail-reviews-scroll .review-card .review-stars { color: #f59e0b; font-size: 0.75rem; }
+        .app-detail-bottom .detail-reviews-scroll .review-card .review-text { font-size: 0.75rem; color: var(--text-light); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .app-detail-bottom .similar-apps-title { font-weight: 700; font-size: 1rem; margin: 14px 0 8px; color: var(--text-color); }
+        .app-detail-bottom .similar-apps-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 8px; scrollbar-width: none; -ms-overflow-style: none; }
+        .app-detail-bottom .similar-apps-scroll::-webkit-scrollbar { display: none; }
+        .app-detail-bottom .similar-apps-scroll .similar-card { flex: 0 0 auto; width: 140px; background: var(--bg-card); border-radius: 16px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid var(--border-color); }
+        .app-detail-bottom .similar-apps-scroll .similar-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow-hover); }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-icon { width: 56px; height: 56px; border-radius: 14px; background: var(--border-color); margin: 0 auto 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--text-light); }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color); }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-rating { font-size: 0.65rem; color: #f59e0b; }
+
+        /* ===== القائمة الجانبية ===== */
+        .side-menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 800; animation: fadeIn 0.25s ease; }
+        .side-menu-overlay.open { display: block; }
+        .side-menu { position: fixed; top: 0; left: 0; width: 320px; max-width: 85vw; height: 100%; background: var(--secondary-color); z-index: 900; transform: translateX(-110%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; padding: 20px 16px 30px; box-shadow: 4px 0 30px rgba(0,0,0,0.3); scrollbar-width: thin; scrollbar-color: var(--primary-color) transparent; }
+        .side-menu::-webkit-scrollbar { width: 4px; }
+        .side-menu::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+        .side-menu.open { transform: translateX(0); }
+        .side-menu .menu-logo { text-align: center; padding: 10px 0 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px; }
+        .side-menu .menu-logo img { max-width: 120px; max-height: 80px; object-fit: contain; border-radius: 12px; }
+        .side-menu .menu-logo .logo-text { color: white; font-size: 1.3rem; font-weight: 800; margin-top: 4px; }
+        .side-menu .menu-logo .logo-text .logo-text1 { color: white; }
+        .side-menu .menu-logo .logo-text .logo-text2 { color: var(--primary-color); }
+        .side-menu .menu-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; color: var(--text-light); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-bottom: 4px; border: none; background: none; width: 100%; text-align: right; font-family: inherit; }
+        .side-menu .menu-item:hover { background: var(--bg-card); color: white; }
+        .side-menu .menu-item i { font-size: 1.3rem; width: 28px; text-align: center; color: var(--primary-color); }
+        .side-menu .menu-item .item-badge { background: var(--primary-color); color: white; font-size: 0.6rem; padding: 1px 10px; border-radius: 20px; margin-right: auto; font-weight: 700; }
+        .side-menu .menu-item .item-badge.coming { background: #f59e0b; }
+        .side-menu .menu-divider { height: 1px; background: var(--border-color); margin: 12px 0; }
+        .side-menu .menu-footer { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-light); font-size: 0.7rem; }
+
+        /* ===== مودال المستخدم ===== */
+        .user-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 700; justify-content: center; align-items: center; padding: 20px; }
+        .user-modal.open { display: flex; }
+        .user-modal-content { background: var(--bg-card); border-radius: 28px; max-width: 400px; width: 100%; padding: 30px 24px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        .user-modal-content h3 { font-size: 1.3rem; color: var(--text-color); margin-bottom: 4px; }
+        .user-modal-content .user-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--border-color); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--text-light); }
+        .user-modal-content input { width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 40px; margin-bottom: 12px; font-size: 1rem; font-family: inherit; background: var(--bg-body); color: var(--text-color); transition: 0.2s; }
+        .user-modal-content input:focus { outline: none; border-color: var(--primary-color); }
+        .user-modal-content .user-btn { background: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 40px; font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%; transition: 0.2s; font-family: inherit; }
+        .user-modal-content .user-btn:hover { background: var(--primary-dark); }
+        .user-modal-content .user-btn.outline { background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); margin-top: 8px; }
+        .user-modal-content .user-btn.outline:hover { background: var(--bg-body); }
+        .user-modal-content .user-close { margin-top: 12px; background: var(--border-color); border: none; padding: 10px 30px; border-radius: 40px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text-color); }
+
+        /* ===== مودال السلة ===== */
+        .cart-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 700; justify-content: center; align-items: center; padding: 20px; }
+        .cart-modal.open { display: flex; }
+        .cart-modal-content { background: var(--bg-card); border-radius: 28px; max-width: 420px; width: 100%; max-height: 85vh; padding: 24px 20px 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.4); display: flex; flex-direction: column; }
+        .cart-modal-content h3 { font-size: 1.3rem; color: var(--text-color); margin-bottom: 12px; text-align: center; }
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 12px; scrollbar-width: thin; }
+        .cart-items::-webkit-scrollbar { width: 4px; }
+        .cart-items::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+        .cart-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--bg-body); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border-color); }
+        .cart-item .ci-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--border-color); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-light); flex-shrink: 0; }
+        .cart-item .ci-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .cart-item .ci-info { flex: 1; min-width: 0; }
+        .cart-item .ci-info .ci-name { font-weight: 600; font-size: 0.9rem; color: var(--text-color); }
+        .cart-item .ci-info .ci-price { font-size: 0.8rem; color: var(--text-light); }
+        .cart-item .ci-remove { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.1rem; padding: 4px; }
+        .cart-empty { text-align: center; color: var(--text-light); padding: 30px 0; }
+        .cart-total { font-weight: 700; font-size: 1.1rem; text-align: center; padding: 10px 0; border-top: 2px solid var(--border-color); margin-bottom: 12px; color: var(--text-color); }
+        .cart-actions { display: flex; flex-direction: column; gap: 8px; }
+        .cart-actions button { padding: 10px; border-radius: 40px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s; font-family: inherit; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .cart-actions .btn-whatsapp { background: #25D366; color: white; }
+        .cart-actions .btn-whatsapp:hover { background: #1da851; }
+        .cart-actions .btn-email { background: #3b82f6; color: white; }
+        .cart-actions .btn-email:hover { background: #2563eb; }
+        .cart-actions .btn-chat { background: #8b5cf6; color: white; }
+        .cart-actions .btn-chat:hover { background: #7c3aed; }
+        .cart-actions .btn-close-cart { background: var(--border-color); color: var(--text-color); }
+        .cart-actions .btn-close-cart:hover { background: var(--shadow-color); }
+
+        /* ===== مودال الدفع ===== */
+        .payment-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 600; justify-content: center; align-items: center; padding: 20px; }
+        .payment-modal.open { display: flex; }
+        .payment-modal-content { background: var(--bg-card); border-radius: 28px; max-width: 400px; width: 100%; padding: 30px 24px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        .payment-modal-content h3 { font-size: 1.3rem; color: var(--text-color); margin-bottom: 8px; }
+        .payment-modal-content .payment-amount { font-size: 2rem; font-weight: 800; color: var(--text-color); margin: 12px 0; }
+        .payment-modal-content .payment-methods { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+        .payment-modal-content .payment-methods button { background: var(--bg-card); border: 2px solid var(--border-color); padding: 12px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--text-color); }
+        .payment-modal-content .payment-methods button:hover { border-color: var(--primary-color); background: var(--bg-body); }
+        .payment-modal-content .payment-methods button i { font-size: 1.2rem; color: var(--primary-color); }
+        .payment-modal-content .payment-close { margin-top: 16px; background: var(--border-color); border: none; padding: 10px 30px; border-radius: 40px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text-color); }
+
+        /* ===== مودال التطبيق القديم ===== */
+        .app-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
+        .app-modal.open { display: flex; }
+        .app-modal-content { background: var(--bg-card); border-radius: 24px; max-width: 400px; width: 100%; padding: 30px 24px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); position: relative; }
+        .app-modal-content .modal-close { position: absolute; top: 12px; left: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light); }
+        .app-modal-content .modal-icon { width: 80px; height: 80px; border-radius: 20px; background: var(--border-color); margin: 0 auto 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--text-light); }
+        .app-modal-content .modal-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .app-modal-content h3 { font-size: 1.4rem; color: var(--text-color); margin-bottom: 4px; }
+        .app-modal-content p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 8px; }
+        .app-modal-content .modal-meta { font-size: 0.8rem; color: var(--text-light); margin-bottom: 16px; }
+        .app-modal-content .modal-download { background: var(--primary-color); color: white; border: none; padding: 12px 32px; border-radius: 40px; font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%; transition: 0.2s; }
+        .app-modal-content .modal-download:hover { background: var(--primary-dark); }
+        .app-modal-content .modal-download.disabled { background: var(--border-color); color: var(--text-light); cursor: not-allowed; }
+
+        /* ===== الشريط السفلي ===== */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 8px 0 10px; z-index: 200; box-shadow: 0 -2px 10px var(--shadow-color); }
+        .bottom-nav .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.65rem; color: var(--text-light); cursor: pointer; transition: 0.2s; border: none; background: none; font-family: inherit; padding: 4px 8px; border-radius: 12px; min-width: 50px; }
+        .bottom-nav .nav-item i { font-size: 1.5rem; transition: 0.2s; }
+        .bottom-nav .nav-item.active { color: var(--primary-color); }
+        .bottom-nav .nav-item.active i { transform: scale(1.1); }
+        .bottom-nav .nav-item:hover { color: var(--primary-color); }
+        .bottom-nav .nav-item .nav-label { font-size: 0.6rem; font-weight: 600; }
+
+        /* ===== التذييل ===== */
+        .footer { background: var(--footer-bg); color: var(--footer-text); padding: 30px 16px 20px; margin-top: 20px; }
+        .footer .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+        .footer h4 { color: white; margin-bottom: 8px; }
+        .footer ul { list-style: none; padding: 0; }
+        .footer ul li { margin-bottom: 4px; }
+        .footer ul li a { color: var(--footer-text); transition: 0.2s; }
+        .footer ul li a:hover { color: var(--primary-color); }
+        .footer .social-icons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .footer .social-icons a { color: var(--footer-text); font-size: 1.4rem; transition: 0.2s; }
+        .footer .social-icons a:hover { color: var(--primary-color); }
+        .footer .copyright { text-align: center; border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 16px; font-size: 0.85rem; color: var(--footer-text); }
+
+        /* ===== تحسينات متجاوبة ===== */
+        @media (max-width: 768px) {
+            .carousel-slide { height: 140px; }
+            .marquee-item { font-size: 0.75rem; padding: 2px 12px; }
+            .marquee-item img { width: 26px; height: 26px; }
+            .nav-actions img#logoImageHeader { height: 35px; max-width: 120px; }
+            .category-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            .card-horizontal { width: 220px; padding: 10px 12px; }
+            .card-horizontal .card-icon { flex: 0 0 54px; width: 54px; height: 54px; font-size: 1.6rem; }
+            .horizontal-scroll-3rows .card-horizontal { width: 320px; }
+            .bottom-nav .nav-item i { font-size: 1.3rem; }
+            .bottom-nav .nav-item { min-width: 44px; }
+            .app-detail-container { max-width: 100%; border-radius: 20px 20px 0 0; max-height: 98vh; }
+            .app-detail-top .detail-icon { width: 80px; height: 80px; }
+            .side-menu { width: 280px; }
+            .logo { font-size: 1.2rem; }
+        }
+        @media (max-width: 480px) {
+            .carousel-slide { height: 120px; }
+            .section-header h3 { font-size: 0.95rem; }
+            .nav-actions img#logoImageHeader { height: 30px; max-width: 100px; }
+            .category-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .category-card { padding: 8px; }
+            .card-horizontal { width: 180px; padding: 8px 10px; gap: 8px; }
+            .card-horizontal .card-icon { flex: 0 0 44px; width: 44px; height: 44px; font-size: 1.2rem; }
+            .horizontal-scroll-3rows .card-horizontal { width: 260px; }
+            .app-detail-top .detail-icon { width: 70px; height: 70px; font-size: 2rem; }
+            .app-detail-top .detail-name { font-size: 1.1rem; }
+            .app-detail-middle .detail-images-scroll img { width: 100px; height: 70px; }
+            .side-menu { width: 260px; padding: 16px 12px; }
+            .side-menu .menu-item { padding: 12px 12px; font-size: 0.9rem; }
+            .bottom-nav .nav-item i { font-size: 1.1rem; }
+            .bottom-nav .nav-item { min-width: 38px; padding: 2px 4px; }
+            .bottom-nav .nav-item .nav-label { font-size: 0.5rem; }
+            .logo { font-size: 1rem; }
+        }
+
+        /* ===== مكونات إضافية ===== */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-8 { margin-top: 8px; }
+        .mb-8 { margin-bottom: 8px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .gap-8 { gap: 8px; }
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+        .filter-bar button { background: var(--border-color); border: none; padding: 4px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; color: var(--text-color); }
+        .filter-bar button.active { background: var(--primary-color); color: white; }
+        .filter-bar button:hover { opacity: 0.8; }
+
+        /* ===== الهاشتاجات ===== */
+        .hashtags-container { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+        .hashtag { background: var(--border-color); padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; color: var(--text-color); cursor: pointer; transition: 0.2s; display: inline-block; }
+        .hashtag:hover { background: var(--primary-color); color: white; }
+
+        /* ===== الإعلانات المخصصة ===== */
+        .custom-ad { background: var(--bg-card); border-radius: var(--border-radius); padding: 12px; margin: 8px 0; border: 1px solid var(--border-color); }
+        .custom-ad img { width: 100%; max-height: 120px; object-fit: cover; border-radius: 8px; }
+        .custom-ad .ad-title { font-weight: 600; color: var(--text-color); margin-top: 4px; }
+
+        /* ===== دوران التقيمات ===== */
+        .testimonials-wrapper { position: relative; overflow: hidden; padding: 12px 0; }
+        .testimonials-scroll { display: flex; flex-wrap: nowrap; gap: 16px; padding: 0 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .testimonials-scroll::-webkit-scrollbar { display: none; }
+        .testimonial-card { flex: 0 0 auto; width: 220px; background: var(--bg-card); border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--border-color); transition: all 0.3s ease; }
+        .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px var(--shadow-hover); }
+        .testimonial-card img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: var(--border-color); margin-bottom: 6px; }
+        .testimonial-card .t-name { font-weight: 700; font-size: 0.95rem; color: var(--text-color); }
+        .testimonial-card .t-review { font-size: 0.85rem; color: var(--text-light); margin: 4px 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .testimonial-card .t-rating { color: #f59e0b; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== الهيدر ===== -->
+    <header class="navbar">
+        <div class="container">
+            <div class="logo" id="logoDisplay">
+                <!-- سيتم ملؤه ديناميكياً -->
+            </div>
+            <div class="nav-actions">
+                <img id="logoImageHeader" src="" alt="شعار الموقع" style="display: none;" onclick="openSideMenu()" />
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== كاروسيل ===== -->
+    <section class="carousel-section" id="carouselSection">
+        <div class="container">
+            <div class="carousel-wrapper">
+                <div class="carousel-slides" id="carouselSlides"></div>
+                <button class="carousel-btn prev" onclick="changeCarousel(-1)">&#10094;</button>
+                <button class="carousel-btn next" onclick="changeCarousel(1)">&#10095;</button>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== شريط إعلاني متحرك ===== -->
+    <section class="marquee-section" id="marqueeSection">
+        <div class="container" style="overflow:hidden;">
+            <div class="marquee-track" id="marqueeTrack"></div>
+        </div>
+    </section>
+
+    <!-- ===== المحتوى الرئيسي ===== -->
+    <main class="container" id="mainContent">
+        <!-- سيتم ملؤه ديناميكياً -->
+    </main>
+
+    <!-- ===== صفحة التطبيقات ===== -->
+    <div id="appsPage">
+        <div class="container">
+            <!-- سيتم ملؤه ديناميكياً -->
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- القائمة الجانبية -->
+    <!-- ========================================================== -->
+    <div class="side-menu-overlay" id="sideMenuOverlay" onclick="closeSideMenu()"></div>
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-logo">
+            <img id="menuLogoImage" src="" alt="شعار الموقع" style="display:none; max-width:100px; margin:0 auto;" />
+            <div class="logo-text" id="menuLogoText">
+                <span class="logo-text1">Play</span>
+                <span class="logo-text2">Ramz</span>
+            </div>
+        </div>
+
+        <!-- أيقونة المستخدم -->
+        <button class="menu-item" id="menuUserBtn" onclick="openUserModal()" style="display:none;">
+            <i class="fas fa-user-circle"></i>
+            <span>حسابي</span>
+            <span class="item-badge" id="userStatusBadge">تسجيل الدخول</span>
+        </button>
+
+        <!-- أيقونة السلة -->
+        <button class="menu-item" id="menuCartBtn" onclick="openCartModal()" style="display:none;">
+            <i class="fas fa-shopping-cart"></i>
+            <span>السلة</span>
+            <span class="item-badge" id="cartCountBadge">0</span>
+        </button>
+
+        <div class="menu-divider"></div>
+
+        <!-- تبديل الثيم -->
+        <button class="menu-item" onclick="switchTheme()">
+            <i class="fas fa-palette"></i>
+            <span>تبديل الثيم</span>
+            <span class="item-badge" id="themeBadge">🌿</span>
+        </button>
+
+        <!-- التحديثات -->
+        <button class="menu-item" onclick="showComingSoon('التحديثات')">
+            <i class="fas fa-sync-alt"></i>
+            <span>التحديثات</span>
+            <span class="item-badge coming">قريباً</span>
+        </button>
+
+        <!-- المدونة -->
+        <button class="menu-item" onclick="scrollToBlog()">
+            <i class="fas fa-blog"></i>
+            <span>المدونة</span>
+        </button>
+
+        <!-- لوحة التحكم -->
+        <button class="menu-item" onclick="openAdminLogin()">
+            <i class="fas fa-cog"></i>
+            <span>Ramzplay</span>
+            <span class="item-badge">تحكم</span>
+        </button>
+
+        <!-- الشركاء -->
+        <button class="menu-item" onclick="showComingSoon('الشركاء')">
+            <i class="fas fa-handshake"></i>
+            <span>الشركاء</span>
+            <span class="item-badge coming">قريباً</span>
+        </button>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-footer">
+            <span>Play Ramz v2.0</span>
+            <span style="display:block; font-size:0.6rem; color:var(--text-light); margin-top:4px;">جميع الحقوق محفوظة للمهندس رمزي الصلاحي © 2026</span>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- مودال المستخدم -->
+    <!-- ========================================================== -->
+    <div class="user-modal" id="userModal">
+        <div class="user-modal-content">
+            <div class="user-avatar"><i class="fas fa-user"></i></div>
+            <h3 id="userModalTitle">تسجيل الدخول</h3>
+            <p style="color:var(--text-light); font-size:0.9rem; margin-bottom:12px;" id="userModalSub">أدخل بياناتك للدخول إلى حسابك</p>
+            <input type="text" id="userNameInput" placeholder="اسم المستخدم" />
+            <input type="password" id="userPassInput" placeholder="كلمة المرور" />
+            <button class="user-btn" id="userActionBtn" onclick="handleUserAction()">تسجيل الدخول</button>
+            <button class="user-btn outline" id="userSwitchBtn" onclick="switchUserMode()">إنشاء حساب جديد</button>
+            <button class="user-close" onclick="closeUserModal()">إلغاء</button>
+            <div id="userStatusMsg" style="margin-top:8px; font-size:0.85rem; color:#ef4444;"></div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- مودال السلة -->
+    <!-- ========================================================== -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-modal-content">
+            <h3>🛒 سلة المشتريات</h3>
+            <div class="cart-items" id="cartItemsContainer"><div class="cart-empty">السلة فارغة</div></div>
+            <div class="cart-total" id="cartTotal">المجموع: 0.00 ر.س</div>
+            <div class="cart-actions">
+                <button class="btn-whatsapp" onclick="sendOrderViaWhatsApp()"><i class="fab fa-whatsapp"></i> طلب عبر واتساب</button>
+                <button class="btn-email" onclick="sendOrderViaEmail()"><i class="fas fa-envelope"></i> طلب عبر البريد</button>
+                <button class="btn-chat" onclick="sendOrderViaChat()"><i class="fas fa-comment-dots"></i> محادثة المدير</button>
+                <button class="btn-close-cart" onclick="closeCartModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- مودال الدفع -->
+    <!-- ========================================================== -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-modal-content">
+            <h3>💳 إتمام عملية الشراء</h3>
+            <div class="payment-amount" id="paymentAmount">0.00 ر.س</div>
+            <p style="color:var(--text-light); font-size:0.9rem;">اختر طريقة الدفع المفضلة:</p>
+            <div class="payment-methods" id="paymentMethods">
+                <button onclick="simulatePayment('card')"><i class="fas fa-credit-card"></i> بطاقة ائتمان</button>
+                <button onclick="simulatePayment('mada')"><i class="fas fa-credit-card"></i> مدى (Mada)</button>
+                <button onclick="simulatePayment('applepay')"><i class="fab fa-apple-pay"></i> Apple Pay</button>
+                <button onclick="simulatePayment('googlepay')"><i class="fab fa-google-pay"></i> Google Pay</button>
+                <button onclick="simulatePayment('western')"><i class="fas fa-money-bill-wave"></i> ويسترن يونيون</button>
+            </div>
+            <button class="payment-close" onclick="closePaymentModal()">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- ===== شاشة تفاصيل التطبيق ===== -->
+    <div class="app-detail-overlay" id="appDetailOverlay">
+        <div class="app-detail-container" id="appDetailContainer">
+            <button class="app-detail-close" onclick="closeAppDetail()">✕</button>
+            <div id="appDetailContent"></div>
+        </div>
+    </div>
+
+    <!-- ===== التذييل ===== -->
+    <footer class="footer" id="footerSection">
+        <div class="container" id="footerContent"></div>
+    </footer>
+
+    <!-- ===== مودال التطبيق القديم ===== -->
+    <div class="app-modal" id="appModal">
+        <div class="app-modal-content">
+            <button class="modal-close" onclick="closeAppModal()">&times;</button>
+            <div class="modal-icon" id="modalIcon"><i class="fas fa-app-store"></i></div>
+            <h3 id="modalName">اسم التطبيق</h3>
+            <p id="modalDesc">وصف التطبيق</p>
+            <div class="modal-meta" id="modalMeta">★ 4.5 · 50 م.ب</div>
+            <button class="modal-download" id="modalDownloadBtn" onclick="downloadApp()">تثبيت</button>
+        </div>
+    </div>
+
+    <!-- ===== الشريط السفلي ===== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
+            <i class="fas fa-house"></i><span class="nav-label">الرئيسية</span>
+        </button>
+        <button class="nav-item" data-tab="apps" onclick="switchTab('apps')">
+            <i class="fas fa-th-large"></i><span class="nav-label">التطبيقات</span>
+        </button>
+        <button class="nav-item" data-tab="stores" onclick="switchTab('stores')">
+            <i class="fas fa-store"></i><span class="nav-label">المطورين</span>
+        </button>
+        <button class="nav-item" data-tab="search" onclick="switchTab('search')">
+            <i class="fas fa-search"></i><span class="nav-label">بحث</span>
+        </button>
+        <button class="nav-item" onclick="openSideMenu()">
+            <i class="fas fa-bars"></i><span class="nav-label">القائمة</span>
+        </button>
+    </nav>
+
+    <!-- ===== تحميل common.js ===== -->
+    <script src="common.js"></script>
+
+    <!-- ===== كود التشغيل الرئيسي ===== -->
+    <script>
+        // ============================================================
+        // كود index.html – النسخة النهائية
+        // ============================================================
+
+        let appData = {};
+        let currentTab = 'home';
+        let currentFilterCategory = 'all';
+        let currentFilterStore = 'all';
+        let carouselIndex = 0;
+        let carouselTimer = null;
+        let currentAppId = null;
+        let currentDetailAppId = null;
+        let pendingPaymentAppId = null;
+        let isUserLoggedIn = false;
+        let currentUser = null;
+        let userMode = 'login';
+
+        // متغيرات للتحكم في دوران آراء المستخدمين
+        let testimonialsInterval = null;
+        let testimonialsScrollContainer = null;
+        let testimonialsAutoScroll = true;
+
+        // ---- تحميل البيانات وعرض الموقع ----
+        async function init() {
+            appData = await window.loadAppData();
+            
+            // تطبيق الثيم المحفوظ
+            applyTheme();
+            
+            // زيادة عداد الزوار
+            if (!sessionStorage.getItem('visitorCounted')) {
+                if (window.incrementVisitorCount) window.incrementVisitorCount();
+                sessionStorage.setItem('visitorCounted', 'true');
+            }
+            
+            loadUserState();
+            renderAll();
+            setupEventListeners();
+            
+            // تحديث SEO
+            updateSEO();
+            
+            // تحميل الإعلانات
+            loadAds();
+            
+            setInterval(async () => {
+                const fresh = await window.loadAppData();
+                if (JSON.stringify(fresh) !== JSON.stringify(appData)) {
+                    appData = fresh;
+                    renderAll();
+                }
+            }, 60000);
+        }
+
+        function renderAll() {
+            renderLogo();
+            renderCarousel();
+            renderMarquee();
+            renderFooter();
+            renderSideMenu();
+            updateCartBadge();
+            switchTab(currentTab);
+        }
+
+        // ============================================================
+        // الثيمات
+        // ============================================================
+        function applyTheme() {
+            const theme = appData.settings?.activeTheme || 'theme-default';
+            document.body.className = theme;
+            updateThemeBadge(theme);
+        }
+
+        function switchTheme() {
+            const themes = ['theme-default', 'theme-dark', 'theme-blue', 'theme-purple', 'theme-red', 'theme-gold'];
+            const current = document.body.className || 'theme-default';
+            let index = themes.indexOf(current);
+            index = (index + 1) % themes.length;
+            const newTheme = themes[index];
+            document.body.className = newTheme;
+            if (appData.settings) {
+                appData.settings.activeTheme = newTheme;
+                window.saveAppData(appData, ['settings']);
+            }
+            updateThemeBadge(newTheme);
+            showToast('🎨 تم التبديل إلى ' + newTheme.replace('theme-', ''), 'success');
+        }
+
+        function updateThemeBadge(theme) {
+            const badge = document.getElementById('themeBadge');
+            if (!badge) return;
+            const icons = {
+                'theme-default': '🌿',
+                'theme-dark': '🌙',
+                'theme-blue': '🔵',
+                'theme-purple': '🟣',
+                'theme-red': '🔴',
+                'theme-gold': '🟡'
+            };
+            badge.textContent = icons[theme] || '🌿';
+        }
+
+        // ============================================================
+        // SEO
+        // ============================================================
+        function updateSEO() {
+            if (window.updatePageSEO) {
+                const data = getCurrentPageData();
+                window.updatePageSEO(data);
+            }
+        }
+
+        function getCurrentPageData() {
+            // يمكن توسيع هذه الدالة لجلب بيانات الصفحة الحالية
+            return null;
+        }
+
+        // ============================================================
+        // الإعلانات
+        // ============================================================
+        function loadAds() {
+            const ads = appData.settings?.ads || {};
+            if (ads.googleAdSense?.publisherId) {
+                window.loadGoogleAdSense(ads.googleAdSense.publisherId);
+            }
+        }
+
+        // ============================================================
+        // الدوال الأساسية
+        // ============================================================
+        function renderLogo() {
+            const s = appData.settings || {};
+            const el = document.getElementById('logoDisplay');
+            const logoImg = document.getElementById('logoImageHeader');
+            const imageUrl = s.logoImage || '';
+
+            if (el) {
+                const icon = s.logoIcon || 'fa-gamepad';
+                const text1 = s.logoText1 || 'Play';
+                const text2 = s.logoText2 || 'Ramz';
+                const color2 = s.logoText2Color || '#4CAF50';
+                el.innerHTML = `
+                    <i class="fas ${icon}"></i>
+                    <span class="logo-text1">${text1}</span>
+                    <span class="logo-text2" style="color:${color2};">${text2}</span>
+                `;
+            }
+
+            if (logoImg) {
+                if (imageUrl && imageUrl.trim() !== '') {
+                    logoImg.src = imageUrl;
+                    logoImg.style.display = 'block';
+                    if (el) el.style.display = 'none';
+                } else {
+                    logoImg.style.display = 'none';
+                    logoImg.src = '';
+                    if (el) el.style.display = 'flex';
+                }
+            }
+
+            // تحديث القائمة الجانبية
+            const menuLogoText = document.getElementById('menuLogoText');
+            if (menuLogoText) {
+                const text1 = s.logoText1 || 'Play';
+                const text2 = s.logoText2 || 'Ramz';
+                const color2 = s.logoText2Color || '#4CAF50';
+                menuLogoText.innerHTML = `
+                    <span class="logo-text1">${text1}</span>
+                    <span class="logo-text2" style="color:${color2};">${text2}</span>
+                `;
+            }
+
+            const menuLogoImg = document.getElementById('menuLogoImage');
+            if (menuLogoImg) {
+                if (imageUrl && imageUrl.trim() !== '') {
+                    menuLogoImg.src = imageUrl;
+                    menuLogoImg.style.display = 'block';
+                } else {
+                    menuLogoImg.style.display = 'none';
+                }
+            }
+
+            document.title = (s.appName || 'Play Ramz') + ' - متجر التطبيقات';
+        }
+
+        function renderCarousel() {
+            const container = document.getElementById('carouselSlides');
+            const dots = document.getElementById('carouselDots');
+            const slides = appData.carousel || [];
+            if (slides.length === 0) {
+                container.innerHTML = `<div class="carousel-slide"><span style="color:var(--text-light);">لا توجد إعلانات</span></div>`;
+                dots.innerHTML = '';
+                return;
+            }
+            const sorted = [...slides].sort((a, b) => (a.order || 0) - (b.order || 0));
+            container.innerHTML = sorted.map((slide) =>
+                `<div class="carousel-slide"><img src="${slide.image}" alt="${slide.seo?.altText || slide.name || 'إعلان'}" loading="lazy" /></div>`
+            ).join('');
+            dots.innerHTML = sorted.map((_, i) =>
+                `<button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToCarousel(${i})"></button>`
+            ).join('');
+            carouselIndex = 0;
+            updateCarousel();
+            startCarouselTimer();
+        }
+
+        function updateCarousel() {
+            const total = appData.carousel ? appData.carousel.length : 0;
+            if (total === 0) return;
+            if (carouselIndex >= total) carouselIndex = 0;
+            if (carouselIndex < 0) carouselIndex = total - 1;
+            const container = document.getElementById('carouselSlides');
+            container.style.transform = `translateX(-${carouselIndex * 100}%)`;
+            document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === carouselIndex);
+            });
+        }
+
+        function changeCarousel(dir) {
+            const total = appData.carousel ? appData.carousel.length : 0;
+            if (total === 0) return;
+            carouselIndex += dir;
+            if (carouselIndex >= total) carouselIndex = 0;
+            if (carouselIndex < 0) carouselIndex = total - 1;
+            updateCarousel();
+            resetCarouselTimer();
+        }
+
+        function goToCarousel(idx) {
+            const total = appData.carousel ? appData.carousel.length : 0;
+            if (idx < 0 || idx >= total) return;
+            carouselIndex = idx;
+            updateCarousel();
+            resetCarouselTimer();
+        }
+
+        function startCarouselTimer() {
+            if (carouselTimer) clearInterval(carouselTimer);
+            carouselTimer = setInterval(() => changeCarousel(1), 4000);
+        }
+
+        function resetCarouselTimer() {
+            if (carouselTimer) clearInterval(carouselTimer);
+            startCarouselTimer();
+        }
+
+        function renderMarquee() {
+            const track = document.getElementById('marqueeTrack');
+            const items = appData.marquee || [];
+            if (items.length === 0) {
+                track.innerHTML = '<span style="color:var(--text-light);padding:4px 0;">أضف إعلانات من لوحة التحكم</span>';
+                return;
+            }
+            const doubled = [...items, ...items];
+            track.innerHTML = doubled.map((item) => `
+                <div class="marquee-item">
+                    <img src="${item.icon || 'https://placehold.co/64/e2e8f0/94a3b8?text=?'}" alt="${item.name}" />
+                    <span>${item.name}</span>
+                    <button class="marquee-btn" onclick="event.stopPropagation();handleMarqueeClick('${item.link}')">تحميل</button>
+                </div>
+            `).join('');
+        }
+
+        function handleMarqueeClick(link) {
+            if (link && link !== '#') window.open(link, '_blank');
+            else alert('رابط التحميل غير متاح حالياً');
+        }
+
+        function renderFooter() {
+            const container = document.getElementById('footerContent');
+            const f = appData.footer || {};
+            const s = appData.settings || {};
+            const links = f.links || {};
+            const linkKeys = ['policy', 'terms', 'about', 'contact', 'blog'];
+            const linkLabels = { 'policy': 'سياسة الخصوصية', 'terms': 'الشروط والأحكام', 'about': 'من نحن', 'contact': 'اتصل بنا', 'blog': 'المدونة' };
+            let linkHtml = '';
+            linkKeys.forEach(key => {
+                const item = links[key] || { text: linkLabels[key], external_url: '', use_file: false };
+                const url = item.use_file ? `${key}.html` : (item.external_url || '#');
+                linkHtml += `<li><a href="${url}">${item.text}</a></li>`;
+            });
+
+            const social = f.socialMedia || [];
+            const socialIcons = {
+                'whatsapp': 'fab fa-whatsapp', 'facebook': 'fab fa-facebook-f', 'twitter': 'fab fa-twitter',
+                'instagram': 'fab fa-instagram', 'telegram': 'fab fa-telegram-plane', 'snapchat': 'fab fa-snapchat-ghost',
+                'linkedin': 'fab fa-linkedin-in', 'tiktok': 'fab fa-tiktok'
+            };
+            let socialHtml = '';
+            social.forEach(item => {
+                if (item.active && item.url) {
+                    const icon = socialIcons[item.platform] || 'fas fa-link';
+                    socialHtml += `<a href="${item.url}" target="_blank"><i class="${icon}"></i></a>`;
+                }
+            });
+
+            container.innerHTML = `
+                <div><h4>روابط سريعة</h4><ul>${linkHtml}</ul></div>
+                <div>
+                    <h4>تواصل معنا</h4>
+                    <ul>
+                        ${f.email ? `<li><i class="fas fa-envelope"></i> <a href="mailto:${f.email}">${f.email}</a></li>` : ''}
+                        ${f.phone ? `<li><i class="fas fa-phone"></i> <a href="tel:${f.phone}">${f.phone}</a></li>` : ''}
+                        ${f.whatsapp ? `<li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/${f.whatsapp}" target="_blank">واتساب</a></li>` : ''}
+                    </ul>
+                    <div class="social-icons">${socialHtml}</div>
+                </div>
+                <div>
+                    <h4>طرق الدفع</h4>
+                    <ul>${(f.payments || []).map(p => `<li>${p}</li>`).join('')}</ul>
+                </div>
+                <div class="copyright">${s.footerText || '© 2026 Play Ramz – جميع الحقوق محفوظة للمهندس رمزي الصلاحي'}</div>
+            `;
+        }
+
+        function renderSideMenu() {
+            const s = appData.settings || {};
+            const menuSettings = s.menuSettings || { enableUserIcon: true, enableCartIcon: true };
+            const userBtn = document.getElementById('menuUserBtn');
+            if (menuSettings.enableUserIcon !== false) {
+                userBtn.style.display = 'flex';
+                const badge = document.getElementById('userStatusBadge');
+                if (isUserLoggedIn && currentUser) badge.textContent = currentUser.name || 'مرحباً';
+                else badge.textContent = 'تسجيل الدخول';
+            } else userBtn.style.display = 'none';
+
+            const cartBtn = document.getElementById('menuCartBtn');
+            if (menuSettings.enableCartIcon !== false) cartBtn.style.display = 'flex';
+            else cartBtn.style.display = 'none';
+
+            updateCartBadge();
+        }
+
+        // ---- دوال المستخدم ----
+        function loadUserState() {
+            try {
+                const saved = localStorage.getItem('ramzplay_user');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    isUserLoggedIn = data.loggedIn || false;
+                    currentUser = data.user || null;
+                }
+            } catch (e) {}
+        }
+
+        function saveUserState() {
+            try {
+                localStorage.setItem('ramzplay_user', JSON.stringify({ loggedIn: isUserLoggedIn, user: currentUser }));
+            } catch (e) {}
+        }
+
+        function openUserModal() {
+            if (isUserLoggedIn && currentUser) {
+                alert(`👤 مرحباً ${currentUser.name || 'مستخدم'}!\n📧 ${currentUser.email || 'لا يوجد بريد'}`);
+                return;
+            }
+            userMode = 'login';
+            document.getElementById('userModalTitle').textContent = 'تسجيل الدخول';
+            document.getElementById('userModalSub').textContent = 'أدخل بياناتك للدخول إلى حسابك';
+            document.getElementById('userActionBtn').textContent = 'تسجيل الدخول';
+            document.getElementById('userSwitchBtn').textContent = 'إنشاء حساب جديد';
+            document.getElementById('userStatusMsg').textContent = '';
+            document.getElementById('userNameInput').value = '';
+            document.getElementById('userPassInput').value = '';
+            document.getElementById('userModal').classList.add('open');
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.remove('open');
+        }
+
+        function switchUserMode() {
+            if (userMode === 'login') {
+                userMode = 'register';
+                document.getElementById('userModalTitle').textContent = 'إنشاء حساب جديد';
+                document.getElementById('userModalSub').textContent = 'أدخل بياناتك لإنشاء حساب جديد';
+                document.getElementById('userActionBtn').textContent = 'إنشاء حساب';
+                document.getElementById('userSwitchBtn').textContent = 'لديك حساب؟ تسجيل الدخول';
+            } else {
+                userMode = 'login';
+                document.getElementById('userModalTitle').textContent = 'تسجيل الدخول';
+                document.getElementById('userModalSub').textContent = 'أدخل بياناتك للدخول إلى حسابك';
+                document.getElementById('userActionBtn').textContent = 'تسجيل الدخول';
+                document.getElementById('userSwitchBtn').textContent = 'إنشاء حساب جديد';
+            }
+            document.getElementById('userStatusMsg').textContent = '';
+        }
+
+        function handleUserAction() {
+            const name = document.getElementById('userNameInput').value.trim();
+            const pass = document.getElementById('userPassInput').value.trim();
+            const msg = document.getElementById('userStatusMsg');
+
+            if (!name || !pass) {
+                msg.textContent = '⚠️ يرجى ملء جميع الحقول';
+                msg.style.color = '#ef4444';
+                return;
+            }
+
+            if (userMode === 'register') {
+                const users = JSON.parse(localStorage.getItem('ramzplay_users') || '[]');
+                if (users.find(u => u.name === name)) {
+                    msg.textContent = '⚠️ هذا الاسم مستخدم بالفعل';
+                    msg.style.color = '#ef4444';
+                    return;
+                }
+                users.push({ name, password: pass, email: '', createdAt: new Date().toISOString() });
+                localStorage.setItem('ramzplay_users', JSON.stringify(users));
+                isUserLoggedIn = true;
+                currentUser = { name, email: '' };
+                saveUserState();
+                renderSideMenu();
+                closeUserModal();
+                alert('✅ تم إنشاء الحساب بنجاح!');
+            } else {
+                const users = JSON.parse(localStorage.getItem('ramzplay_users') || '[]');
+                const found = users.find(u => u.name === name && u.password === pass);
+                if (found) {
+                    isUserLoggedIn = true;
+                    currentUser = { name: found.name, email: found.email || '' };
+                    saveUserState();
+                    renderSideMenu();
+                    closeUserModal();
+                    alert('✅ مرحباً ' + name + '!');
+                } else {
+                    msg.textContent = '⚠️ اسم المستخدم أو كلمة المرور غير صحيحة';
+                    msg.style.color = '#ef4444';
+                }
+            }
+        }
+
+        // ---- دوال السلة ----
+        function getCartItems() {
+            try { return JSON.parse(localStorage.getItem('ramzplay_cart') || '[]'); } catch { return []; }
+        }
+
+        function saveCartItems(items) {
+            localStorage.setItem('ramzplay_cart', JSON.stringify(items));
+            updateCartBadge();
+        }
+
+        function addToCart(appId) {
+            let app = null;
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) {
+                    const found = appData.products[storeId].find(p => p.id === appId);
+                    if (found) { app = found; break; }
+                }
+            }
+            if (!app || app.restricted) return;
+            const cart = getCartItems();
+            if (cart.find(item => item.id === appId)) {
+                alert('⚠️ هذا التطبيق موجود بالفعل في السلة');
+                return;
+            }
+            cart.push({
+                id: app.id,
+                name: app.name,
+                image: app.image || '',
+                price: app.paymentRequired ? (app.price || 0) : 0,
+                currency: appData.settings?.currency || 'ر.س'
+            });
+            saveCartItems(cart);
+            alert('✅ تم إضافة ' + app.name + ' إلى السلة');
+        }
+
+        function removeFromCart(appId) {
+            let cart = getCartItems();
+            cart = cart.filter(item => item.id !== appId);
+            saveCartItems(cart);
+            renderCartModal();
+        }
+
+        function updateCartBadge() {
+            const cart = getCartItems();
+            const badge = document.getElementById('cartCountBadge');
+            if (badge) {
+                badge.textContent = cart.length;
+                badge.style.display = cart.length > 0 ? 'inline' : 'none';
+            }
+        }
+
+        function openCartModal() {
+            renderCartModal();
+            document.getElementById('cartModal').classList.add('open');
+        }
+
+        function closeCartModal() {
+            document.getElementById('cartModal').classList.remove('open');
+        }
+
+        function renderCartModal() {
+            const container = document.getElementById('cartItemsContainer');
+            const totalEl = document.getElementById('cartTotal');
+            const cart = getCartItems();
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="cart-empty">🛒 السلة فارغة</div>';
+                totalEl.textContent = 'المجموع: 0.00 ر.س';
+                return;
+            }
+            let total = 0;
+            let html = '';
+            cart.forEach(item => {
+                total += item.price || 0;
+                html += `
+                    <div class="cart-item">
+                        <div class="ci-icon">${item.image ? `<img src="${item.image}" alt="${item.name}" />` : `<i class="fas fa-mobile-alt"></i>`}</div>
+                        <div class="ci-info">
+                            <div class="ci-name">${item.name}</div>
+                            <div class="ci-price">${item.price > 0 ? item.price + ' ' + item.currency : 'مجاني'}</div>
+                        </div>
+                        <button class="ci-remove" onclick="removeFromCart('${item.id}')"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            const currency = appData.settings?.currency || 'ر.س';
+            totalEl.textContent = `المجموع: ${total.toFixed(2)} ${currency}`;
+        }
+
+        function sendOrderViaWhatsApp() {
+            const cart = getCartItems();
+            if (cart.length === 0) { alert('السلة فارغة'); return; }
+            const menuSettings = appData.settings?.menuSettings || {};
+            const phone = menuSettings.whatsappOrders || '966500000000';
+            let msg = '🛒 طلب جديد:\n';
+            let total = 0;
+            cart.forEach(item => {
+                msg += `- ${item.name} (${item.price > 0 ? item.price + ' ' + (item.currency || 'ر.س') : 'مجاني'})\n`;
+                total += item.price || 0;
+            });
+            msg += `\nالمجموع: ${total.toFixed(2)} ${appData.settings?.currency || 'ر.س'}`;
+            window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function sendOrderViaEmail() {
+            const cart = getCartItems();
+            if (cart.length === 0) { alert('السلة فارغة'); return; }
+            const menuSettings = appData.settings?.menuSettings || {};
+            const email = menuSettings.emailOrders || 'orders@ramzplay.com';
+            let subject = 'طلب جديد من متجر Ramzplay';
+            let body = '🛒 طلب جديد:\n';
+            let total = 0;
+            cart.forEach(item => {
+                body += `- ${item.name} (${item.price > 0 ? item.price + ' ' + (item.currency || 'ر.س') : 'مجاني'})\n`;
+                total += item.price || 0;
+            });
+            body += `\nالمجموع: ${total.toFixed(2)} ${appData.settings?.currency || 'ر.س'}`;
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function sendOrderViaChat() {
+            const cart = getCartItems();
+            if (cart.length === 0) { alert('السلة فارغة'); return; }
+            const menuSettings = appData.settings?.menuSettings || {};
+            const email = menuSettings.emailOrders || 'admin@ramzplay.com';
+            let subject = 'طلب محادثة حول طلب جديد';
+            let body = 'مرحباً، أرغب في الاستفسار عن طلبي التالي:\n\n';
+            let total = 0;
+            cart.forEach(item => {
+                body += `- ${item.name} (${item.price > 0 ? item.price + ' ' + (item.currency || 'ر.س') : 'مجاني'})\n`;
+                total += item.price || 0;
+            });
+            body += `\nالمجموع: ${total.toFixed(2)} ${appData.settings?.currency || 'ر.س'}`;
+            body += '\n\nيرجى التواصل معي لتأكيد الطلب. شكراً!';
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            alert('📨 سيتم فتح محادثة مع المدير عبر البريد الإلكتروني.\n\n' + body);
+        }
+
+        // ---- دوال "قريباً" ----
+        function showComingSoon(name) {
+            alert(`⏳ "${name}" قريباً! سيتم إضافة هذه الميزة في التحديثات القادمة.`);
+        }
+
+        // ---- التنقل إلى المدونة ----
+        function scrollToBlog() {
+            closeSideMenu();
+            const blogSection = document.querySelector('.blog-grid');
+            if (blogSection) blogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            else {
+                switchTab('home');
+                setTimeout(() => {
+                    const blogSection2 = document.querySelector('.blog-grid');
+                    if (blogSection2) blogSection2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
+            }
+        }
+
+        // ---- فتح لوحة التحكم ----
+        function openAdminLogin() {
+            closeSideMenu();
+            window.location.href = 'admin.html';
+        }
+
+        // ---- دوال القائمة الجانبية ----
+        function openSideMenu() {
+            document.getElementById('sideMenuOverlay').classList.add('open');
+            document.getElementById('sideMenu').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSideMenu() {
+            document.getElementById('sideMenuOverlay').classList.remove('open');
+            document.getElementById('sideMenu').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // ---- التبويبات ----
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(el => {
+                el.classList.toggle('active', el.dataset.tab === tab);
+            });
+            if (tab !== 'home') stopTestimonialsAutoScroll();
+            const main = document.getElementById('mainContent');
+            const appsPage = document.getElementById('appsPage');
+            const carouselSec = document.getElementById('carouselSection');
+            const marqueeSec = document.getElementById('marqueeSection');
+            const footerSec = document.getElementById('footerSection');
+
+            if (tab === 'home') {
+                main.style.display = '';
+                appsPage.style.display = 'none';
+                appsPage.classList.remove('active');
+                carouselSec.style.display = '';
+                marqueeSec.style.display = '';
+                footerSec.style.display = '';
+                renderHome(main);
+                setTimeout(startTestimonialsAutoScroll, 300);
+            } else if (tab === 'apps') {
+                main.style.display = 'none';
+                appsPage.style.display = 'block';
+                appsPage.classList.add('active');
+                carouselSec.style.display = 'none';
+                marqueeSec.style.display = 'none';
+                footerSec.style.display = '';
+                renderAppsPage();
+                stopTestimonialsAutoScroll();
+            } else if (tab === 'stores') {
+                main.style.display = '';
+                appsPage.style.display = 'none';
+                appsPage.classList.remove('active');
+                carouselSec.style.display = 'none';
+                marqueeSec.style.display = 'none';
+                footerSec.style.display = '';
+                renderStoresPage(main);
+            } else if (tab === 'search') {
+                main.style.display = '';
+                appsPage.style.display = 'none';
+                appsPage.classList.remove('active');
+                carouselSec.style.display = 'none';
+                marqueeSec.style.display = 'none';
+                footerSec.style.display = '';
+                renderSearchPage(main);
+            } else {
+                main.style.display = '';
+                appsPage.style.display = 'none';
+                appsPage.classList.remove('active');
+                carouselSec.style.display = '';
+                marqueeSec.style.display = '';
+                footerSec.style.display = '';
+                renderHome(main);
+                setTimeout(startTestimonialsAutoScroll, 300);
+            }
+        }
+
+        // ============================================================
+        // دوال مساعدة لإنشاء البطاقات
+        // ============================================================
+        function categoryCardOld(cat) {
+            const count = countProductsInCategory(cat.id);
+            return `
+                <div class="category-card" onclick="filterByCategory('${cat.id}')">
+                    <i class="${cat.icon || 'fas fa-tag'}" style="color:${cat.color || var(--primary-color)}"></i>
+                    <div class="cat-name">${cat.name}</div>
+                    <div class="cat-count">${count} تطبيق</div>
+                </div>
+            `;
+        }
+
+        function storeCardHtml(store) {
+            const count = (appData.products[store.id] || []).length;
+            return `
+                <div class="card-horizontal" onclick="filterByStore('${store.id}')">
+                    <div class="card-icon">${store.logo ? `<img src="${store.logo}" alt="${store.name}" />` : `<i class="fas fa-store"></i>`}</div>
+                    <div class="card-info">
+                        <div class="row1">${store.name}</div>
+                        <div class="row2"><span class="badge">${count} تطبيق</span>${store.description ? `<span>${store.description}</span>` : ''}</div>
+                        <div class="row3">
+                            <span style="color:var(--text-light); font-size:0.7rem;">${store.hidden ? '🔒 مخفي' : 'نشط'}</span>
+                            <div class="action-btn"><button onclick="event.stopPropagation();filterByStore('${store.id}')">زيارة</button></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function testimonialCardHtml(t) {
+            const stars = '★'.repeat(Math.floor(t.rating || 0)) + (t.rating % 1 >= 0.5 ? '½' : '');
+            return `
+                <div class="testimonial-card">
+                    <img src="${t.image || 'https://placehold.co/100/e2e8f0/94a3b8?text=?'}" alt="${t.name}" />
+                    <div class="t-name">${t.name}</div>
+                    <div class="t-rating">${stars}</div>
+                    <div class="t-review">${t.review || ''}</div>
+                </div>
+            `;
+        }
+
+        function appCardHtml(app) {
+            const category = appData.categories.find(c => c.id === app.categoryId);
+            const categoryName = category ? category.name : '';
+            const ratingStars = app.rating ? '★ '.repeat(Math.floor(app.rating)) + (app.rating % 1 >= 0.5 ? '½' : '') : '';
+            let downloadsText = '';
+            if (app.downloadCount) {
+                const count = app.downloadCount;
+                if (count >= 1000000) downloadsText = (count / 1000000).toFixed(1) + 'M';
+                else if (count >= 1000) downloadsText = (count / 1000).toFixed(1) + 'K';
+                else downloadsText = count.toString();
+            }
+
+            const isPurchased = window.isProductPurchased ? window.isProductPurchased(app.id) : false;
+            let actionHtml = '';
+            if (app.restricted) actionHtml = `<button disabled>مقيد</button>`;
+            else if (app.paymentRequired && !isPurchased) {
+                const priceText = app.price > 0 ? `${app.price} ${appData.settings?.currency || 'ر.س'}` : 'مجاني';
+                actionHtml = `<button class="payment-required" onclick="event.stopPropagation();openPaymentModal('${app.id}')">💰 ${priceText}</button>`;
+            } else actionHtml = `<button onclick="event.stopPropagation();openAppDetail('${app.id}')">تثبيت</button>`;
+
+            const hashtagsHtml = window.renderHashtags ? window.renderHashtags(app.hashtags || []) : '';
+
+            return `
+                <div class="card-horizontal" onclick="openAppDetail('${app.id}')">
+                    <div class="card-icon">${app.image ? `<img src="${app.image}" alt="${app.seo?.altText || app.name}" />` : `<i class="fas fa-mobile-alt"></i>`}</div>
+                    <div class="card-info">
+                        <div class="row1">${app.name}</div>
+                        <div class="row2">${categoryName ? `<span class="badge">${categoryName}</span>` : ''}<span>${app.desc || ''}</span></div>
+                        <div class="row3">
+                            <span class="rating-stars">${ratingStars || '☆'}</span>
+                            <span><i class="fas fa-download"></i> ${downloadsText || app.downloadCount || 0}</span>
+                            <div class="action-btn">${actionHtml}</div>
+                        </div>
+                        ${hashtagsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // عرض الرئيسية
+        // ============================================================
+        function renderHome(container) {
+            let html = '';
+
+            // الفئات
+            const categories = appData.categories || [];
+            if (categories.length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📂 الفئات</h3><a onclick="switchTab('apps')">استعراض التطبيقات</a></div>
+                        <div class="category-grid">${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}</div>
+                    </div>
+                `;
+            }
+
+            // المطورين
+            const stores = [];
+            for (const cat in appData.stores) {
+                if (appData.stores[cat]) stores.push(...appData.stores[cat].filter(s => !s.hidden));
+            }
+            if (stores.length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>🏢 المطورين</h3><a onclick="switchTab('stores')">عرض الكل</a></div>
+                        <div class="horizontal-scroll-2rows">${stores.slice(0, 14).map(store => storeCardHtml(store)).join('')}</div>
+                    </div>
+                `;
+            }
+
+            // الأكثر تحميلاً
+            const allProducts = [];
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) allProducts.push(...appData.products[storeId].filter(p => !p.restricted));
+            }
+            const sortedProducts = allProducts.sort((a, b) => (b.downloadCount || 0) - (a.downloadCount || 0));
+            const topProducts = sortedProducts.slice(0, 21);
+            if (topProducts.length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>🔥 الأكثر تحميلاً</h3></div>
+                        <div class="horizontal-scroll-3rows">${topProducts.map(app => appCardHtml(app)).join('')}</div>
+                    </div>
+                `;
+            }
+
+            // آراء المستخدمين مع دوران تلقائي
+            const testimonials = appData.testimonials || [];
+            if (testimonials.length) {
+                const duplicated = [...testimonials, ...testimonials, ...testimonials];
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>⭐ آراء المستخدمين</h3></div>
+                        <div class="testimonials-wrapper">
+                            <div class="testimonials-scroll" id="testimonialsScroll">${duplicated.map(t => testimonialCardHtml(t)).join('')}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // المدونة
+            const blogPosts = appData.settings?.blogPosts || [];
+            if (blogPosts.length) {
+                html += `
+                    <div class="section-block" id="blogSection">
+                        <div class="section-header"><h3>المدونة</h3></div>
+                        <div class="blog-grid">
+                            ${blogPosts.slice(0, 4).map((post, idx) => `
+                                <div class="blog-card">
+                                    <img src="${post.image || 'https://placehold.co/400x200/e2e8f0/94a3b8?text=?'}" alt="${post.title}" />
+                                    <div class="blog-body">
+                                        <div class="blog-title">${post.title}</div>
+                                        <div class="blog-excerpt">${post.content ? post.content.substring(0,60)+'...' : ''}</div>
+                                        <div style="font-size:0.7rem;color:var(--text-light);margin-top:4px;">${post.date || ''}</div>
+                                    </div>
+                                    <div class="blog-footer">
+                                        <span style="font-size:0.7rem;color:var(--text-light);">${post.hashtags ? post.hashtags.slice(0,2).join(' ') : ''}</span>
+                                        <div class="share-btns">
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','whatsapp')" title="مشاركة عبر واتساب"><i class="fab fa-whatsapp"></i></button>
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','twitter')" title="مشاركة عبر تويتر"><i class="fab fa-twitter"></i></button>
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','facebook')" title="مشاركة عبر فيسبوك"><i class="fab fa-facebook-f"></i></button>
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','email')" title="مشاركة عبر البريد"><i class="fas fa-envelope"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+            setTimeout(() => { setupTestimonialsScroll(); startTestimonialsAutoScroll(); }, 100);
+        }
+
+        // ============================================================
+        // دوال دوران آراء المستخدمين
+        // ============================================================
+        function setupTestimonialsScroll() {
+            testimonialsScrollContainer = document.getElementById('testimonialsScroll');
+            if (!testimonialsScrollContainer) return;
+            testimonialsScrollContainer.addEventListener('touchstart', () => {
+                testimonialsAutoScroll = false;
+                stopTestimonialsAutoScroll();
+            });
+            testimonialsScrollContainer.addEventListener('touchend', () => {
+                setTimeout(() => {
+                    if (!testimonialsAutoScroll) {
+                        testimonialsAutoScroll = true;
+                        startTestimonialsAutoScroll();
+                    }
+                }, 3000);
+            });
+            testimonialsScrollContainer.addEventListener('mousedown', () => {
+                testimonialsAutoScroll = false;
+                stopTestimonialsAutoScroll();
+            });
+            testimonialsScrollContainer.addEventListener('mouseup', () => {
+                setTimeout(() => {
+                    if (!testimonialsAutoScroll) {
+                        testimonialsAutoScroll = true;
+                        startTestimonialsAutoScroll();
+                    }
+                }, 3000);
+            });
+        }
+
+        function startTestimonialsAutoScroll() {
+            if (!testimonialsScrollContainer) return;
+            if (testimonialsInterval) clearInterval(testimonialsInterval);
+            const cards = testimonialsScrollContainer.querySelectorAll('.testimonial-card');
+            if (cards.length === 0) return;
+            const cardWidth = cards[0].offsetWidth + 16;
+            testimonialsInterval = setInterval(() => {
+                if (!testimonialsAutoScroll) return;
+                const currentScroll = testimonialsScrollContainer.scrollLeft;
+                const maxScroll = testimonialsScrollContainer.scrollWidth - testimonialsScrollContainer.clientWidth;
+                let nextScroll = currentScroll + cardWidth;
+                if (nextScroll >= maxScroll) testimonialsScrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
+                else testimonialsScrollContainer.scrollTo({ left: nextScroll, behavior: 'smooth' });
+            }, 2000);
+        }
+
+        function stopTestimonialsAutoScroll() {
+            if (testimonialsInterval) { clearInterval(testimonialsInterval);
+                testimonialsInterval = null; }
+        }
+
+        // ============================================================
+        // مشاركة المقالات
+        // ============================================================
+        function shareArticle(url, title, platform) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const fullUrl = url.startsWith('http') ? url : baseUrl + (url.startsWith('/') ? '' : '/') + url;
+            const encodedUrl = encodeURIComponent(fullUrl);
+            const encodedTitle = encodeURIComponent(title || 'Play Ramz');
+            const shareUrls = {
+                whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+                twitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+                email: `mailto:?subject=${encodedTitle}&body=${encodedTitle}%0A%0A${encodedUrl}`
+            };
+            window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+        }
+
+        // ============================================================
+        // عرض صفحات المطورين والبحث
+        // ============================================================
+        function renderStoresPage(container) {
+            const stores = [];
+            for (const cat in appData.stores) {
+                if (appData.stores[cat]) stores.push(...appData.stores[cat]);
+            }
+            container.innerHTML = `
+                <div class="section-block">
+                    <div class="section-header"><h3>جميع المطورين</h3></div>
+                    <div class="horizontal-scroll-2rows">${stores.map(store => storeCardHtml(store)).join('')}</div>
+                </div>
+            `;
+        }
+
+        function renderSearchPage(container) {
+            container.innerHTML = `
+                <div class="section-block">
+                    <div class="section-header"><h3>بحث</h3></div>
+                    <div style="padding:12px 16px;">
+                        <input type="text" id="searchInput" placeholder="ابحث عن تطبيق..." style="width:100%;padding:12px 16px;border:2px solid var(--border-color);border-radius:12px;font-size:1rem;font-family:inherit;background:var(--bg-body);color:var(--text-color);" oninput="doSearch(this.value)" />
+                        <div id="searchResults" style="margin-top:16px;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function doSearch(query) {
+            const results = document.getElementById('searchResults');
+            if (!query.trim()) { results.innerHTML = ''; return; }
+            const q = query.trim().toLowerCase();
+            const allProducts = [];
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) allProducts.push(...appData.products[storeId]);
+            }
+            const matches = allProducts.filter(p => p.name.toLowerCase().includes(q) || (p.desc && p.desc.toLowerCase().includes(q)));
+            if (matches.length === 0) {
+                results.innerHTML = '<div style="color:var(--text-light);text-align:center;padding:20px;">لا توجد نتائج</div>';
+                return;
+            }
+            let html = `<div class="section-block"><div class="horizontal-scroll-3rows">`;
+            matches.forEach(app => { html += appCardHtml(app); });
+            html += `</div></div>`;
+            results.innerHTML = html;
+        }
+
+        // ============================================================
+        // عرض صفحة التطبيقات
+        // ============================================================
+        function renderAppsPage() {
+            const container = document.getElementById('appsPage').querySelector('.container');
+            if (!container) return;
+            let html = '';
+            const allApps = [];
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) allApps.push(...appData.products[storeId].filter(p => !p.restricted));
+            }
+            const chunkSize = 9;
+            const appChunks = [];
+            for (let i = 0; i < allApps.length; i += chunkSize) appChunks.push(allApps.slice(i, i + chunkSize));
+            const carouselImages = appData.carousel || [];
+            const blogPosts = appData.settings?.blogPosts || [];
+            const categories = appData.categories || [];
+
+            if (categories.length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📂 الفئات</h3></div>
+                        <div class="category-grid">${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}</div>
+                    </div>
+                `;
+            }
+
+            if (appChunks.length > 0 && appChunks[0].length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📱 التطبيقات</h3></div>
+                        <div class="horizontal-scroll-3rows">${appChunks[0].map(app => appCardHtml(app)).join('')}</div>
+                    </div>
+                `;
+            }
+
+            if (carouselImages.length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📸 إعلانات مميزة</h3></div>
+                        <div style="padding:12px 16px;">
+                            <div class="carousel-wrapper" style="max-height:200px;">
+                                <div class="carousel-slides" style="display:flex; transition:transform 0.4s ease;" id="appsCarouselSlides">
+                                    ${carouselImages.map(slide => `
+                                        <div class="carousel-slide" style="min-width:100%; height:180px; background:var(--border-color); display:flex; align-items:center; justify-content:center;">
+                                            <img src="${slide.image}" alt="${slide.seo?.altText || slide.name}" style="width:100%; height:100%; object-fit:cover;" />
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <button class="carousel-btn prev" onclick="changeAppsCarousel(-1)">&#10094;</button>
+                                <button class="carousel-btn next" onclick="changeAppsCarousel(1)">&#10095;</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (appChunks.length > 1 && appChunks[1].length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📱 تطبيقات مميزة</h3></div>
+                        <div class="horizontal-scroll-3rows">${appChunks[1].map(app => appCardHtml(app)).join('')}</div>
+                    </div>
+                `;
+            }
+
+            if (blogPosts.length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📝 مقالات</h3></div>
+                        <div class="blog-grid">
+                            ${blogPosts.slice(0, 4).map((post, idx) => `
+                                <div class="blog-card">
+                                    <img src="${post.image || 'https://placehold.co/400x200/e2e8f0/94a3b8?text=?'}" alt="${post.title}" />
+                                    <div class="blog-body">
+                                        <div class="blog-title">${post.title}</div>
+                                        <div class="blog-excerpt">${post.content ? post.content.substring(0,60)+'...' : ''}</div>
+                                        <div style="font-size:0.7rem;color:var(--text-light);margin-top:4px;">${post.date || ''}</div>
+                                    </div>
+                                    <div class="blog-footer">
+                                        <span style="font-size:0.7rem;color:var(--text-light);">${post.hashtags ? post.hashtags.slice(0,2).join(' ') : ''}</span>
+                                        <div class="share-btns">
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','whatsapp')" title="مشاركة عبر واتساب"><i class="fab fa-whatsapp"></i></button>
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','twitter')" title="مشاركة عبر تويتر"><i class="fab fa-twitter"></i></button>
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','facebook')" title="مشاركة عبر فيسبوك"><i class="fab fa-facebook-f"></i></button>
+                                            <button onclick="shareArticle('blog.html?post=${idx}','${post.title}','email')" title="مشاركة عبر البريد"><i class="fas fa-envelope"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (appChunks.length > 2 && appChunks[2].length) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📱 المزيد من التطبيقات</h3></div>
+                        <div class="horizontal-scroll-3rows">${appChunks[2].map(app => appCardHtml(app)).join('')}</div>
+                    </div>
+                `;
+            }
+
+            if (carouselImages.length > 1) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>🎯 إعلان مميز</h3></div>
+                        <div style="padding:12px 16px;">
+                            <div style="background:var(--gradient-primary); border-radius:16px; padding:30px 20px; text-align:center; color:white;">
+                                <h3 style="font-size:1.3rem;">${carouselImages[1].name || 'إعلان مميز'}</h3>
+                                <p style="margin:8px 0; color:var(--text-light);">اكتشف المزيد من التطبيقات المذهلة</p>
+                                <button style="background:white; color:var(--primary-color); border:none; padding:8px 30px; border-radius:40px; font-weight:700; cursor:pointer;" onclick="window.location.href='${carouselImages[1].link || '#'}'">استعراض</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (appChunks.length > 3) {
+                for (let i = 3; i < appChunks.length; i++) {
+                    if (appChunks[i].length) {
+                        html += `
+                            <div class="section-block">
+                                <div class="section-header"><h3>📱 تطبيقات إضافية</h3></div>
+                                <div class="horizontal-scroll-3rows">${appChunks[i].map(app => appCardHtml(app)).join('')}</div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            container.innerHTML = html;
+            setupAppsCarousel();
+        }
+
+        // ---- كاروسيل الصور في صفحة التطبيقات ----
+        let appsCarouselIndex = 0;
+        let appsCarouselTimer = null;
+
+        function setupAppsCarousel() {
+            const slides = document.getElementById('appsCarouselSlides');
+            if (!slides) return;
+            appsCarouselIndex = 0;
+            updateAppsCarousel();
+            if (appsCarouselTimer) clearInterval(appsCarouselTimer);
+            appsCarouselTimer = setInterval(() => changeAppsCarousel(1), 4000);
+        }
+
+        function updateAppsCarousel() {
+            const slides = document.getElementById('appsCarouselSlides');
+            if (!slides) return;
+            const total = slides.children.length;
+            if (total === 0) return;
+            if (appsCarouselIndex >= total) appsCarouselIndex = 0;
+            if (appsCarouselIndex < 0) appsCarouselIndex = total - 1;
+            slides.style.transform = `translateX(-${appsCarouselIndex * 100}%)`;
+        }
+
+        function changeAppsCarousel(dir) {
+            const slides = document.getElementById('appsCarouselSlides');
+            if (!slides) return;
+            const total = slides.children.length;
+            if (total === 0) return;
+            appsCarouselIndex += dir;
+            if (appsCarouselIndex >= total) appsCarouselIndex = 0;
+            if (appsCarouselIndex < 0) appsCarouselIndex = total - 1;
+            updateAppsCarousel();
+            if (appsCarouselTimer) {
+                clearInterval(appsCarouselTimer);
+                appsCarouselTimer = setInterval(() => changeAppsCarousel(1), 4000);
+            }
+        }
+
+        // ============================================================
+        // دوال التصفية
+        // ============================================================
+        function filterByCategory(categoryId) {
+            currentFilterCategory = categoryId;
+            currentFilterStore = 'all';
+            switchTab('apps');
+            const container = document.getElementById('appsPage').querySelector('.container');
+            if (container) renderAppsPageWithFilter(categoryId);
+        }
+
+        function filterByStore(storeId) {
+            currentFilterStore = storeId;
+            currentFilterCategory = 'all';
+            switchTab('apps');
+            const container = document.getElementById('appsPage').querySelector('.container');
+            if (container) renderAppsPageWithFilter(null, storeId);
+        }
+
+        function renderAppsPageWithFilter(categoryId, storeId) {
+            const container = document.getElementById('appsPage').querySelector('.container');
+            if (!container) return;
+            let filteredApps = [];
+            for (const storeId2 in appData.products) {
+                if (appData.products[storeId2]) {
+                    let apps = appData.products[storeId2].filter(p => !p.restricted);
+                    if (categoryId) apps = apps.filter(p => p.categoryId === categoryId);
+                    if (storeId) apps = apps.filter(p => p.storeId === storeId);
+                    filteredApps.push(...apps);
+                }
+            }
+            const category = appData.categories.find(c => c.id === categoryId);
+            const store = findStoreById(storeId);
+            let title = 'تطبيقات';
+            if (category) title = `تطبيقات في "${category.name}"`;
+            if (store) title = `تطبيقات من "${store.name}"`;
+
+            let html = `
+                <div class="section-block">
+                    <div class="section-header"><h3>${title}</h3><a onclick="clearFilters()">إلغاء التصفية</a></div>
+                    ${filteredApps.length === 0 ? '<div style="padding:12px 16px;color:var(--text-light);">لا توجد تطبيقات</div>' : ''}
+                    <div class="horizontal-scroll-3rows">${filteredApps.map(app => appCardHtml(app)).join('')}</div>
+                </div>
+            `;
+            const categories = appData.categories || [];
+            if (categories.length && !categoryId) {
+                html += `
+                    <div class="section-block">
+                        <div class="section-header"><h3>📂 تصفح حسب الفئة</h3></div>
+                        <div class="category-grid">${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}</div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function clearFilters() {
+            currentFilterCategory = 'all';
+            currentFilterStore = 'all';
+            switchTab('apps');
+        }
+
+        function findStoreById(storeId) {
+            for (const cat in appData.stores) {
+                const found = appData.stores[cat].find(s => s.id === storeId);
+                if (found) return found;
+            }
+            return null;
+        }
+
+        function countProductsInCategory(categoryId) {
+            let count = 0;
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) count += appData.products[storeId].filter(p => p.categoryId === categoryId).length;
+            }
+            return count;
+        }
+
+        // ============================================================
+        // مودال الدفع
+        // ============================================================
+        function openPaymentModal(appId) {
+            let app = null;
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) {
+                    const found = appData.products[storeId].find(p => p.id === appId);
+                    if (found) { app = found; break; }
+                }
+            }
+            if (!app) return;
+            pendingPaymentAppId = appId;
+            document.getElementById('paymentAmount').textContent = `${app.price || 0} ${appData.settings?.currency || 'ر.س'}`;
+            document.getElementById('paymentModal').classList.add('open');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('open');
+            pendingPaymentAppId = null;
+        }
+
+        function simulatePayment(method) {
+            if (!pendingPaymentAppId) return;
+            const appId = pendingPaymentAppId;
+            if (window.markProductAsPurchased) window.markProductAsPurchased(appId);
+            if (!appData.purchasedProducts) appData.purchasedProducts = [];
+            if (!appData.purchasedProducts.includes(appId)) {
+                appData.purchasedProducts.push(appId);
+                window.saveAppData(appData, ['purchasedProducts']).catch(console.error);
+            }
+            closePaymentModal();
+            alert('✅ تم شراء التطبيق بنجاح! يمكنك الآن تثبيته.');
+            renderAll();
+        }
+
+        // ============================================================
+        // شاشة تفاصيل التطبيق
+        // ============================================================
+        function openAppDetail(appId) {
+            let app = null;
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) {
+                    const found = appData.products[storeId].find(p => p.id === appId);
+                    if (found) { app = found; break; }
+                }
+            }
+            if (!app) return;
+            currentDetailAppId = appId;
+            const overlay = document.getElementById('appDetailOverlay');
+            const container = document.getElementById('appDetailContent');
+
+            const category = appData.categories.find(c => c.id === app.categoryId);
+            const categoryName = category ? category.name : '';
+            const ratingStars = app.rating ? '★ '.repeat(Math.floor(app.rating)) + (app.rating % 1 >= 0.5 ? '½' : '') : '';
+
+            const isPurchased = window.isProductPurchased ? window.isProductPurchased(app.id) : false;
+            let statusHtml = '', statusClass = '', priceHtml = '', installBtnHtml = '';
+
+            if (app.restricted) {
+                statusHtml = '🔒 مقيد';
+                statusClass = 'restricted';
+                installBtnHtml = `<button class="detail-install-btn" disabled>غير متاح</button>`;
+            } else if (app.paymentRequired && !isPurchased) {
+                statusHtml = '💰 يتطلب الدفع';
+                statusClass = 'payment';
+                const priceText = app.price > 0 ? `${app.price} ${appData.settings?.currency || 'ر.س'}` : 'مجاني';
+                priceHtml = `<div class="detail-price">${priceText}</div>`;
+                installBtnHtml =
+                    `<button class="detail-install-btn payment-required" onclick="openPaymentModal('${app.id}')">💰 شراء التطبيق</button>`;
+            } else {
+                statusHtml = '✅ متاح';
+                statusClass = '';
+                priceHtml = app.price > 0 ? `<div class="detail-price">${app.price} ${appData.settings?.currency || 'ر.س'}</div>` :
+                    '<div class="detail-price">مجاني</div>';
+                installBtnHtml = `<button class="detail-install-btn" onclick="downloadDetailApp()">📥 تثبيت التطبيق</button>`;
+            }
+
+            const images = app.images || [app.image || 'https://placehold.co/400x300/e2e8f0/94a3b8?text=?'];
+            const similarApps = [];
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) {
+                    const similar = appData.products[storeId].filter(p =>
+                        p.id !== app.id && !p.restricted && (p.categoryId === app.categoryId || p.storeId === app.storeId)
+                    );
+                    similarApps.push(...similar);
+                }
+            }
+            const topSimilar = similarApps.slice(0, 6);
+            const reviews = appData.testimonials || [];
+
+            const hashtagsHtml = window.renderHashtags ? window.renderHashtags(app.hashtags || []) : '';
+
+            container.innerHTML = `
+                <div class="app-detail-top">
+                    <div class="detail-icon">${app.image ? `<img src="${app.image}" alt="${app.seo?.altText || app.name}" />` : `<i class="fas fa-mobile-alt"></i>`}</div>
+                    <div class="detail-name">${app.name}</div>
+                    <div class="detail-desc">${app.desc || 'لا يوجد وصف'}</div>
+                    <div class="detail-status ${statusClass}">${statusHtml}</div>
+                    ${priceHtml}
+                    ${installBtnHtml}
+                    ${hashtagsHtml}
+                </div>
+                <div class="app-detail-middle">
+                    <div class="detail-images-scroll">${images.map(img => `<img src="${img}" alt="${app.name}" onerror="this.src='https://placehold.co/400x300/e2e8f0/94a3b8?text=?'" />`).join('')}</div>
+                    <button class="detail-about-btn" onclick="alert('${app.desc || 'لمحة عن التطبيق: ' + app.name}')">📖 لمحة عن التطبيق</button>
+                </div>
+                <div class="app-detail-bottom">
+                    <div class="share-section">
+                        <span class="share-label">🔗 مشاركة التطبيق:</span>
+                        <button class="share-btn" onclick="shareApp('${app.id}')"><i class="fas fa-share-alt"></i> مشاركة الرابط</button>
+                        <button class="share-btn" style="background:#1DA1F2;" onclick="shareOnTwitter('${app.id}')"><i class="fab fa-twitter"></i></button>
+                        <button class="share-btn" style="background:#25D366;" onclick="shareOnWhatsApp('${app.id}')"><i class="fab fa-whatsapp"></i></button>
+                    </div>
+                    <div class="rating-filter">
+                        <button class="star-btn active" onclick="filterReviews(this, 0)">⭐ الكل</button>
+                        <button class="star-btn" onclick="filterReviews(this, 4)">★★★★★</button>
+                        <button class="star-btn" onclick="filterReviews(this, 3)">★★★★</button>
+                        <button class="star-btn" onclick="filterReviews(this, 2)">★★★</button>
+                    </div>
+                    <div class="detail-reviews-scroll" id="detailReviewsScroll">
+                        ${reviews.map(r => `
+                            <div class="review-card" data-rating="${Math.floor(r.rating||0)}">
+                                <div class="review-name">${r.name || 'مستخدم'}</div>
+                                <div class="review-stars">${'★'.repeat(Math.floor(r.rating||0))}</div>
+                                <div class="review-text">${r.review || ''}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${topSimilar.length > 0 ? `
+                        <div class="similar-apps-title">📱 تطبيقات مشابهة</div>
+                        <div class="similar-apps-scroll">
+                            ${topSimilar.map(sim => `
+                                <div class="similar-card" onclick="closeAppDetail(); setTimeout(() => openAppDetail('${sim.id}'), 300);">
+                                    <div class="sim-icon">${sim.image ? `<img src="${sim.image}" alt="${sim.name}" />` : `<i class="fas fa-mobile-alt"></i>`}</div>
+                                    <div class="sim-name">${sim.name}</div>
+                                    <div class="sim-rating">${sim.rating ? '★'.repeat(Math.floor(sim.rating)) : '☆'}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAppDetail() {
+            document.getElementById('appDetailOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+            currentDetailAppId = null;
+        }
+
+        function filterReviews(btn, rating) {
+            document.querySelectorAll('.rating-filter .star-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cards = document.querySelectorAll('#detailReviewsScroll .review-card');
+            cards.forEach(card => {
+                const cardRating = parseInt(card.dataset.rating) || 0;
+                card.style.display = (rating === 0 || cardRating >= rating) ? '' : 'none';
+            });
+        }
+
+        // ---- دوال المشاركة ----
+        function shareApp(appId) {
+            const link = window.getProductShareLink ? window.getProductShareLink(appId) :
+                `${window.location.origin}${window.location.pathname}?product=${appId}`;
+            if (navigator.share) {
+                navigator.share({ title: 'تطبيق رائع', text: 'اكتشف هذا التطبيق المميز!', url: link }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(link).then(() => alert('✅ تم نسخ رابط التطبيق'))
+                    .catch(() => prompt('انسخ الرابط:', link));
+            }
+        }
+
+        function shareOnTwitter(appId) {
+            const link = window.getProductShareLink ? window.getProductShareLink(appId) :
+                `${window.location.origin}${window.location.pathname}?product=${appId}`;
+            const text = 'اكتشف هذا التطبيق الرائع! 🚀';
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`,
+            '_blank');
+        }
+
+        function shareOnWhatsApp(appId) {
+            const link = window.getProductShareLink ? window.getProductShareLink(appId) :
+                `${window.location.origin}${window.location.pathname}?product=${appId}`;
+            const text = `اكتشف هذا التطبيق الرائع! 🚀 ${link}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function downloadDetailApp() {
+            if (!currentDetailAppId) return;
+            let app = null;
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) {
+                    const found = appData.products[storeId].find(p => p.id === currentDetailAppId);
+                    if (found) { app = found; break; }
+                }
+            }
+            if (!app || app.restricted) { alert('هذا التطبيق غير متاح حالياً'); return; }
+            const isPurchased = window.isProductPurchased ? window.isProductPurchased(app.id) : false;
+            if (app.paymentRequired && !isPurchased) { openPaymentModal(app.id); return; }
+            if (app.link && app.link !== '#') window.open(app.link, '_blank');
+            else {
+                alert(`جاري تحميل ${app.name} ... (محاكاة)`);
+                app.downloadCount = (app.downloadCount || 0) + 1;
+                saveDataAfterDownload();
+            }
+            closeAppDetail();
+        }
+
+        async function saveDataAfterDownload() {
+            try { await window.saveAppData(appData, ['products']); } catch (e) { console.error(e); }
+        }
+
+        // ---- مودال التطبيق القديم ----
+        function openAppModal(appId) {
+            let app = null;
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) {
+                    const found = appData.products[storeId].find(p => p.id === appId);
+                    if (found) { app = found; break; }
+                }
+            }
+            if (!app) return;
+            currentAppId = appId;
+            const modal = document.getElementById('appModal');
+            document.getElementById('modalName').textContent = app.name;
+            document.getElementById('modalDesc').textContent = app.desc || '';
+            document.getElementById('modalMeta').textContent =
+                `★ ${app.rating || '?'} · ${app.appSize || ''} · ⬇ ${app.downloadCount||0}`;
+            const iconEl = document.getElementById('modalIcon');
+            iconEl.innerHTML = app.image ? `<img src="${app.image}" alt="${app.name}" />` : `<i class="fas fa-mobile-alt"></i>`;
+            const btn = document.getElementById('modalDownloadBtn');
+            if (app.restricted) {
+                btn.textContent = 'مقيد';
+                btn.classList.add('disabled');
+                btn.disabled = true;
+            } else {
+                btn.textContent = 'تثبيت';
+                btn.classList.remove('disabled');
+                btn.disabled = false;
+            }
+            modal.classList.add('open');
+        }
+
+        function closeAppModal() {
+            document.getElementById('appModal').classList.remove('open');
+            currentAppId = null;
+        }
+
+        function downloadApp() {
+            if (!currentAppId) return;
+            let app = null;
+            for (const storeId in appData.products) {
+                if (appData.products[storeId]) {
+                    const found = appData.products[storeId].find(p => p.id === currentAppId);
+                    if (found) { app = found; break; }
+                }
+            }
+            if (!app || app.restricted) { alert('هذا التطبيق غير متاح حالياً'); return; }
+            const isPurchased = window.isProductPurchased ? window.isProductPurchased(app.id) : false;
+            if (app.paymentRequired && !isPurchased) { openPaymentModal(app.id); return; }
+            if (app.link && app.link !== '#') window.open(app.link, '_blank');
+            else {
+                alert(`جاري تحميل ${app.name} ... (محاكاة)`);
+                app.downloadCount = (app.downloadCount || 0) + 1;
+                saveDataAfterDownload();
+            }
+            closeAppModal();
+        }
+
+        // ---- دالة عرض الإشعارات ----
+        function showToast(message, type = 'success') {
+            const old = document.querySelector('.toast-message');
+            if (old) old.remove();
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText =
+                `position:fixed;bottom:30px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:40px;font-weight:700;box-shadow:0 8px 30px rgba(0,0,0,0.3);z-index:9999;animation:slideUp 0.4s ease;color:white;direction:rtl;font-family:'Cairo',sans-serif;max-width:90%;text-align:center;background:${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#f59e0b'};`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(30px)';
+                toast.style.transition = 'all 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        // ---- ربط الأحداث ----
+        function setupEventListeners() {
+            document.getElementById('appDetailOverlay')?.addEventListener('click', function(e) {
+                if (e.target === this) closeAppDetail();
+            });
+            document.getElementById('paymentModal')?.addEventListener('click', function(e) {
+                if (e.target === this) closePaymentModal();
+            });
+            document.getElementById('appModal')?.addEventListener('click', function(e) {
+                if (e.target === this) closeAppModal();
+            });
+            document.getElementById('userModal')?.addEventListener('click', function(e) {
+                if (e.target === this) closeUserModal();
+            });
+            document.getElementById('cartModal')?.addEventListener('click', function(e) {
+                if (e.target === this) closeCartModal();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') { e.preventDefault();
+                    openAdminLogin(); }
+                if (e.key === 'Escape') {
+                    if (document.getElementById('appDetailOverlay').classList.contains('open')) closeAppDetail();
+                    else if (document.getElementById('paymentModal').classList.contains('open')) closePaymentModal();
+                    else if (document.getElementById('userModal').classList.contains('open')) closeUserModal();
+                    else if (document.getElementById('cartModal').classList.contains('open')) closeCartModal();
+                    else if (document.getElementById('sideMenu').classList.contains('open')) closeSideMenu();
+                    else closeAppModal();
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                if (currentTab === 'home') { stopTestimonialsAutoScroll();
+                    setTimeout(startTestimonialsAutoScroll, 300); }
+            });
+        }
+
+        // ---- بدء التطبيق ----
+        init();
+
+        // تصدير الدوال للنطاق العام
+        window.switchTab = switchTab;
+        window.changeCarousel = changeCarousel;
+        window.goToCarousel = goToCarousel;
+        window.changeAppsCarousel = changeAppsCarousel;
+        window.openAppDetail = openAppDetail;
+        window.closeAppDetail = closeAppDetail;
+        window.openPaymentModal = openPaymentModal;
+        window.closePaymentModal = closePaymentModal;
+        window.simulatePayment = simulatePayment;
+        window.openAppModal = openAppModal;
+        window.closeAppModal = closeAppModal;
+        window.downloadApp = downloadApp;
+        window.downloadDetailApp = downloadDetailApp;
+        window.filterByCategory = filterByCategory;
+        window.filterByStore = filterByStore;
+        window.clearFilters = clearFilters;
+        window.doSearch = doSearch;
+        window.handleMarqueeClick = handleMarqueeClick;
+        window.shareApp = shareApp;
+        window.shareOnTwitter = shareOnTwitter;
+        window.shareOnWhatsApp = shareOnWhatsApp;
+        window.filterReviews = filterReviews;
+        window.openSideMenu = openSideMenu;
+        window.closeSideMenu = closeSideMenu;
+        window.openUserModal = openUserModal;
+        window.closeUserModal = closeUserModal;
+        window.openCartModal = openCartModal;
+        window.closeCartModal = closeCartModal;
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.sendOrderViaWhatsApp = sendOrderViaWhatsApp;
+        window.sendOrderViaEmail = sendOrderViaEmail;
+        window.sendOrderViaChat = sendOrderViaChat;
+        window.showComingSoon = showComingSoon;
+        window.scrollToBlog = scrollToBlog;
+        window.openAdminLogin = openAdminLogin;
+        window.handleUserAction = handleUserAction;
+        window.switchUserMode = switchUserMode;
+        window.shareArticle = shareArticle;
+        window.switchTheme = switchTheme;
+        window.showToast = showToast;
+
+        console.log('🚀 Play Ramz - النسخة النهائية المتكاملة جاهزة!');
+        console.log('© 2026 جميع الحقوق محفوظة للمهندس رمزي الصلاحي');
+    </script>
+</body>
+</html>

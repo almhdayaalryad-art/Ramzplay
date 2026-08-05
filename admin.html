@@ -1,0 +1,3362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم Ramzplay – الإدارة الشاملة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <script src="common.js">
+    </script>
+    <style>
+        /* ===== أنماط لوحة التحكم ===== */
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #0f172a;
+            --bg-body: #0b1a33;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --border-color: #334155;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b1a33, #1e2b3c);
+            color: var(--text-light);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(8px);
+        }
+
+        .login-box {
+            background: var(--secondary);
+            padding: 40px 30px;
+            border-radius: 40px;
+            text-align: center;
+            width: 320px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-box h2 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+
+        .login-box p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 40px;
+            border: none;
+            margin-bottom: 16px;
+            background: #1e293b;
+            color: white;
+            font-size: 1rem;
+            direction: rtl;
+        }
+
+        .login-box input:focus {
+            outline: 2px solid var(--primary);
+        }
+
+        .login-box button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .login-box button:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        .admin-container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .top-bar h1 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-bar .back-link {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .top-bar .back-link:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-online {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-offline {
+            background: #ef4444;
+            color: white;
+        }
+
+        .connection-status {
+            background: #10b981;
+            padding: 10px 16px;
+            border-radius: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .connection-status i {
+            font-size: 1.1rem;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .action-bar button {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .action-bar .btn-save {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-bar .btn-save:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .action-bar .btn-sync {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .action-bar .btn-sync:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .action-bar .btn-preview {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .action-bar .btn-preview:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .action-bar .btn-export {
+            background: #06b6d4;
+            color: white;
+        }
+
+        .action-bar .btn-export:hover {
+            background: #0891b2;
+            transform: translateY(-2px);
+        }
+
+        .action-bar .btn-import {
+            background: #6366f1;
+            color: white;
+        }
+
+        .action-bar .btn-import:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+        }
+
+        .admin-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 18px 20px 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+
+        .admin-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .admin-card h2 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-card h2 i {
+            font-size: 1.2rem;
+        }
+
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .admin-form label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .admin-form input,
+        .admin-form textarea,
+        .admin-form select {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: none;
+            background: #1e293b;
+            color: white;
+            width: 100%;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .admin-form input:focus,
+        .admin-form textarea:focus,
+        .admin-form select:focus {
+            outline: 2px solid var(--primary);
+        }
+
+        .admin-form textarea {
+            border-radius: 20px;
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .admin-form input[type="file"] {
+            padding: 8px;
+            background: #0f172a;
+            border: 1px dashed var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .admin-form input[type="file"]::-webkit-file-upload-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .admin-form .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .admin-form .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .admin-form .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .admin-form .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .admin-form .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        .admin-form .btn-primary.hidden-btn {
+            display: none;
+        }
+
+        .admin-form .row2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .admin-form .row3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .admin-list {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+            margin-top: 12px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .admin-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .admin-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .admin-item {
+            background: #2d3a4f;
+            padding: 10px 14px;
+            border-radius: 40px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .admin-item:hover {
+            background: #3d4a5f;
+        }
+
+        .admin-item .item-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-item .item-info .badge {
+            background: #3b82f6;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .admin-item .item-info .badge.green {
+            background: #10b981;
+        }
+
+        .admin-item .item-info .badge.orange {
+            background: #f59e0b;
+        }
+
+        .admin-item .item-info .badge.red {
+            background: #ef4444;
+        }
+
+        .admin-item .item-info .badge.grey {
+            background: #64748b;
+        }
+
+        .admin-item .item-actions {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .admin-item .item-actions button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .admin-item .item-actions button.edit {
+            background: #3b82f6;
+        }
+
+        .admin-item .item-actions button.edit:hover {
+            background: #2563eb;
+        }
+
+        .admin-item .item-actions button.toggle {
+            background: #f59e0b;
+        }
+
+        .admin-item .item-actions button.toggle:hover {
+            background: #d97706;
+        }
+
+        .admin-item .item-actions button.del:hover {
+            background: #dc2626;
+        }
+
+        .admin-item .item-actions button.share {
+            background: #8b5cf6;
+        }
+
+        .admin-item .item-actions button.share:hover {
+            background: #7c3aed;
+        }
+
+        .file-upload-area {
+            border: 1px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 12px 14px;
+            background: #0f172a;
+            margin: 4px 0;
+        }
+
+        .file-upload-area .file-status {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #1e293b;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            word-break: break-all;
+        }
+
+        .file-upload-area .file-status .success {
+            color: #4ade80;
+        }
+
+        .file-upload-area .flex-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .file-upload-area .flex-row input[type="file"] {
+            flex: 2;
+            min-width: 150px;
+        }
+
+        .file-upload-area .flex-row select {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .file-upload-area .flex-row button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .file-upload-area .flex-row button:hover {
+            background: #7c3aed;
+            transform: scale(1.02);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stats-card {
+            background: #1e293b;
+            padding: 14px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stats-card .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .stats-card .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #3b82f6;
+        }
+
+        .stats-card .value.green {
+            color: #10b981;
+        }
+
+        .stats-card .value.orange {
+            color: #f59e0b;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 14px 30px;
+            border-radius: 40px;
+            font-weight: 700;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            animation: slideUp 0.4s ease;
+            color: white;
+            direction: rtl;
+            font-family: 'Cairo', sans-serif;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast-success {
+            background: #10b981;
+        }
+
+        .toast-error {
+            background: #ef4444;
+        }
+
+        .toast-warning {
+            background: #f59e0b;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .auto-save-badge {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: var(--primary);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 9998;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hidden-item {
+            opacity: 0.5;
+            background: #4b5563;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 12px 0;
+        }
+
+        .coming-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        .social-field-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            background: #1e293b;
+            padding: 8px 14px;
+            border-radius: 40px;
+            margin-bottom: 6px;
+        }
+
+        .social-field-group i {
+            width: 28px;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .social-field-group label {
+            min-width: 70px;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .social-field-group input[type="text"] {
+            flex: 1;
+            min-width: 120px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: none;
+            background: #0f172a;
+            color: white;
+        }
+
+        .social-field-group input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .social-field-group .checkbox-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .footer-link-item {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            background: #0f172a;
+        }
+
+        .footer-link-item label {
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.85rem;
+        }
+
+        .footer-link-item input[type="text"],
+        .footer-link-item input[type="url"] {
+            width: 100%;
+            padding: 8px 14px;
+            border-radius: 30px;
+            border: none;
+            background: #1e293b;
+            color: white;
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+
+        .footer-link-item .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .footer-link-item .checkbox-group input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .footer-link-item .checkbox-group label {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* ===== تنسيق معاينة الشعار ===== */
+        .logo-preview-container {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .logo-preview-container img {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 12px;
+            background: #1e293b;
+            padding: 4px;
+            border: 2px solid var(--border-color);
+        }
+        .logo-preview-container .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ===== تنسيق رسائل الاتصال ===== */
+        .message-item {
+            background: #2d3a4f;
+            padding: 12px 14px;
+            border-radius: 16px;
+            margin-bottom: 6px;
+            transition: 0.2s;
+            border-right: 3px solid transparent;
+        }
+
+        .message-item:hover {
+            background: #3d4a5f;
+        }
+
+        .message-item.unread {
+            border-right-color: #4CAF50;
+        }
+
+        .message-item .msg-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .message-item .msg-header .msg-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .message-item .msg-header .msg-date {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        .message-item .msg-subject {
+            font-weight: 600;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+        }
+
+        .message-item .msg-body {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin: 4px 0;
+            word-break: break-word;
+        }
+
+        .message-item .msg-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .message-item .msg-footer .msg-email {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        .message-item .msg-footer .msg-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .message-item .msg-footer .msg-actions button {
+            border: none;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .message-item .msg-footer .msg-actions .btn-read {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .message-item .msg-footer .msg-actions .btn-read:hover {
+            background: #2563eb;
+        }
+
+        .message-item .msg-footer .msg-actions .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .message-item .msg-footer .msg-actions .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .badge-status {
+            display: inline-block;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+
+        .badge-status.new {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-status.read {
+            background: #64748b;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-card {
+                padding: 14px;
+            }
+            .top-bar h1 {
+                font-size: 1.2rem;
+            }
+            .action-bar button {
+                font-size: 0.8rem;
+                padding: 8px 14px;
+            }
+            .admin-form .row2,
+            .admin-form .row3 {
+                grid-template-columns: 1fr;
+            }
+            .login-box {
+                width: 90%;
+                padding: 30px 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .auto-save-badge {
+                top: 8px;
+                right: 8px;
+                font-size: 0.6rem;
+                padding: 4px 12px;
+            }
+            .social-field-group {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 20px;
+                padding: 12px;
+            }
+            .social-field-group input[type="text"] {
+                min-width: unset;
+            }
+            .message-item .msg-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .logo-preview-container img {
+                max-width: 80px;
+                max-height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-item {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 20px;
+                padding: 12px;
+            }
+            .admin-item .item-actions {
+                margin-top: 6px;
+                justify-content: flex-start;
+            }
+            .file-upload-area .flex-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .file-upload-area .flex-row input[type="file"] {
+                min-width: unset;
+            }
+            .file-upload-area .flex-row select {
+                min-width: unset;
+            }
+            .message-item .msg-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== تسجيل الدخول ===== -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>🔐 Ramzplay</h2>
+            <p>لوحة التحكم الشاملة</p>
+            <input type="password" id="secretCodeInput" placeholder="الرمز السري" />
+            <button onclick="checkLogin()">دخول</button>
+            <div id="loginError" style="color:#ef4444; font-size:0.85rem; margin-top:10px; display:none;">⚠️ الرمز غير صحيح</div>
+        </div>
+    </div>
+
+    <!-- ===== لوحة التحكم ===== -->
+    <div class="admin-container" id="adminContent" style="display: none;">
+
+        <div class="auto-save-badge" id="autoSaveBadge">
+            <i class="fas fa-check-circle"></i> جميع التغييرات محفوظة
+        </div>
+
+        <div class="top-bar">
+            <h1><i class="fas fa-cog"></i> لوحة تحكم Ramzplay</h1>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <span id="connectionStatusBadge" class="status-badge status-online"><i class="fas fa-wifi"></i> متصل</span>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> العودة للسوق</a>
+            </div>
+        </div>
+
+        <div id="connectionStatus" class="connection-status">
+            <i class="fas fa-check-circle"></i> البيانات محفوظة محلياً وتُزامن مع السحابة تلقائياً
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-save" onclick="forceSaveAll()"><i class="fas fa-save"></i> حفظ ومزامنة الكل</button>
+            <button class="btn-sync" onclick="syncWithSupabase()"><i class="fas fa-cloud-upload-alt"></i> مزامنة مع Supabase</button>
+            <button class="btn-preview" onclick="previewChanges()"><i class="fas fa-eye"></i> معاينة التغييرات</button>
+            <button class="btn-export" onclick="exportData()"><i class="fas fa-download"></i> تصدير JSON</button>
+            <button class="btn-import" onclick="document.getElementById('importFileInput').click()"><i class="fas fa-upload"></i> استيراد JSON</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importData(event)" />
+        </div>
+
+        <div class="admin-grid">
+
+            <!-- ========== 1. شعار الموقع ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-image"></i> شعار الموقع</h2>
+                <div class="admin-form">
+                    <div class="logo-preview-container">
+                        <img id="logoPreview" src="" alt="الشعار الحالي" />
+                        <div class="label">الشعار الحالي</div>
+                    </div>
+                    <input type="file" id="logoFileInput" accept="image/*" />
+                    <button class="btn-primary" id="uploadLogoBtn">⬆ رفع الشعار وحفظه</button>
+                    <button class="btn-primary" id="removeLogoBtn" style="background:#ef4444;">🗑️ إزالة الشعار</button>
+                </div>
+            </div>
+
+            <!-- ========== 2. الفئات ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-tags"></i> إدارة الفئات</h2>
+                <div class="admin-form" id="categoryForm">
+                    <input type="hidden" id="editCategoryId" />
+                    <input type="text" id="categoryName" placeholder="اسم الفئة" required />
+                    <input type="text" id="categorySlug" placeholder="slug (رابط مختصر)" required />
+                    <input type="text" id="categoryIcon" placeholder="أيقونة (مثل fas fa-gamepad)" />
+                    <input type="color" id="categoryColor" value="#4CAF50" />
+                    <label>الصورة المميزة</label>
+                    <input type="text" id="categoryFeaturedImage" placeholder="رابط الصورة" />
+                    <input type="file" id="categoryFeaturedImageFile" accept="image/*" />
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="categoryShowInIndex" checked />
+                        <label>عرض في الفهرس</label>
+                    </div>
+                    <label>ترتيب الفهرس</label>
+                    <input type="number" id="categoryIndexOrder" value="0" />
+                    <button class="btn-primary" id="addCategoryBtn">➕ إضافة فئة</button>
+                    <button class="btn-primary hidden-btn" id="updateCategoryBtn">تحديث الفئة</button>
+                </div>
+                <div class="admin-list" id="categoriesList"></div>
+            </div>
+
+            <!-- ========== 3. التطبيقات ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-mobile-alt"></i> إدارة التطبيقات</h2>
+                <div class="admin-form">
+                    <select id="productCategorySelect"><option>اختر الفئة</option></select>
+                    <select id="productStoreSelect"><option>اختر المطور</option></select>
+                </div>
+                <div class="admin-form" id="productForm">
+                    <input type="hidden" id="editProductStoreId" />
+                    <input type="hidden" id="editProductId" />
+                    <input type="text" id="productName" placeholder="اسم التطبيق" required />
+                    <select id="productCategorySelectForApp"><option>اختر الفئة</option></select>
+                    <div class="row2">
+                        <div><label>حجم التطبيق (MB)</label><input type="text" id="productAppSize" placeholder="45.2" /></div>
+                        <div><label>الإصدار</label><input type="text" id="productAppVersion" placeholder="2.3.1" /></div>
+                        <div><label>عدد التنزيلات</label><input type="text" id="productAppDownloads" placeholder="1M+" /></div>
+                        <div><label>التقييم (نجوم)</label><input type="number" id="productAppRating" placeholder="4.5" min="0" max="5" step="0.1" /></div>
+                    </div>
+                    <label>تاريخ التحديث</label>
+                    <input type="date" id="productAppUpdateDate" />
+                    <div class="row2">
+                        <div><label>السعر القديم</label><input type="number" id="productOldPrice" placeholder="0" /></div>
+                        <div><label>السعر الحالي (0 مجاني)</label><input type="number" id="productNewPrice" placeholder="0" /></div>
+                    </div>
+                    <label>الصورة الرئيسية</label>
+                    <input type="text" id="productImage" placeholder="رابط الصورة" />
+                    <input type="file" id="productImageFile" accept="image/*" />
+
+                    <!-- رفع الملف -->
+                    <div class="file-upload-area">
+                        <label style="color:var(--primary); font-weight:700;">📂 ملف التطبيق (APK / AAB / PDF / DOCX)</label>
+                        <div class="flex-row">
+                            <input type="file" id="productFileInput" accept=".apk,.aab,.pdf,.doc,.docx" />
+                            <select id="productFileTypeSelect">
+                                <option value="apk">📱 APK</option>
+                                <option value="aab">📦 AAB</option>
+                                <option value="pdf">📄 PDF</option>
+                                <option value="doc">📝 DOC</option>
+                                <option value="docx">📝 DOCX</option>
+                            </select>
+                            <button type="button" id="uploadProductFileBtn"><i class="fas fa-upload"></i> رفع</button>
+                        </div>
+                        <div class="file-status">
+                            <span id="productFileInfo">لم يتم رفع ملف</span>
+                        </div>
+                        <input type="hidden" id="productFileUrl" value="" />
+                        <input type="hidden" id="productFileTypeHidden" value="" />
+                    </div>
+
+                    <label>رابط تحميل احتياطي</label>
+                    <input type="url" id="productLink" placeholder="https://example.com/app.apk" />
+                    <label>كلمات مفتاحية</label>
+                    <input type="text" id="productSeoKeywords" placeholder="لعبة استراتيجية, تطبيق تعليمي" />
+                    <label>الهاشتاجات</label>
+                    <input type="text" id="productHashtags" placeholder="#ألعاب_أندرويد, #تطبيقات_مجانية" />
+
+                    <div class="divider"></div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="productRestricted" />
+                        <label>🔒 تقييد التطبيق (منع التنزيل)</label>
+                    </div>
+                    <label>سبب التقييد</label>
+                    <textarea id="productRestrictionReason" rows="2" placeholder="مثال: التطبيق تحت المراجعة"></textarea>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="productPaymentRequired" />
+                        <label>💰 يتطلب الدفع</label>
+                    </div>
+                    <div class="row2">
+                        <div><label>السعر</label><input type="number" id="productPrice" placeholder="0" step="0.01" /></div>
+                        <div><label>نوع الدفع</label>
+                            <select id="productPaymentType">
+                                <option value="one_time">مرة واحدة</option>
+                                <option value="subscription">اشتراك</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="addProductBtn">➕ إضافة تطبيق</button>
+                    <button class="btn-primary hidden-btn" id="updateProductBtn">تحديث التطبيق</button>
+                </div>
+                <div class="admin-list" id="productsList"></div>
+            </div>
+
+            <!-- ========== 4. المطورين ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-store"></i> إدارة المطورين</h2>
+                <div class="admin-form">
+                    <select id="storeCategorySelect"><option>اختر الفئة</option></select>
+                </div>
+                <div class="admin-form" id="storeForm">
+                    <input type="hidden" id="editStoreId" />
+                    <input type="text" id="storeName" placeholder="اسم المطور" required />
+                    <label>الشعار</label>
+                    <input type="text" id="storeLogo" placeholder="رابط الشعار" />
+                    <input type="file" id="storeLogoFile" accept="image/*" />
+                    <input type="url" id="storeExternalUrl" placeholder="الرابط الخارجي" />
+                    <input type="text" id="storeDescription" placeholder="الوصف" />
+                    <input type="text" id="storePhone" placeholder="الهاتف" />
+                    <input type="text" id="storeAddress" placeholder="العنوان" />
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="storeHidden" />
+                        <label>إخفاء المطور</label>
+                    </div>
+                    <label>نمط عرض المنتجات</label>
+                    <select id="storeProductDisplayMode">
+                        <option value="grid">شبكي</option>
+                        <option value="list">قائمة</option>
+                    </select>
+                    <div class="row2">
+                        <div><label>عدد التطبيقات في الشريط</label><input type="number" id="storeProductDisplayCount" value="10" /></div>
+                        <div><label>عدد الأشرطة الأفقية</label><input type="number" id="storeNumStrips" value="10" /></div>
+                    </div>
+                    <button class="btn-primary" id="addStoreBtn">➕ إضافة مطور</button>
+                    <button class="btn-primary hidden-btn" id="updateStoreBtn">تحديث المطور</button>
+                </div>
+                <div class="admin-list" id="storesList"></div>
+            </div>
+
+            <!-- ========== 5. الإعلانات الدوارة ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-images"></i> الإعلانات الدوارة (Carousel)</h2>
+                <div class="admin-form" id="carouselForm">
+                    <input type="hidden" id="editCarouselId" />
+                    <input type="text" id="carouselName" placeholder="اسم الإعلان" />
+                    <input type="url" id="carouselLink" placeholder="الرابط" />
+                    <label>صورة الإعلان</label>
+                    <input type="text" id="carouselImage" placeholder="رابط الصورة" />
+                    <input type="file" id="carouselImageFile" accept="image/*" />
+                    <label>الترتيب</label>
+                    <input type="number" id="carouselOrder" value="0" />
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="carouselActive" checked />
+                        <label>نشط</label>
+                    </div>
+                    <button class="btn-primary" id="addCarouselBtn">➕ إضافة إعلان</button>
+                    <button class="btn-primary hidden-btn" id="updateCarouselBtn">تحديث الإعلان</button>
+                </div>
+                <div class="admin-list" id="carouselList"></div>
+            </div>
+
+            <!-- ========== 6. شريط الماركي ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-scroll"></i> شريط الماركي</h2>
+                <div class="admin-form" id="marqueeForm">
+                    <input type="hidden" id="editMarqueeId" />
+                    <input type="text" id="marqueeName" placeholder="اسم العنصر" />
+                    <label>الأيقونة</label>
+                    <input type="text" id="marqueeIcon" placeholder="رابط الأيقونة" />
+                    <input type="file" id="marqueeIconFile" accept="image/*" />
+                    <input type="url" id="marqueeLink" placeholder="رابط التحميل" />
+                    <button class="btn-primary" id="addMarqueeBtn">➕ إضافة عنصر</button>
+                    <button class="btn-primary hidden-btn" id="updateMarqueeBtn">تحديث</button>
+                </div>
+                <div class="admin-list" id="marqueeList"></div>
+            </div>
+
+            <!-- ========== 7. مراجعات المستخدمين ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-star"></i> مراجعات المستخدمين</h2>
+                <div class="admin-form" id="testimonialForm">
+                    <input type="hidden" id="editTestimonialId" />
+                    <input type="text" id="testimonialName" placeholder="الاسم" required />
+                    <label>الصورة</label>
+                    <input type="text" id="testimonialImage" placeholder="رابط الصورة" />
+                    <input type="file" id="testimonialImageFile" accept="image/*" />
+                    <label>التقييم (1-5)</label>
+                    <input type="number" id="testimonialRating" placeholder="5" min="1" max="5" required />
+                    <textarea id="testimonialReview" rows="3" placeholder="نص المراجعة" required></textarea>
+                    <button class="btn-primary" id="addTestimonialBtn">➕ إضافة مراجعة</button>
+                    <button class="btn-primary hidden-btn" id="updateTestimonialBtn">تحديث المراجعة</button>
+                </div>
+                <div class="admin-list" id="testimonialsList"></div>
+            </div>
+
+            <!-- ========== 8. المدونة ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-blog"></i> إدارة المدونة</h2>
+                <div class="admin-form" id="blogForm">
+                    <input type="hidden" id="editBlogId" />
+                    <input type="text" id="blogTitle" placeholder="عنوان المقال" required />
+                    <textarea id="blogContent" rows="4" placeholder="محتوى المقال" required></textarea>
+                    <label>الصورة</label>
+                    <input type="text" id="blogImage" placeholder="رابط الصورة" />
+                    <input type="file" id="blogImageFile" accept="image/*" />
+                    <label>التاريخ</label>
+                    <input type="date" id="blogDate" />
+                    <label>الهاشتاجات</label>
+                    <input type="text" id="blogHashtags" placeholder="#تطبيقات, #ألعاب_أندرويد" />
+                    <button class="btn-primary" id="addBlogBtn">➕ إضافة مقال</button>
+                    <button class="btn-primary hidden-btn" id="updateBlogBtn">تحديث المقال</button>
+                </div>
+                <div class="admin-list" id="blogList"></div>
+            </div>
+
+            <!-- ========== 9. التحديثات ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-sync-alt"></i> إدارة التحديثات</h2>
+                <div class="admin-form" id="updateForm">
+                    <input type="hidden" id="editUpdateId" />
+                    <input type="text" id="updateTitle" placeholder="عنوان التحديث" required />
+                    <label>التاريخ</label>
+                    <input type="date" id="updateDate" />
+                    <textarea id="updateContent" rows="3" placeholder="محتوى التحديث"></textarea>
+                    <button class="btn-primary" id="addUpdateBtn">➕ إضافة تحديث</button>
+                    <button class="btn-primary hidden-btn" id="updateUpdateBtn">تحديث</button>
+                </div>
+                <div class="admin-list" id="updatesList"></div>
+            </div>
+
+            <!-- ========== 10. الشركاء ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-handshake"></i> إدارة الشركاء</h2>
+                <div class="admin-form" id="partnerForm">
+                    <input type="hidden" id="editPartnerId" />
+                    <input type="text" id="partnerName" placeholder="اسم الشريك" required />
+                    <label>الشعار</label>
+                    <input type="text" id="partnerLogo" placeholder="رابط الشعار" />
+                    <input type="file" id="partnerLogoFile" accept="image/*" />
+                    <input type="url" id="partnerUrl" placeholder="رابط الشريك" />
+                    <button class="btn-primary" id="addPartnerBtn">➕ إضافة شريك</button>
+                    <button class="btn-primary hidden-btn" id="updatePartnerBtn">تحديث</button>
+                </div>
+                <div class="admin-list" id="partnersList"></div>
+            </div>
+
+            <!-- ========== 11. الإعدادات العامة ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-globe"></i> الإعدادات العامة</h2>
+                <div class="admin-form">
+                    <label>العملة</label>
+                    <select id="currencySelect">
+                        <option value="SAR">ريال سعودي (ر.س)</option>
+                        <option value="USD">دولار ($)</option>
+                        <option value="OMR">ريال عماني (ر.ع.)</option>
+                        <option value="QAR">ريال قطري (ر.ق)</option>
+                        <option value="AED">درهم إماراتي (د.إ)</option>
+                    </select>
+                    <label>اللغة</label>
+                    <select id="languageSelect">
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showSaudiFlag" />
+                        <label>عرض علم السعودية</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="cartEnabled" />
+                        <label>تفعيل مكتبة التطبيقات</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enableUserProfile" />
+                        <label>تفعيل صفحة المستخدم</label>
+                    </div>
+                    <label>البريد الإلكتروني للتواصل</label>
+                    <input type="email" id="contactEmail" placeholder="admin@example.com" />
+                    <label>رقم واتساب الدعم</label>
+                    <input type="text" id="whatsappNumber" placeholder="967778562099" />
+                    <label>كود التتبع (Google Analytics)</label>
+                    <textarea id="trackingCode" rows="2" placeholder="رمز التتبع"></textarea>
+                    <button class="btn-primary" id="saveGeneralSettings">💾 حفظ الإعدادات العامة</button>
+                </div>
+            </div>
+
+            <!-- ========== 12. إعدادات الدفع ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-credit-card"></i> إعدادات الدفع</h2>
+                <div class="admin-form">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="paymentEnabled" />
+                        <label>تفعيل الدفع الإلكتروني</label>
+                    </div>
+                    <label>البوابة</label>
+                    <select id="paymentGateway">
+                        <option value="simulated">محاكاة (للتجربة)</option>
+                        <option value="stripe">Stripe</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="myfatoorah">MyFatoorah</option>
+                        <option value="googlepay">Google Pay</option>
+                    </select>
+                    <label>مفتاح API العام</label>
+                    <input type="text" id="paymentPublicKey" placeholder="pk_test_..." />
+                    <label>مفتاح API السري</label>
+                    <input type="password" id="paymentSecretKey" placeholder="sk_test_..." />
+                    <label>عملة الدفع</label>
+                    <select id="paymentCurrency">
+                        <option value="SAR">ريال سعودي</option>
+                        <option value="USD">دولار أمريكي</option>
+                        <option value="EUR">يورو</option>
+                    </select>
+                    <div class="row2">
+                        <div><label>نسبة الضريبة (٪)</label><input type="number" id="paymentTaxRate" value="0" step="0.1" /></div>
+                        <div><label>رسوم الشحن</label><input type="number" id="paymentShippingFee" value="0" step="0.1" /></div>
+                    </div>
+                    <div class="divider"></div>
+                    <h4 style="color:#f59e0b;">💵 ويسترن يونيون</h4>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="wuEnabled" />
+                        <label>تفعيل ويسترن يونيون</label>
+                    </div>
+                    <label>الاسم المستلم</label>
+                    <input type="text" id="wuReceiver" placeholder="Ramzplay Store" />
+                    <div class="row2">
+                        <div><label>الدولة</label><input type="text" id="wuCountry" placeholder="السعودية" /></div>
+                        <div><label>المدينة</label><input type="text" id="wuCity" placeholder="الرياض" /></div>
+                    </div>
+                    <div class="divider"></div>
+                    <h4 style="color:#4285f4;">🔵 Google Pay</h4>
+                    <label>معرف التاجر</label>
+                    <input type="text" id="googleMerchantId" placeholder="1234567890" />
+                    <label>معرف بوابة الدفع</label>
+                    <input type="text" id="googleGatewayId" placeholder="example_gateway" />
+                    <button class="btn-primary" id="savePaymentSettings">💾 حفظ إعدادات الدفع</button>
+                </div>
+            </div>
+
+            <!-- ========== 13. إعدادات التصميم ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-palette"></i> إعدادات التصميم</h2>
+                <div class="admin-form">
+                    <label>خلفية الفئات</label>
+                    <input type="text" id="designCategoryBg" value="linear-gradient(145deg, #e8f5e9, #c8e6c9)" />
+                    <label>لون نص الفئات</label>
+                    <input type="color" id="designCategoryText" value="#2e7d32" />
+                    <label>حجم خط الفئات</label>
+                    <input type="text" id="designCategoryFontSize" value="2rem" />
+                    <label>خلفية المطورين</label>
+                    <input type="color" id="designStoreBg" value="#ffffff" />
+                    <label>لون نص المطورين</label>
+                    <input type="color" id="designStoreText" value="#1e293b" />
+                    <label>حجم خط المطورين</label>
+                    <input type="text" id="designStoreFontSize" value="1.3rem" />
+                    <label>خلفية التطبيقات</label>
+                    <input type="color" id="designProductBg" value="#ffffff" />
+                    <label>لون نص التطبيقات</label>
+                    <input type="color" id="designProductText" value="#1e293b" />
+                    <label>حجم خط التطبيقات</label>
+                    <input type="text" id="designProductFontSize" value="0.85rem" />
+                    <label>خلفية الإعلانات</label>
+                    <input type="text" id="designAdBg" value="linear-gradient(90deg, #4CAF50, #388E3C)" />
+                    <label>لون نص الإعلانات</label>
+                    <input type="color" id="designAdText" value="#ffffff" />
+                    <label>حجم خط الإعلانات</label>
+                    <input type="text" id="designAdFontSize" value="1.1rem" />
+                    <label>حجم الخط العام</label>
+                    <input type="text" id="designGeneralFontSize" value="1rem" />
+                    <button class="btn-primary" id="saveDesignSettings">💾 حفظ إعدادات التصميم</button>
+                </div>
+            </div>
+
+            <!-- ========== 14. إعدادات القائمة الجانبية ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-bars"></i> إعدادات القائمة الجانبية</h2>
+                <div class="admin-form">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="menuEnableUserIcon" checked />
+                        <label>تفعيل أيقونة المستخدم</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="menuEnableCartIcon" checked />
+                        <label>تفعيل أيقونة السلة</label>
+                    </div>
+                    <label>رقم واتساب الطلبات</label>
+                    <input type="text" id="menuWhatsappOrders" placeholder="+966500000000" />
+                    <label>البريد الإلكتروني للطلبات</label>
+                    <input type="email" id="menuEmailOrders" placeholder="orders@ramzplay.com" />
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="menuEnableInAppChat" />
+                        <label>تفعيل المحادثة داخل التطبيق</label>
+                    </div>
+                    <button class="btn-primary" id="saveMenuSettings">💾 حفظ إعدادات القائمة</button>
+                </div>
+            </div>
+
+            <!-- ========== 15. روابط التذييل ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-link"></i> روابط التذييل</h2>
+                <div class="admin-form" id="footerLinksForm">
+                    <div id="footerLinksContainer"></div>
+                    <button class="btn-primary" id="saveFooterLinks">💾 حفظ روابط التذييل</button>
+                </div>
+            </div>
+
+            <!-- ========== 16. التذييل (تواصل اجتماعي) ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-share-alt"></i> التذييل والتواصل</h2>
+                <div class="admin-form">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="footerEmail" placeholder="info@ramzplay.com" />
+                    <label>الهاتف</label>
+                    <input type="text" id="footerPhone" placeholder="+966500000000" />
+                    <label>رقم واتساب</label>
+                    <input type="text" id="footerWhatsapp" placeholder="966500000000" />
+                    <label>طرق الدفع (أيقونات مفصولة بفاصلة)</label>
+                    <input type="text" id="footerPayments" placeholder="Visa, Mastercard, Mada" />
+                    <div style="border:1px solid var(--border-color); border-radius:20px; padding:14px; margin:8px 0; background:#0f172a;">
+                        <h4 style="color:var(--primary); margin-bottom:8px;">حسابات التواصل الاجتماعي</h4>
+                        <div id="socialFieldsContainer"></div>
+                    </div>
+                    <button class="btn-primary" id="saveFooterBtn">💾 حفظ التذييل</button>
+                </div>
+            </div>
+
+            <!-- ========== 17. رسائل الاتصال ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-envelope"></i> رسائل الاتصال</h2>
+                <div class="admin-list" id="messagesList" style="max-height:400px;">
+                    <p style="color:var(--text-muted);">لا توجد رسائل</p>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+                    <button onclick="markAllAsRead()" style="background:#3b82f6; color:white; border:none; padding:8px 16px; border-radius:40px; cursor:pointer; font-weight:600; transition:0.2s;">✅ تحديد الكل كمقروء</button>
+                    <button onclick="deleteAllMessages()" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:40px; cursor:pointer; font-weight:600; transition:0.2s;">🗑️ حذف الكل</button>
+                </div>
+            </div>
+
+            <!-- ========== 18. إحصائيات التنزيلات ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-chart-bar"></i> إحصائيات التنزيلات</h2>
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <div class="label">إجمالي التنزيلات</div>
+                        <div class="value" id="totalDownloads">0</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="label">عدد التطبيقات</div>
+                        <div class="value green" id="totalApps">0</div>
+                    </div>
+                </div>
+                <div style="margin-top:12px;">
+                    <h4 style="color:var(--text-muted); font-size:0.9rem;">أكثر التطبيقات تحميلاً</h4>
+                    <div id="topAppsList" style="margin-top:6px;"></div>
+                </div>
+            </div>
+
+            <!-- ========== 19. عداد الزوار ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-eye"></i> عداد الزوار</h2>
+                <div style="background:var(--primary); color:white; padding:18px; border-radius:40px; text-align:center; font-size:1.8rem; font-weight:800;">
+                    <span id="visitorCountAdmin">0</span>
+                </div>
+                <button id="resetVisitorBtn" style="background:#f59e0b; color:white; border:none; padding:12px; border-radius:40px; font-weight:700; width:100%; margin-top:10px; cursor:pointer; transition:0.2s; font-family:inherit;">إعادة تعيين العداد</button>
+            </div>
+
+            <!-- ========== 20. سجل الأخطاء ========== -->
+            <div class="admin-card">
+                <h2><i class="fas fa-bug"></i> سجل الأخطاء</h2>
+                <div class="admin-list" id="adminErrorsList" style="max-height:200px;">
+                    <p style="color:var(--text-muted);">لا توجد أخطاء مسجلة.</p>
+                </div>
+                <button id="clearAdminErrors" style="background:#ef4444; color:white; border:none; padding:10px; border-radius:40px; font-weight:700; width:100%; margin-top:10px; cursor:pointer; transition:0.2s; font-family:inherit;">مسح السجل</button>
+            </div>
+
+        </div><!-- .admin-grid -->
+    </div><!-- .admin-container -->
+
+    <script>
+        // ============================================================
+        // كود لوحة التحكم الكامل – Ramzplay Admin
+        // ============================================================
+
+        let appData = {};
+        let changedTables = new Set();
+        let isSaving = false;
+        let saveTimeoutId = null;
+        let currentEditStoreId = null;
+        let currentEditProductStoreId = null;
+        let currentEditProductId = null;
+        let currentEditCarouselId = null;
+        let currentEditTestimonialId = null;
+        let currentEditMarqueeId = null;
+        let currentEditUpdateId = null;
+        let currentEditPartnerId = null;
+
+        // ===== عرض الإشعارات =====
+        function showToast(message, type = 'success') {
+            const old = document.querySelector('.toast-message');
+            if (old) old.remove();
+            const toast = document.createElement('div');
+            toast.className = `toast-message toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(30px)';
+                toast.style.transition = 'all 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 5000);
+        }
+
+        // ===== عرض الـ Spinner =====
+        function showSpinner(show) {
+            const badge = document.getElementById('autoSaveBadge');
+            if (!badge) return;
+            if (show) {
+                badge.innerHTML = '<span class="spinner"></span> جاري الحفظ...';
+                badge.style.background = '#f59e0b';
+            } else {
+                badge.innerHTML = '<i class="fas fa-check-circle"></i> جميع التغييرات محفوظة';
+                badge.style.background = '#4CAF50';
+            }
+        }
+
+        // ===== تحديث حالة الاتصال =====
+        function updateConnectionStatus(online = true) {
+            const badge = document.getElementById('connectionStatusBadge');
+            const statusDiv = document.getElementById('connectionStatus');
+            if (badge) {
+                badge.className = `status-badge ${online ? 'status-online' : 'status-offline'}`;
+                badge.innerHTML = online ?
+                    '<i class="fas fa-wifi"></i> متصل' :
+                    '<i class="fas fa-wifi-slash"></i> غير متصل';
+            }
+            if (statusDiv) {
+                statusDiv.style.background = online ? '#10b981' : '#ef4444';
+                statusDiv.innerHTML = online ?
+                    '<i class="fas fa-check-circle"></i> البيانات محفوظة محلياً وتُزامن مع السحابة تلقائياً' :
+                    '<i class="fas fa-exclamation-triangle"></i> غير متصل بالإنترنت – البيانات محفوظة محلياً فقط';
+            }
+        }
+
+        // ===== حفظ البيانات في Supabase =====
+        async function saveToSupabaseAdmin(tables = null) {
+            const tablesToSave = tables || Array.from(changedTables);
+            if (!appData || isSaving || tablesToSave.length === 0) return;
+
+            isSaving = true;
+            showSpinner(true);
+            if (saveTimeoutId) clearTimeout(saveTimeoutId);
+            saveTimeoutId = setTimeout(() => {
+                if (isSaving) {
+                    showSpinner(false);
+                    isSaving = false;
+                    showToast('⚠️ انتهت مهلة الحفظ، جارٍ إعادة المحاولة...', 'warning');
+                    saveToSupabaseAdmin(tablesToSave);
+                }
+            }, 60000);
+
+            try {
+                const success = await window.saveAppData(appData, tablesToSave);
+                if (success) {
+                    tablesToSave.forEach(t => changedTables.delete(t));
+                    showToast('✅ تم حفظ التغييرات في السحابة', 'success');
+                } else {
+                    showToast('⚠️ تم الحفظ محلياً فقط (فشل السحابة)', 'warning');
+                }
+            } catch (err) {
+                console.error('خطأ في الحفظ:', err);
+                showToast('❌ خطأ في الحفظ: ' + err.message, 'error');
+                if (typeof window.logAdminError === 'function') window.logAdminError(err, 'saveToSupabaseAdmin');
+            } finally {
+                if (saveTimeoutId) clearTimeout(saveTimeoutId);
+                saveTimeoutId = null;
+                showSpinner(false);
+                isSaving = false;
+            }
+        }
+
+        // ===== دوال مساعدة =====
+        function generateId() {
+            return 'id_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+        }
+
+        function findStoreById(storeId) {
+            if (!appData) return null;
+            for (const cat in appData.stores) {
+                const found = appData.stores[cat].find(s => s.id === storeId);
+                if (found) return found;
+            }
+            return null;
+        }
+
+        function resetForm(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const inputs = container.querySelectorAll('input:not([type="hidden"]), textarea, select');
+            inputs.forEach(inp => {
+                if (inp.type === 'checkbox' || inp.type === 'radio') inp.checked = false;
+                else if (inp.tagName === 'SELECT') inp.selectedIndex = 0;
+                else inp.value = '';
+            });
+            const addBtn = container.querySelector('[id$="Btn"]:not([id*="update"])');
+            const updateBtn = container.querySelector('[id$="UpdateBtn"]');
+            if (addBtn) addBtn.style.display = 'block';
+            if (updateBtn) updateBtn.style.display = 'none';
+            container.querySelectorAll('[id$="Id"], [id$="editId"]').forEach(el => el.value = '');
+        }
+
+        // ===== إعداد رفع الصور =====
+        function setupImageUpload(fileInputId, targetInputId, folder) {
+            const fileInput = document.getElementById(fileInputId);
+            if (!fileInput) return;
+            fileInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('⚠️ حجم الصورة كبير جداً (حد أقصى 10 م.ب)', 'error');
+                    e.target.value = '';
+                    return;
+                }
+                try {
+                    showSpinner(true);
+                    showToast('⏳ جاري رفع الصورة...', 'success');
+                    const oldUrl = document.getElementById(targetInputId)?.value || null;
+                    const newUrl = await window.uploadAndReplaceImage(file, oldUrl, folder);
+                    document.getElementById(targetInputId).value = newUrl;
+                    changedTables.add('settings');
+                    await saveToSupabaseAdmin(['settings']);
+                    showToast('✅ تم رفع الصورة وحفظها', 'success');
+                } catch (err) {
+                    showToast('❌ فشل رفع الصورة: ' + err.message, 'error');
+                    if (typeof window.logAdminError === 'function') window.logAdminError(err, 'uploadImage');
+                } finally {
+                    showSpinner(false);
+                    e.target.value = '';
+                }
+            });
+        }
+
+        // ===== رفع ملف التطبيق =====
+        document.getElementById('uploadProductFileBtn')?.addEventListener('click', async function() {
+            const input = document.getElementById('productFileInput');
+            const file = input?.files[0];
+            if (!file) { showToast('⚠️ اختر ملفاً أولاً', 'warning'); return; }
+            if (file.size > 50 * 1024 * 1024) {
+                showToast('⚠️ حجم الملف يتجاوز 50 م.ب', 'error');
+                input.value = '';
+                return;
+            }
+            const selectedType = document.getElementById('productFileTypeSelect').value;
+            try {
+                showSpinner(true);
+                showToast('⏳ جاري رفع الملف...', 'success');
+                const fileInfo = await window.uploadFile(file, 'app_files');
+                document.getElementById('productFileUrl').value = fileInfo.url;
+                document.getElementById('productFileTypeHidden').value = selectedType;
+                const infoEl = document.getElementById('productFileInfo');
+                if (infoEl) {
+                    infoEl.innerHTML =
+                        `<span class="success">✅ ${file.name} (${(file.size/1024/1024).toFixed(2)} م.ب) - النوع: ${selectedType.toUpperCase()}</span>`;
+                }
+                changedTables.add('products');
+                await saveToSupabaseAdmin(['products']);
+                showToast('✅ تم رفع الملف وحفظه', 'success');
+            } catch (err) {
+                showToast('❌ فشل رفع الملف: ' + err.message, 'error');
+            } finally {
+                showSpinner(false);
+                if (input) input.value = '';
+            }
+        });
+
+        // ===== تعبئة القوائم المنسدلة =====
+        function populateCategorySelects() {
+            const selects = ['storeCategorySelect', 'productCategorySelect', 'productCategorySelectForApp'];
+            selects.forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                sel.innerHTML = '<option>اختر الفئة</option>';
+                if (appData?.categories) {
+                    appData.categories.forEach(cat => {
+                        sel.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                    });
+                }
+            });
+        }
+
+        function populateStoreSelect(categoryId) {
+            const sel = document.getElementById('productStoreSelect');
+            if (!sel) return;
+            sel.innerHTML = '<option>اختر المطور</option>';
+            if (categoryId && appData?.stores[categoryId]) {
+                appData.stores[categoryId].forEach(store => {
+                    sel.innerHTML += `<option value="${store.id}">${store.name}</option>`;
+                });
+            }
+        }
+
+        // ===== عرض القوائم =====
+        function refreshAllLists() {
+            if (!appData) return;
+            updateLogoPreview();
+            renderCategoriesList();
+            renderStoresList(document.getElementById('storeCategorySelect').value);
+            renderProductsList();
+            renderCarouselList();
+            renderMarqueeList();
+            renderTestimonialsList();
+            renderBlogList();
+            renderUpdatesList();
+            renderPartnersList();
+            renderMessagesList();
+            populateCategorySelects();
+            populateGeneralSettings();
+            populateDesignSettings();
+            populateMenuSettings();
+            populateFooterSettings();
+            populateFooterLinks();
+            renderSocialFields();
+            renderStatsSummary();
+            renderAdminErrors();
+            const vc = document.getElementById('visitorCountAdmin');
+            if (vc) vc.textContent = appData.settings?.visitorCount || 0;
+        }
+
+        // ============================================================
+        // 1. شعار الموقع
+        // ============================================================
+        function updateLogoPreview() {
+            const img = document.getElementById('logoPreview');
+            if (img && appData.settings?.logoImage) {
+                img.src = appData.settings.logoImage;
+                img.style.display = 'block';
+            } else if (img) {
+                img.src = '';
+                img.style.display = 'block';
+            }
+        }
+
+        // رفع الشعار
+        document.getElementById('uploadLogoBtn')?.addEventListener('click', async function() {
+            const fileInput = document.getElementById('logoFileInput');
+            const file = fileInput.files[0];
+            if (!file) { showToast('⚠️ اختر صورة أولاً', 'warning'); return; }
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('⚠️ حجم الصورة كبير جداً (حد أقصى 5 م.ب)', 'error');
+                fileInput.value = '';
+                return;
+            }
+            try {
+                showSpinner(true);
+                const oldUrl = appData.settings?.logoImage || null;
+                const newUrl = await window.uploadAndReplaceImage(file, oldUrl, 'logos');
+                if (!appData.settings) appData.settings = {};
+                appData.settings.logoImage = newUrl;
+                changedTables.add('settings');
+                await saveToSupabaseAdmin(['settings']);
+                updateLogoPreview();
+                showToast('✅ تم رفع الشعار وحفظه', 'success');
+            } catch (err) {
+                showToast('❌ فشل رفع الشعار: ' + err.message, 'error');
+            } finally {
+                showSpinner(false);
+                fileInput.value = '';
+            }
+        });
+
+        // إزالة الشعار
+        document.getElementById('removeLogoBtn')?.addEventListener('click', async function() {
+            if (!confirm('هل تريد إزالة الشعار؟')) return;
+            if (appData.settings) appData.settings.logoImage = '';
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            updateLogoPreview();
+            showToast('✅ تم إزالة الشعار', 'success');
+        });
+
+        // ============================================================
+        // 2. دوال إدارة الفئات
+        // ============================================================
+        function renderCategoriesList() {
+            const container = document.getElementById('categoriesList');
+            if (!container || !appData?.categories) return;
+            container.innerHTML = appData.categories.map(cat => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <i class="${cat.icon || 'fas fa-tag'}" style="color:${cat.color || '#4CAF50'}"></i>
+                            <span>${cat.name}</span>
+                            <span class="badge">${cat.slug || ''}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editCategory('${cat.id}')">تعديل</button>
+                            <button class="del" onclick="deleteCategory('${cat.id}')">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editCategory(id) {
+            const cat = appData.categories.find(c => c.id === id);
+            if (!cat) return;
+            document.getElementById('editCategoryId').value = cat.id;
+            document.getElementById('categoryName').value = cat.name;
+            document.getElementById('categorySlug').value = cat.slug || '';
+            document.getElementById('categoryIcon').value = cat.icon || 'fas fa-tag';
+            document.getElementById('categoryColor').value = cat.color || '#4CAF50';
+            document.getElementById('categoryFeaturedImage').value = cat.featuredImage || '';
+            document.getElementById('categoryShowInIndex').checked = cat.showInIndex !== false;
+            document.getElementById('categoryIndexOrder').value = cat.indexOrder || 0;
+            document.getElementById('addCategoryBtn').style.display = 'none';
+            document.getElementById('updateCategoryBtn').style.display = 'block';
+        }
+
+        async function deleteCategory(id) {
+            if (!confirm('⚠️ هل أنت متأكد من حذف هذه الفئة؟')) return;
+            try {
+                let hasApps = false;
+                for (const storeId in appData.products) {
+                    if (appData.products[storeId]?.some(p => p.categoryId === id)) { hasApps = true; break; }
+                }
+                if (hasApps) {
+                    const cat = appData.categories.find(c => c.id === id);
+                    showToast(`❌ لا يمكن حذف "${cat.name}" لأنها تحتوي على تطبيقات`, 'error');
+                    return;
+                }
+                await window.deleteCategory(id);
+                appData.categories = appData.categories.filter(c => c.id !== id);
+                changedTables.add('categories');
+                await saveToSupabaseAdmin(['categories']);
+                refreshAllLists();
+                showToast('✅ تم حذف الفئة', 'success');
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        }
+
+        document.getElementById('addCategoryBtn').addEventListener('click', async () => {
+            const name = document.getElementById('categoryName').value.trim();
+            if (!name) { showToast('⚠️ اسم الفئة مطلوب', 'warning'); return; }
+            const slug = document.getElementById('categorySlug').value.trim() || name.replace(/\s/g, '-').toLowerCase();
+            if (appData.categories.some(c => c.slug === slug)) {
+                showToast('⚠️ هذا الـ slug موجود مسبقاً', 'error');
+                return;
+            }
+            const newCat = {
+                name,
+                slug,
+                icon: document.getElementById('categoryIcon').value || 'fas fa-tag',
+                color: document.getElementById('categoryColor').value || '#4CAF50',
+                featuredImage: document.getElementById('categoryFeaturedImage').value || '',
+                showInIndex: document.getElementById('categoryShowInIndex').checked,
+                indexOrder: parseInt(document.getElementById('categoryIndexOrder').value) || 0
+            };
+            try {
+                const result = await window.addCategory(newCat);
+                appData.categories.push(result);
+                changedTables.add('categories');
+                await saveToSupabaseAdmin(['categories']);
+                refreshAllLists();
+                resetForm('categoryForm');
+                showToast('✅ تم إضافة الفئة', 'success');
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        });
+
+        document.getElementById('updateCategoryBtn').addEventListener('click', async () => {
+            const id = document.getElementById('editCategoryId').value;
+            if (!id) return;
+            const updated = {
+                name: document.getElementById('categoryName').value.trim(),
+                slug: document.getElementById('categorySlug').value.trim(),
+                icon: document.getElementById('categoryIcon').value || 'fas fa-tag',
+                color: document.getElementById('categoryColor').value || '#4CAF50',
+                featuredImage: document.getElementById('categoryFeaturedImage').value || '',
+                showInIndex: document.getElementById('categoryShowInIndex').checked,
+                indexOrder: parseInt(document.getElementById('categoryIndexOrder').value) || 0
+            };
+            try {
+                const result = await window.updateCategory(id, updated);
+                const idx = appData.categories.findIndex(c => c.id === id);
+                if (idx !== -1) appData.categories[idx] = result;
+                changedTables.add('categories');
+                await saveToSupabaseAdmin(['categories']);
+                refreshAllLists();
+                resetForm('categoryForm');
+                showToast('✅ تم تحديث الفئة', 'success');
+            } catch (err) {
+                showToast('❌ ' + err.message, 'error');
+            }
+        });
+
+        // ============================================================
+        // 3. دوال إدارة التطبيقات
+        // ============================================================
+        function renderProductsList() {
+            const container = document.getElementById('productsList');
+            if (!container) return;
+            container.innerHTML = '';
+            for (const storeId in appData.products) {
+                const store = findStoreById(storeId);
+                if (!store) continue;
+                (appData.products[storeId] || []).forEach(prod => {
+                    const catName = appData.categories.find(c => c.id === prod.categoryId)?.name || 'بدون فئة';
+                    container.innerHTML += `
+                            <div class="admin-item">
+                                <div class="item-info">
+                                    <span style="font-weight:700;">${prod.name}</span>
+                                    <span class="badge">${catName}</span>
+                                    <span class="badge green">⬇️ ${prod.downloadCount || 0}</span>
+                                    ${prod.restricted ? '<span class="badge red">🔒 مقيد</span>' : ''}
+                                    ${prod.paymentRequired ? '<span class="badge orange">💰 دفع</span>' : ''}
+                                </div>
+                                <div class="item-actions">
+                                    <button class="edit" onclick="editProduct('${storeId}','${prod.id}')">تعديل</button>
+                                    <button class="del" onclick="deleteProduct('${storeId}','${prod.id}')">حذف</button>
+                                    <button class="share" onclick="copyShareLink('${prod.id}')"><i class="fas fa-share-alt"></i></button>
+                                </div>
+                            </div>
+                        `;
+                });
+            }
+        }
+
+        function copyShareLink(productId) {
+            const link = window.getProductShareLink ? window.getProductShareLink(productId) :
+                `${window.location.origin}/index.html?product=${productId}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(link).then(() => showToast('✅ تم نسخ رابط التوزيع', 'success'))
+                    .catch(() => fallbackCopy(link));
+            } else {
+                fallbackCopy(link);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('✅ تم نسخ الرابط', 'success');
+        }
+
+        function editProduct(storeId, productId) {
+            const product = appData.products[storeId]?.find(p => p.id === productId);
+            if (!product) return;
+            currentEditProductStoreId = storeId;
+            currentEditProductId = productId;
+            document.getElementById('editProductStoreId').value = storeId;
+            document.getElementById('editProductId').value = productId;
+            document.getElementById('productName').value = product.name || '';
+            document.getElementById('productAppSize').value = product.appSize || '';
+            document.getElementById('productAppVersion').value = product.appVersion || '';
+            document.getElementById('productAppDownloads').value = product.appDownloads || '';
+            document.getElementById('productAppRating').value = product.appRating || '';
+            document.getElementById('productAppUpdateDate').value = product.appUpdateDate || '';
+            document.getElementById('productOldPrice').value = product.oldPrice || 0;
+            document.getElementById('productNewPrice').value = product.newPrice || 0;
+            document.getElementById('productImage').value = product.image || '';
+            document.getElementById('productLink').value = product.link || '';
+            document.getElementById('productSeoKeywords').value = product.seoKeywords || '';
+            document.getElementById('productHashtags').value = (product.hashtags || []).join(', ');
+            document.getElementById('productRestricted').checked = product.restricted || false;
+            document.getElementById('productRestrictionReason').value = product.restrictionReason || '';
+            document.getElementById('productPaymentRequired').checked = product.paymentRequired || false;
+            document.getElementById('productPrice').value = product.price || 0;
+            document.getElementById('productPaymentType').value = product.paymentType || 'one_time';
+            document.getElementById('productCategorySelectForApp').value = product.categoryId || '';
+            document.getElementById('productFileUrl').value = product.file_url || '';
+            document.getElementById('productFileTypeHidden').value = product.file_type || '';
+            document.getElementById('productFileTypeSelect').value = product.file_type || 'apk';
+            const infoEl = document.getElementById('productFileInfo');
+            if (infoEl) {
+                infoEl.innerHTML = product.file_url ?
+                    `<span class="success">✅ ملف مرفوع (${(product.file_type||'ملف').toUpperCase()})</span>` :
+                    'لم يتم رفع ملف';
+            }
+            document.getElementById('addProductBtn').style.display = 'none';
+            document.getElementById('updateProductBtn').style.display = 'block';
+        }
+
+        async function deleteProduct(storeId, productId) {
+            if (!confirm('حذف هذا التطبيق نهائياً؟')) return;
+            const idx = appData.products[storeId]?.findIndex(p => p.id === productId);
+            if (idx === -1 || idx === undefined) return;
+            appData.products[storeId].splice(idx, 1);
+            changedTables.add('products');
+            await saveToSupabaseAdmin(['products']);
+            refreshAllLists();
+            showToast('✅ تم حذف التطبيق', 'success');
+        }
+
+        document.getElementById('addProductBtn').addEventListener('click', async () => {
+            const storeId = document.getElementById('productStoreSelect').value;
+            if (!storeId || storeId === 'اختر المطور') { showToast('⚠️ اختر المطور أولاً', 'warning'); return; }
+            const name = document.getElementById('productName').value.trim();
+            if (!name) { showToast('⚠️ اسم التطبيق مطلوب', 'warning'); return; }
+            const categoryId = document.getElementById('productCategorySelectForApp').value;
+            if (!categoryId || categoryId === 'اختر الفئة') { showToast('⚠️ اختر الفئة', 'warning'); return; }
+            const hashtags = document.getElementById('productHashtags').value.split(',').map(t => t.trim()).filter(Boolean);
+            const newProduct = {
+                id: generateId(),
+                storeId,
+                categoryId,
+                name,
+                desc: '',
+                appSize: document.getElementById('productAppSize').value.trim(),
+                appVersion: document.getElementById('productAppVersion').value.trim(),
+                appDownloads: document.getElementById('productAppDownloads').value.trim(),
+                appRating: parseFloat(document.getElementById('productAppRating').value) || 0,
+                appUpdateDate: document.getElementById('productAppUpdateDate').value || '',
+                oldPrice: parseFloat(document.getElementById('productOldPrice').value) || 0,
+                newPrice: parseFloat(document.getElementById('productNewPrice').value) || 0,
+                image: document.getElementById('productImage').value || 'https://placehold.co/300/e2e8f0/94a3b8?text=?',
+                link: document.getElementById('productLink').value || '#',
+                seoKeywords: document.getElementById('productSeoKeywords').value || '',
+                hashtags,
+                restricted: document.getElementById('productRestricted').checked,
+                restrictionReason: document.getElementById('productRestrictionReason').value.trim(),
+                paymentRequired: document.getElementById('productPaymentRequired').checked,
+                price: parseFloat(document.getElementById('productPrice').value) || 0,
+                paymentType: document.getElementById('productPaymentType').value,
+                file_url: document.getElementById('productFileUrl').value,
+                file_type: document.getElementById('productFileTypeHidden').value,
+                version: 0,
+                downloadCount: 0,
+                images: []
+            };
+            if (!appData.products[storeId]) appData.products[storeId] = [];
+            appData.products[storeId].push(newProduct);
+            changedTables.add('products');
+            await saveToSupabaseAdmin(['products']);
+            refreshAllLists();
+            resetForm('productForm');
+            showToast('✅ تم إضافة التطبيق', 'success');
+        });
+
+        document.getElementById('updateProductBtn').addEventListener('click', async () => {
+            if (!currentEditProductStoreId || !currentEditProductId) return;
+            const product = appData.products[currentEditProductStoreId]?.find(p => p.id === currentEditProductId);
+            if (!product) return;
+            const hashtags = document.getElementById('productHashtags').value.split(',').map(t => t.trim()).filter(Boolean);
+            Object.assign(product, {
+                name: document.getElementById('productName').value.trim(),
+                appSize: document.getElementById('productAppSize').value.trim(),
+                appVersion: document.getElementById('productAppVersion').value.trim(),
+                appDownloads: document.getElementById('productAppDownloads').value.trim(),
+                appRating: parseFloat(document.getElementById('productAppRating').value) || 0,
+                appUpdateDate: document.getElementById('productAppUpdateDate').value || '',
+                oldPrice: parseFloat(document.getElementById('productOldPrice').value) || 0,
+                newPrice: parseFloat(document.getElementById('productNewPrice').value) || 0,
+                image: document.getElementById('productImage').value || 'https://placehold.co/300/e2e8f0/94a3b8?text=?',
+                link: document.getElementById('productLink').value || '#',
+                seoKeywords: document.getElementById('productSeoKeywords').value || '',
+                hashtags,
+                restricted: document.getElementById('productRestricted').checked,
+                restrictionReason: document.getElementById('productRestrictionReason').value.trim(),
+                paymentRequired: document.getElementById('productPaymentRequired').checked,
+                price: parseFloat(document.getElementById('productPrice').value) || 0,
+                paymentType: document.getElementById('productPaymentType').value,
+                categoryId: document.getElementById('productCategorySelectForApp').value || '',
+                file_url: document.getElementById('productFileUrl').value,
+                file_type: document.getElementById('productFileTypeHidden').value
+            });
+            if (product.file_url) product.version = (product.version || 0) + 1;
+            changedTables.add('products');
+            await saveToSupabaseAdmin(['products']);
+            refreshAllLists();
+            resetForm('productForm');
+            currentEditProductStoreId = null;
+            currentEditProductId = null;
+            showToast('✅ تم تحديث التطبيق', 'success');
+        });
+
+        document.getElementById('productCategorySelect').addEventListener('change', (e) => {
+            populateStoreSelect(e.target.value);
+        });
+
+        document.getElementById('storeCategorySelect').addEventListener('change', (e) => {
+            renderStoresList(e.target.value);
+        });
+
+        // ============================================================
+        // 4. دوال إدارة المطورين
+        // ============================================================
+        function renderStoresList(category) {
+            const container = document.getElementById('storesList');
+            if (!container || !category || category === 'اختر الفئة' || !appData) return;
+            const stores = appData.stores[category] || [];
+            container.innerHTML = stores.map(store => `
+                    <div class="admin-item ${store.hidden ? 'hidden-item' : ''}">
+                        <div class="item-info">
+                            <span>${store.name}</span>
+                            <span class="badge">${(appData.products[store.id]||[]).length} تطبيق</span>
+                            ${store.hidden ? '<span class="badge red">مخفي</span>' : ''}
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editStore('${store.id}')">تعديل</button>
+                            <button class="toggle" onclick="toggleStoreHidden('${store.id}')">${store.hidden ? 'إظهار' : 'إخفاء'}</button>
+                            <button class="del" onclick="deleteStore('${store.id}')">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editStore(storeId) {
+            const store = findStoreById(storeId);
+            if (!store) return;
+            currentEditStoreId = storeId;
+            document.getElementById('editStoreId').value = storeId;
+            document.getElementById('storeName').value = store.name;
+            document.getElementById('storeLogo').value = store.logo || '';
+            document.getElementById('storeExternalUrl').value = store.externalUrl || '';
+            document.getElementById('storeDescription').value = store.description || '';
+            document.getElementById('storePhone').value = store.phone || '';
+            document.getElementById('storeAddress').value = store.address || '';
+            document.getElementById('storeHidden').checked = store.hidden || false;
+            document.getElementById('storeProductDisplayMode').value = store.productDisplayMode || 'grid';
+            document.getElementById('storeProductDisplayCount').value = store.productDisplayCount || 10;
+            document.getElementById('storeNumStrips').value = store.numStrips || 10;
+            document.getElementById('addStoreBtn').style.display = 'none';
+            document.getElementById('updateStoreBtn').style.display = 'block';
+        }
+
+        async function toggleStoreHidden(storeId) {
+            const store = findStoreById(storeId);
+            if (!store) return;
+            store.hidden = !store.hidden;
+            changedTables.add('stores');
+            await saveToSupabaseAdmin(['stores']);
+            refreshAllLists();
+            showToast(store.hidden ? 'تم إخفاء المطور' : 'تم إظهار المطور', 'success');
+        }
+
+        async function deleteStore(storeId) {
+            if (!confirm('حذف هذا المطور وجميع تطبيقاته؟')) return;
+            let foundCat = null;
+            for (const cat in appData.stores) {
+                const idx = appData.stores[cat].findIndex(s => s.id === storeId);
+                if (idx !== -1) { foundCat = cat;
+                    appData.stores[cat].splice(idx, 1); break; }
+            }
+            if (!foundCat) return;
+            delete appData.products[storeId];
+            changedTables.add('stores');
+            changedTables.add('products');
+            await saveToSupabaseAdmin(['stores', 'products']);
+            refreshAllLists();
+            showToast('✅ تم حذف المطور', 'success');
+        }
+
+        document.getElementById('addStoreBtn').addEventListener('click', async () => {
+            const category = document.getElementById('storeCategorySelect').value;
+            if (!category || category === 'اختر الفئة') { showToast('⚠️ اختر الفئة أولاً', 'warning'); return; }
+            const name = document.getElementById('storeName').value.trim();
+            if (!name) { showToast('⚠️ اسم المطور مطلوب', 'warning'); return; }
+            const newStore = {
+                id: generateId(),
+                name,
+                category,
+                logo: document.getElementById('storeLogo').value || 'https://placehold.co/100/e2e8f0/94a3b8?text=?',
+                externalUrl: document.getElementById('storeExternalUrl').value || '#',
+                hidden: document.getElementById('storeHidden').checked,
+                description: document.getElementById('storeDescription').value || '',
+                phone: document.getElementById('storePhone').value || '',
+                address: document.getElementById('storeAddress').value || '',
+                ownerCode: '',
+                allowUpload: false,
+                banners: [],
+                productDisplayMode: document.getElementById('storeProductDisplayMode').value || 'grid',
+                productDisplayCount: parseInt(document.getElementById('storeProductDisplayCount').value) || 10,
+                numStrips: parseInt(document.getElementById('storeNumStrips').value) || 10
+            };
+            if (!appData.stores[category]) appData.stores[category] = [];
+            appData.stores[category].push(newStore);
+            appData.products[newStore.id] = [];
+            changedTables.add('stores');
+            changedTables.add('products');
+            await saveToSupabaseAdmin(['stores', 'products']);
+            refreshAllLists();
+            resetForm('storeForm');
+            showToast('✅ تم إضافة المطور', 'success');
+        });
+
+        document.getElementById('updateStoreBtn').addEventListener('click', async () => {
+            if (!currentEditStoreId) return;
+            const store = findStoreById(currentEditStoreId);
+            if (!store) return;
+            Object.assign(store, {
+                name: document.getElementById('storeName').value.trim(),
+                logo: document.getElementById('storeLogo').value || 'https://placehold.co/100/e2e8f0/94a3b8?text=?',
+                externalUrl: document.getElementById('storeExternalUrl').value || '#',
+                description: document.getElementById('storeDescription').value || '',
+                phone: document.getElementById('storePhone').value || '',
+                address: document.getElementById('storeAddress').value || '',
+                hidden: document.getElementById('storeHidden').checked,
+                productDisplayMode: document.getElementById('storeProductDisplayMode').value || 'grid',
+                productDisplayCount: parseInt(document.getElementById('storeProductDisplayCount').value) || 10,
+                numStrips: parseInt(document.getElementById('storeNumStrips').value) || 10
+            });
+            changedTables.add('stores');
+            await saveToSupabaseAdmin(['stores']);
+            refreshAllLists();
+            resetForm('storeForm');
+            currentEditStoreId = null;
+            showToast('✅ تم تحديث المطور', 'success');
+        });
+
+        // ============================================================
+        // 5. دوال الإعلانات الدوارة (Carousel)
+        // ============================================================
+        function renderCarouselList() {
+            const container = document.getElementById('carouselList');
+            if (!container || !appData?.carousel) return;
+            container.innerHTML = appData.carousel.map(ad => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <span>${ad.name}</span>
+                            <span class="badge ${ad.active ? 'green' : 'red'}">${ad.active ? 'نشط' : 'غير نشط'}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editCarousel('${ad.id}')">تعديل</button>
+                            <button class="del" onclick="deleteCarousel('${ad.id}')">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editCarousel(id) {
+            const ad = appData.carousel.find(a => a.id === id);
+            if (!ad) return;
+            currentEditCarouselId = id;
+            document.getElementById('editCarouselId').value = id;
+            document.getElementById('carouselName').value = ad.name;
+            document.getElementById('carouselLink').value = ad.link || '#';
+            document.getElementById('carouselImage').value = ad.image || '';
+            document.getElementById('carouselOrder').value = ad.order || 0;
+            document.getElementById('carouselActive').checked = ad.active !== false;
+            document.getElementById('addCarouselBtn').style.display = 'none';
+            document.getElementById('updateCarouselBtn').style.display = 'block';
+        }
+
+        async function deleteCarousel(id) {
+            if (!confirm('حذف هذا الإعلان؟')) return;
+            appData.carousel = appData.carousel.filter(a => a.id !== id);
+            changedTables.add('carousel');
+            await saveToSupabaseAdmin(['carousel']);
+            refreshAllLists();
+            showToast('✅ تم حذف الإعلان', 'success');
+        }
+
+        document.getElementById('addCarouselBtn').addEventListener('click', async () => {
+            const name = document.getElementById('carouselName').value.trim();
+            if (!name) { showToast('⚠️ اسم الإعلان مطلوب', 'warning'); return; }
+            const newAd = {
+                id: generateId(),
+                name,
+                link: document.getElementById('carouselLink').value || '#',
+                image: document.getElementById('carouselImage').value || 'https://placehold.co/800x300/4CAF50/ffffff?text=Ad',
+                order: parseInt(document.getElementById('carouselOrder').value) || 0,
+                active: document.getElementById('carouselActive').checked
+            };
+            if (!appData.carousel) appData.carousel = [];
+            appData.carousel.push(newAd);
+            changedTables.add('carousel');
+            await saveToSupabaseAdmin(['carousel']);
+            refreshAllLists();
+            resetForm('carouselForm');
+            showToast('✅ تم إضافة الإعلان', 'success');
+        });
+
+        document.getElementById('updateCarouselBtn').addEventListener('click', async () => {
+            if (!currentEditCarouselId) return;
+            const idx = appData.carousel.findIndex(a => a.id === currentEditCarouselId);
+            if (idx === -1) return;
+            appData.carousel[idx] = {
+                ...appData.carousel[idx],
+                name: document.getElementById('carouselName').value.trim(),
+                link: document.getElementById('carouselLink').value || '#',
+                image: document.getElementById('carouselImage').value || 'https://placehold.co/800x300/4CAF50/ffffff?text=Ad',
+                order: parseInt(document.getElementById('carouselOrder').value) || 0,
+                active: document.getElementById('carouselActive').checked
+            };
+            changedTables.add('carousel');
+            await saveToSupabaseAdmin(['carousel']);
+            refreshAllLists();
+            resetForm('carouselForm');
+            currentEditCarouselId = null;
+            showToast('✅ تم تحديث الإعلان', 'success');
+        });
+
+        // ============================================================
+        // 6. دوال شريط الماركي
+        // ============================================================
+        function renderMarqueeList() {
+            const container = document.getElementById('marqueeList');
+            if (!container || !appData?.marquee) return;
+            container.innerHTML = appData.marquee.map((item, idx) => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <span>${item.name}</span>
+                            <span class="badge">#${idx+1}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editMarquee(${idx})">تعديل</button>
+                            <button class="del" onclick="deleteMarquee(${idx})">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editMarquee(index) {
+            const item = appData.marquee[index];
+            if (!item) return;
+            currentEditMarqueeId = index;
+            document.getElementById('editMarqueeId').value = index;
+            document.getElementById('marqueeName').value = item.name || '';
+            document.getElementById('marqueeIcon').value = item.icon || '';
+            document.getElementById('marqueeLink').value = item.link || '#';
+            document.getElementById('addMarqueeBtn').style.display = 'none';
+            document.getElementById('updateMarqueeBtn').style.display = 'block';
+        }
+
+        async function deleteMarquee(index) {
+            if (!confirm('حذف هذا العنصر؟')) return;
+            appData.marquee.splice(index, 1);
+            changedTables.add('marquee');
+            await saveToSupabaseAdmin(['marquee']);
+            refreshAllLists();
+            showToast('✅ تم الحذف', 'success');
+        }
+
+        document.getElementById('addMarqueeBtn').addEventListener('click', async () => {
+            const name = document.getElementById('marqueeName').value.trim();
+            if (!name) { showToast('⚠️ اسم العنصر مطلوب', 'warning'); return; }
+            if (!appData.marquee) appData.marquee = [];
+            appData.marquee.push({
+                name,
+                icon: document.getElementById('marqueeIcon').value || 'https://placehold.co/64/4CAF50/ffffff?text=!',
+                link: document.getElementById('marqueeLink').value || '#'
+            });
+            changedTables.add('marquee');
+            await saveToSupabaseAdmin(['marquee']);
+            refreshAllLists();
+            resetForm('marqueeForm');
+            showToast('✅ تم إضافة العنصر', 'success');
+        });
+
+        document.getElementById('updateMarqueeBtn').addEventListener('click', async () => {
+            if (currentEditMarqueeId === null || currentEditMarqueeId === undefined) return;
+            const idx = currentEditMarqueeId;
+            if (!appData.marquee[idx]) return;
+            appData.marquee[idx] = {
+                name: document.getElementById('marqueeName').value.trim(),
+                icon: document.getElementById('marqueeIcon').value || 'https://placehold.co/64/4CAF50/ffffff?text=!',
+                link: document.getElementById('marqueeLink').value || '#'
+            };
+            changedTables.add('marquee');
+            await saveToSupabaseAdmin(['marquee']);
+            refreshAllLists();
+            resetForm('marqueeForm');
+            currentEditMarqueeId = null;
+            showToast('✅ تم التحديث', 'success');
+        });
+
+        // ============================================================
+        // 7. دوال مراجعات المستخدمين
+        // ============================================================
+        function renderTestimonialsList() {
+            const container = document.getElementById('testimonialsList');
+            if (!container || !appData?.testimonials) return;
+            container.innerHTML = appData.testimonials.map(t => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <span>${t.name}</span>
+                            <span class="badge orange">⭐ ${t.rating}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editTestimonial('${t.id}')">تعديل</button>
+                            <button class="del" onclick="deleteTestimonial('${t.id}')">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editTestimonial(id) {
+            const t = appData.testimonials.find(t => t.id === id);
+            if (!t) return;
+            currentEditTestimonialId = id;
+            document.getElementById('editTestimonialId').value = id;
+            document.getElementById('testimonialName').value = t.name;
+            document.getElementById('testimonialImage').value = t.image || '';
+            document.getElementById('testimonialRating').value = t.rating || 5;
+            document.getElementById('testimonialReview').value = t.review || '';
+            document.getElementById('addTestimonialBtn').style.display = 'none';
+            document.getElementById('updateTestimonialBtn').style.display = 'block';
+        }
+
+        async function deleteTestimonial(id) {
+            if (!confirm('حذف هذه المراجعة؟')) return;
+            appData.testimonials = appData.testimonials.filter(t => t.id !== id);
+            changedTables.add('testimonials');
+            await saveToSupabaseAdmin(['testimonials']);
+            refreshAllLists();
+            showToast('✅ تم حذف المراجعة', 'success');
+        }
+
+        document.getElementById('addTestimonialBtn').addEventListener('click', async () => {
+            const name = document.getElementById('testimonialName').value.trim();
+            if (!name) { showToast('⚠️ الاسم مطلوب', 'warning'); return; }
+            if (!appData.testimonials) appData.testimonials = [];
+            appData.testimonials.push({
+                id: generateId(),
+                name,
+                image: document.getElementById('testimonialImage').value || 'https://placehold.co/100/e2e8f0/94a3b8?text=?',
+                rating: parseInt(document.getElementById('testimonialRating').value) || 5,
+                review: document.getElementById('testimonialReview').value.trim()
+            });
+            changedTables.add('testimonials');
+            await saveToSupabaseAdmin(['testimonials']);
+            refreshAllLists();
+            resetForm('testimonialForm');
+            showToast('✅ تم إضافة المراجعة', 'success');
+        });
+
+        document.getElementById('updateTestimonialBtn').addEventListener('click', async () => {
+            if (!currentEditTestimonialId) return;
+            const idx = appData.testimonials.findIndex(t => t.id === currentEditTestimonialId);
+            if (idx === -1) return;
+            appData.testimonials[idx] = {
+                ...appData.testimonials[idx],
+                name: document.getElementById('testimonialName').value.trim(),
+                image: document.getElementById('testimonialImage').value || 'https://placehold.co/100/e2e8f0/94a3b8?text=?',
+                rating: parseInt(document.getElementById('testimonialRating').value) || 5,
+                review: document.getElementById('testimonialReview').value.trim()
+            };
+            changedTables.add('testimonials');
+            await saveToSupabaseAdmin(['testimonials']);
+            refreshAllLists();
+            resetForm('testimonialForm');
+            currentEditTestimonialId = null;
+            showToast('✅ تم تحديث المراجعة', 'success');
+        });
+
+        // ============================================================
+        // 8. دوال المدونة
+        // ============================================================
+        function renderBlogList() {
+            const container = document.getElementById('blogList');
+            if (!container) return;
+            const posts = appData.settings?.blogPosts || [];
+            if (!posts.length) { container.innerHTML = '<p style="color:var(--text-muted);">لا توجد مقالات</p>'; return; }
+            container.innerHTML = posts.map((post, idx) => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <span>${post.title}</span>
+                            <span class="badge">${post.date || ''}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editBlog(${idx})">تعديل</button>
+                            <button class="del" onclick="deleteBlog(${idx})">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editBlog(index) {
+            const posts = appData.settings?.blogPosts || [];
+            const post = posts[index];
+            if (!post) return;
+            document.getElementById('editBlogId').value = index;
+            document.getElementById('blogTitle').value = post.title || '';
+            document.getElementById('blogContent').value = post.content || '';
+            document.getElementById('blogImage').value = post.image || '';
+            document.getElementById('blogDate').value = post.date || '';
+            document.getElementById('blogHashtags').value = (post.hashtags || []).join(', ');
+            document.getElementById('addBlogBtn').style.display = 'none';
+            document.getElementById('updateBlogBtn').style.display = 'block';
+        }
+
+        async function deleteBlog(index) {
+            if (!confirm('حذف هذا المقال؟')) return;
+            if (!appData.settings.blogPosts) return;
+            appData.settings.blogPosts.splice(index, 1);
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            refreshAllLists();
+            showToast('✅ تم حذف المقال', 'success');
+        }
+
+        document.getElementById('addBlogBtn').addEventListener('click', async () => {
+            const title = document.getElementById('blogTitle').value.trim();
+            if (!title) { showToast('⚠️ عنوان المقال مطلوب', 'warning'); return; }
+            if (!appData.settings.blogPosts) appData.settings.blogPosts = [];
+            const hashtags = document.getElementById('blogHashtags').value.split(',').map(t => t.trim()).filter(Boolean);
+            appData.settings.blogPosts.push({
+                id: generateId(),
+                title,
+                content: document.getElementById('blogContent').value.trim(),
+                image: document.getElementById('blogImage').value || 'https://placehold.co/800x400/e2e8f0/94a3b8?text=?',
+                date: document.getElementById('blogDate').value || new Date().toISOString().split('T')[0],
+                hashtags
+            });
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            refreshAllLists();
+            resetForm('blogForm');
+            document.getElementById('addBlogBtn').style.display = 'block';
+            document.getElementById('updateBlogBtn').style.display = 'none';
+            showToast('✅ تم إضافة المقال', 'success');
+        });
+
+        document.getElementById('updateBlogBtn').addEventListener('click', async () => {
+            const index = parseInt(document.getElementById('editBlogId').value);
+            if (isNaN(index)) return;
+            const posts = appData.settings.blogPosts;
+            if (!posts || !posts[index]) return;
+            const hashtags = document.getElementById('blogHashtags').value.split(',').map(t => t.trim()).filter(Boolean);
+            posts[index] = {
+                ...posts[index],
+                title: document.getElementById('blogTitle').value.trim(),
+                content: document.getElementById('blogContent').value.trim(),
+                image: document.getElementById('blogImage').value || 'https://placehold.co/800x400/e2e8f0/94a3b8?text=?',
+                date: document.getElementById('blogDate').value || posts[index].date,
+                hashtags
+            };
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            refreshAllLists();
+            resetForm('blogForm');
+            document.getElementById('addBlogBtn').style.display = 'block';
+            document.getElementById('updateBlogBtn').style.display = 'none';
+            showToast('✅ تم تحديث المقال', 'success');
+        });
+
+        // ============================================================
+        // 9. دوال التحديثات
+        // ============================================================
+        function renderUpdatesList() {
+            const container = document.getElementById('updatesList');
+            if (!container) return;
+            const updates = appData.updates || [];
+            if (!updates.length) { container.innerHTML = '<p style="color:var(--text-muted);">لا توجد تحديثات</p>'; return; }
+            container.innerHTML = updates.map((u, idx) => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <span>${u.title}</span>
+                            <span class="badge">${u.date || ''}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editUpdate(${idx})">تعديل</button>
+                            <button class="del" onclick="deleteUpdate(${idx})">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editUpdate(index) {
+            const updates = appData.updates || [];
+            const u = updates[index];
+            if (!u) return;
+            currentEditUpdateId = index;
+            document.getElementById('editUpdateId').value = index;
+            document.getElementById('updateTitle').value = u.title || '';
+            document.getElementById('updateDate').value = u.date || '';
+            document.getElementById('updateContent').value = u.content || '';
+            document.getElementById('addUpdateBtn').style.display = 'none';
+            document.getElementById('updateUpdateBtn').style.display = 'block';
+        }
+
+        async function deleteUpdate(index) {
+            if (!confirm('حذف هذا التحديث؟')) return;
+            if (!appData.updates) return;
+            appData.updates.splice(index, 1);
+            changedTables.add('updates');
+            await saveToSupabaseAdmin(['updates']);
+            refreshAllLists();
+            showToast('✅ تم الحذف', 'success');
+        }
+
+        document.getElementById('addUpdateBtn').addEventListener('click', async () => {
+            const title = document.getElementById('updateTitle').value.trim();
+            if (!title) { showToast('⚠️ عنوان التحديث مطلوب', 'warning'); return; }
+            if (!appData.updates) appData.updates = [];
+            appData.updates.push({
+                id: generateId(),
+                title,
+                date: document.getElementById('updateDate').value || new Date().toISOString().split('T')[0],
+                content: document.getElementById('updateContent').value.trim()
+            });
+            changedTables.add('updates');
+            await saveToSupabaseAdmin(['updates']);
+            refreshAllLists();
+            resetForm('updateForm');
+            showToast('✅ تم إضافة التحديث', 'success');
+        });
+
+        document.getElementById('updateUpdateBtn').addEventListener('click', async () => {
+            const index = parseInt(document.getElementById('editUpdateId').value);
+            if (isNaN(index)) return;
+            if (!appData.updates || !appData.updates[index]) return;
+            appData.updates[index] = {
+                ...appData.updates[index],
+                title: document.getElementById('updateTitle').value.trim(),
+                date: document.getElementById('updateDate').value || appData.updates[index].date,
+                content: document.getElementById('updateContent').value.trim()
+            };
+            changedTables.add('updates');
+            await saveToSupabaseAdmin(['updates']);
+            refreshAllLists();
+            resetForm('updateForm');
+            currentEditUpdateId = null;
+            showToast('✅ تم تحديث التحديث', 'success');
+        });
+
+        // ============================================================
+        // 10. دوال الشركاء
+        // ============================================================
+        function renderPartnersList() {
+            const container = document.getElementById('partnersList');
+            if (!container) return;
+            const partners = appData.partners || [];
+            if (!partners.length) { container.innerHTML = '<p style="color:var(--text-muted);">لا توجد شركاء</p>'; return; }
+            container.innerHTML = partners.map((p, idx) => `
+                    <div class="admin-item">
+                        <div class="item-info">
+                            <span>${p.name}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="edit" onclick="editPartner(${idx})">تعديل</button>
+                            <button class="del" onclick="deletePartner(${idx})">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function editPartner(index) {
+            const partners = appData.partners || [];
+            const p = partners[index];
+            if (!p) return;
+            currentEditPartnerId = index;
+            document.getElementById('editPartnerId').value = index;
+            document.getElementById('partnerName').value = p.name || '';
+            document.getElementById('partnerLogo').value = p.logo || '';
+            document.getElementById('partnerUrl').value = p.url || '#';
+            document.getElementById('addPartnerBtn').style.display = 'none';
+            document.getElementById('updatePartnerBtn').style.display = 'block';
+        }
+
+        async function deletePartner(index) {
+            if (!confirm('حذف هذا الشريك؟')) return;
+            if (!appData.partners) return;
+            appData.partners.splice(index, 1);
+            changedTables.add('partners');
+            await saveToSupabaseAdmin(['partners']);
+            refreshAllLists();
+            showToast('✅ تم الحذف', 'success');
+        }
+
+        document.getElementById('addPartnerBtn').addEventListener('click', async () => {
+            const name = document.getElementById('partnerName').value.trim();
+            if (!name) { showToast('⚠️ اسم الشريك مطلوب', 'warning'); return; }
+            if (!appData.partners) appData.partners = [];
+            appData.partners.push({
+                id: generateId(),
+                name,
+                logo: document.getElementById('partnerLogo').value || 'https://placehold.co/100/4CAF50/ffffff?text=P',
+                url: document.getElementById('partnerUrl').value || '#'
+            });
+            changedTables.add('partners');
+            await saveToSupabaseAdmin(['partners']);
+            refreshAllLists();
+            resetForm('partnerForm');
+            showToast('✅ تم إضافة الشريك', 'success');
+        });
+
+        document.getElementById('updatePartnerBtn').addEventListener('click', async () => {
+            const index = parseInt(document.getElementById('editPartnerId').value);
+            if (isNaN(index)) return;
+            if (!appData.partners || !appData.partners[index]) return;
+            appData.partners[index] = {
+                ...appData.partners[index],
+                name: document.getElementById('partnerName').value.trim(),
+                logo: document.getElementById('partnerLogo').value || 'https://placehold.co/100/4CAF50/ffffff?text=P',
+                url: document.getElementById('partnerUrl').value || '#'
+            };
+            changedTables.add('partners');
+            await saveToSupabaseAdmin(['partners']);
+            refreshAllLists();
+            resetForm('partnerForm');
+            currentEditPartnerId = null;
+            showToast('✅ تم تحديث الشريك', 'success');
+        });
+
+        // ============================================================
+        // 11. الإعدادات العامة
+        // ============================================================
+        function populateGeneralSettings() {
+            const s = appData.settings || {};
+            document.getElementById('currencySelect').value = s.currency || 'SAR';
+            document.getElementById('languageSelect').value = s.language || 'ar';
+            document.getElementById('showSaudiFlag').checked = s.showSaudiFlag !== false;
+            document.getElementById('cartEnabled').checked = s.cartEnabled !== false;
+            document.getElementById('enableUserProfile').checked = s.enableUserProfile !== false;
+            document.getElementById('contactEmail').value = s.contactEmail || '';
+            document.getElementById('whatsappNumber').value = s.whatsappNumber || '';
+            document.getElementById('trackingCode').value = s.trackingCode || '';
+        }
+
+        document.getElementById('saveGeneralSettings').addEventListener('click', async () => {
+            const s = appData.settings || {};
+            s.currency = document.getElementById('currencySelect').value;
+            s.language = document.getElementById('languageSelect').value;
+            s.showSaudiFlag = document.getElementById('showSaudiFlag').checked;
+            s.cartEnabled = document.getElementById('cartEnabled').checked;
+            s.enableUserProfile = document.getElementById('enableUserProfile').checked;
+            s.contactEmail = document.getElementById('contactEmail').value.trim();
+            s.whatsappNumber = document.getElementById('whatsappNumber').value.trim();
+            s.trackingCode = document.getElementById('trackingCode').value.trim();
+            appData.settings = s;
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            showToast('✅ تم حفظ الإعدادات العامة', 'success');
+        });
+
+        // ============================================================
+        // 12. إعدادات الدفع
+        // ============================================================
+        function populatePaymentSettings() {
+            const p = appData.settings?.paymentSettings || {};
+            document.getElementById('paymentEnabled').checked = p.enabled || false;
+            document.getElementById('paymentGateway').value = p.gateway || 'simulated';
+            document.getElementById('paymentPublicKey').value = p.publicKey || '';
+            document.getElementById('paymentSecretKey').value = p.secretKey || '';
+            document.getElementById('paymentCurrency').value = p.currency || 'SAR';
+            document.getElementById('paymentTaxRate').value = p.taxRate || 0;
+            document.getElementById('paymentShippingFee').value = p.shippingFee || 0;
+            document.getElementById('googleMerchantId').value = p.googleMerchantId || '';
+            document.getElementById('googleGatewayId').value = p.googleGatewayId || '';
+
+            const wu = appData.settings?.westernUnion || {};
+            document.getElementById('wuEnabled').checked = wu.enabled || false;
+            document.getElementById('wuReceiver').value = wu.receiver || 'Ramzplay Store';
+            document.getElementById('wuCountry').value = wu.country || 'السعودية';
+            document.getElementById('wuCity').value = wu.city || 'الرياض';
+        }
+
+        document.getElementById('savePaymentSettings').addEventListener('click', async () => {
+            if (!appData.settings) appData.settings = {};
+            appData.settings.paymentSettings = {
+                enabled: document.getElementById('paymentEnabled').checked,
+                gateway: document.getElementById('paymentGateway').value,
+                publicKey: document.getElementById('paymentPublicKey').value.trim(),
+                secretKey: document.getElementById('paymentSecretKey').value.trim(),
+                currency: document.getElementById('paymentCurrency').value,
+                taxRate: parseFloat(document.getElementById('paymentTaxRate').value) || 0,
+                shippingFee: parseFloat(document.getElementById('paymentShippingFee').value) || 0,
+                googleMerchantId: document.getElementById('googleMerchantId').value.trim(),
+                googleGatewayId: document.getElementById('googleGatewayId').value.trim()
+            };
+            appData.settings.westernUnion = {
+                enabled: document.getElementById('wuEnabled').checked,
+                receiver: document.getElementById('wuReceiver').value.trim() || 'Ramzplay Store',
+                country: document.getElementById('wuCountry').value.trim() || 'السعودية',
+                city: document.getElementById('wuCity').value.trim() || 'الرياض'
+            };
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            showToast('✅ تم حفظ إعدادات الدفع', 'success');
+        });
+
+        // ============================================================
+        // 13. إعدادات التصميم
+        // ============================================================
+        function populateDesignSettings() {
+            const d = appData.design || {};
+            document.getElementById('designCategoryBg').value = d.categoryBg || 'linear-gradient(145deg, #e8f5e9, #c8e6c9)';
+            document.getElementById('designCategoryText').value = d.categoryText || '#2e7d32';
+            document.getElementById('designCategoryFontSize').value = d.categoryFontSize || '2rem';
+            document.getElementById('designStoreBg').value = d.storeBg || '#ffffff';
+            document.getElementById('designStoreText').value = d.storeText || '#1e293b';
+            document.getElementById('designStoreFontSize').value = d.storeFontSize || '1.3rem';
+            document.getElementById('designProductBg').value = d.productBg || '#ffffff';
+            document.getElementById('designProductText').value = d.productText || '#1e293b';
+            document.getElementById('designProductFontSize').value = d.productFontSize || '0.85rem';
+            document.getElementById('designAdBg').value = d.adBg || 'linear-gradient(90deg, #4CAF50, #388E3C)';
+            document.getElementById('designAdText').value = d.adText || '#ffffff';
+            document.getElementById('designAdFontSize').value = d.adFontSize || '1.1rem';
+            document.getElementById('designGeneralFontSize').value = d.generalFontSize || '1rem';
+        }
+
+        document.getElementById('saveDesignSettings').addEventListener('click', async () => {
+            appData.design = {
+                categoryBg: document.getElementById('designCategoryBg').value,
+                categoryText: document.getElementById('designCategoryText').value,
+                categoryFontSize: document.getElementById('designCategoryFontSize').value,
+                storeBg: document.getElementById('designStoreBg').value,
+                storeText: document.getElementById('designStoreText').value,
+                storeFontSize: document.getElementById('designStoreFontSize').value,
+                productBg: document.getElementById('designProductBg').value,
+                productText: document.getElementById('designProductText').value,
+                productFontSize: document.getElementById('designProductFontSize').value,
+                adBg: document.getElementById('designAdBg').value,
+                adText: document.getElementById('designAdText').value,
+                adFontSize: document.getElementById('designAdFontSize').value,
+                generalFontSize: document.getElementById('designGeneralFontSize').value
+            };
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            showToast('✅ تم حفظ إعدادات التصميم', 'success');
+        });
+
+        // ============================================================
+        // 14. إعدادات القائمة الجانبية
+        // ============================================================
+        function populateMenuSettings() {
+            const m = appData.settings?.menuSettings || {};
+            document.getElementById('menuEnableUserIcon').checked = m.enableUserIcon !== false;
+            document.getElementById('menuEnableCartIcon').checked = m.enableCartIcon !== false;
+            document.getElementById('menuWhatsappOrders').value = m.whatsappOrders || '+966500000000';
+            document.getElementById('menuEmailOrders').value = m.emailOrders || 'orders@ramzplay.com';
+            document.getElementById('menuEnableInAppChat').checked = m.enableInAppChat || false;
+        }
+
+        document.getElementById('saveMenuSettings').addEventListener('click', async () => {
+            if (!appData.settings) appData.settings = {};
+            appData.settings.menuSettings = {
+                enableUserIcon: document.getElementById('menuEnableUserIcon').checked,
+                enableCartIcon: document.getElementById('menuEnableCartIcon').checked,
+                whatsappOrders: document.getElementById('menuWhatsappOrders').value.trim() || '+966500000000',
+                emailOrders: document.getElementById('menuEmailOrders').value.trim() || 'orders@ramzplay.com',
+                enableInAppChat: document.getElementById('menuEnableInAppChat').checked
+            };
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            showToast('✅ تم حفظ إعدادات القائمة', 'success');
+        });
+
+        // ============================================================
+        // 15. روابط التذييل
+        // ============================================================
+        function populateFooterLinks() {
+            const container = document.getElementById('footerLinksContainer');
+            if (!container) return;
+            const links = appData.footer?.links || {};
+            const keys = ['policy', 'terms', 'about', 'contact', 'blog'];
+            const labels = { policy: 'سياسة الخصوصية', terms: 'الشروط والأحكام', about: 'من نحن', contact: 'اتصل بنا',
+                blog: 'المدونة' };
+            let html = '';
+            keys.forEach(key => {
+                const item = links[key] || { text: labels[key], external_url: '', use_file: false };
+                html += `
+                        <div class="footer-link-item">
+                            <label>${labels[key]}</label>
+                            <input type="text" id="fl_text_${key}" value="${item.text || labels[key]}" placeholder="النص" />
+                            <input type="url" id="fl_url_${key}" value="${item.external_url || ''}" placeholder="الرابط الخارجي" />
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="fl_file_${key}" ${item.use_file ? 'checked' : ''} />
+                                <label>استخدام ملف (مثل ${key}.html)</label>
+                            </div>
+                        </div>
+                    `;
+            });
+            container.innerHTML = html;
+        }
+
+        document.getElementById('saveFooterLinks').addEventListener('click', async () => {
+            if (!appData.footer) appData.footer = {};
+            if (!appData.footer.links) appData.footer.links = {};
+            const keys = ['policy', 'terms', 'about', 'contact', 'blog'];
+            keys.forEach(key => {
+                appData.footer.links[key] = {
+                    text: document.getElementById(`fl_text_${key}`).value.trim() || key,
+                    external_url: document.getElementById(`fl_url_${key}`).value.trim() || '',
+                    use_file: document.getElementById(`fl_file_${key}`).checked
+                };
+            });
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            showToast('✅ تم حفظ روابط التذييل', 'success');
+        });
+
+        // ============================================================
+        // 16. التذييل والتواصل
+        // ============================================================
+        function populateFooterSettings() {
+            const f = appData.footer || {};
+            document.getElementById('footerEmail').value = f.email || '';
+            document.getElementById('footerPhone').value = f.phone || '';
+            document.getElementById('footerWhatsapp').value = f.whatsapp || '';
+            document.getElementById('footerPayments').value = (f.payments || []).join(', ');
+        }
+
+        function renderSocialFields() {
+            const container = document.getElementById('socialFieldsContainer');
+            if (!container) return;
+            const social = appData.footer?.socialMedia || [];
+            const platforms = ['whatsapp', 'facebook', 'twitter', 'instagram', 'telegram', 'snapchat', 'linkedin', 'tiktok'];
+            const labels = {
+                whatsapp: 'واتساب',
+                facebook: 'فيسبوك',
+                twitter: 'تويتر',
+                instagram: 'إنستغرام',
+                telegram: 'تلغرام',
+                snapchat: 'سناب شات',
+                linkedin: 'لينكدإن',
+                tiktok: 'تيك توك'
+            };
+            const icons = {
+                whatsapp: 'fab fa-whatsapp',
+                facebook: 'fab fa-facebook-f',
+                twitter: 'fab fa-twitter',
+                instagram: 'fab fa-instagram',
+                telegram: 'fab fa-telegram-plane',
+                snapchat: 'fab fa-snapchat-ghost',
+                linkedin: 'fab fa-linkedin-in',
+                tiktok: 'fab fa-tiktok'
+            };
+            let html = '';
+            platforms.forEach(p => {
+                const item = social.find(s => s.platform === p) || { url: '', active: true };
+                html += `
+                        <div class="social-field-group">
+                            <i class="${icons[p]}"></i>
+                            <label>${labels[p]}</label>
+                            <input type="text" id="social_${p}_url" value="${item.url || ''}" placeholder="رابط ${labels[p]}" />
+                            <input type="checkbox" id="social_${p}_active" ${item.active !== false ? 'checked' : ''} />
+                            <label class="checkbox-label">عرض</label>
+                        </div>
+                    `;
+            });
+            container.innerHTML = html;
+        }
+
+        document.getElementById('saveFooterBtn').addEventListener('click', async () => {
+            if (!appData.footer) appData.footer = {};
+            appData.footer.email = document.getElementById('footerEmail').value.trim();
+            appData.footer.phone = document.getElementById('footerPhone').value.trim();
+            appData.footer.whatsapp = document.getElementById('footerWhatsapp').value.trim();
+            appData.footer.payments = document.getElementById('footerPayments').value.split(',').map(p => p.trim()).filter(Boolean);
+            const platforms = ['whatsapp', 'facebook', 'twitter', 'instagram', 'telegram', 'snapchat', 'linkedin', 'tiktok'];
+            appData.footer.socialMedia = platforms.map(p => ({
+                platform: p,
+                url: document.getElementById(`social_${p}_url`).value.trim(),
+                active: document.getElementById(`social_${p}_active`).checked
+            }));
+            changedTables.add('settings');
+            await saveToSupabaseAdmin(['settings']);
+            showToast('✅ تم حفظ التذييل', 'success');
+        });
+
+        // ============================================================
+        // 17. رسائل الاتصال
+        // ============================================================
+        function renderMessagesList() {
+            const container = document.getElementById('messagesList');
+            if (!container) return;
+            const messages = appData.messages || [];
+            if (!messages.length) {
+                container.innerHTML = '<p style="color:var(--text-muted);">لا توجد رسائل</p>';
+                return;
+            }
+            const sorted = [...messages].sort((a, b) => new Date(b.date) - new Date(a.date));
+            container.innerHTML = sorted.map(msg => `
+                    <div class="message-item ${msg.status === 'new' ? 'unread' : ''}">
+                        <div class="msg-header">
+                            <div>
+                                <span class="msg-name">${msg.name}</span>
+                                <span class="badge-status ${msg.status === 'new' ? 'new' : 'read'}">${msg.status === 'new' ? 'جديد' : 'مقروء'}</span>
+                            </div>
+                            <span class="msg-date">${new Date(msg.date).toLocaleString('ar-SA')}</span>
+                        </div>
+                        <div class="msg-subject">${msg.subject}</div>
+                        <div class="msg-body">${msg.message}</div>
+                        <div class="msg-footer">
+                            <span class="msg-email"><i class="fas fa-envelope"></i> ${msg.email} ${msg.ip ? `<i class="fas fa-map-pin" style="margin-right:8px;"></i> ${msg.ip}` : ''}</span>
+                            <div class="msg-actions">
+                                <button class="btn-read" onclick="markMessageRead('${msg.id}')">📌 قراءة</button>
+                                <button class="btn-delete" onclick="deleteMessage('${msg.id}')">🗑️ حذف</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        async function markMessageRead(msgId) {
+            const msg = appData.messages?.find(m => m.id === msgId);
+            if (!msg) return;
+            msg.status = 'read';
+            changedTables.add('messages');
+            await saveToSupabaseAdmin(['messages']);
+            renderMessagesList();
+            showToast('✅ تم تحديث الحالة إلى مقروء', 'success');
+        }
+
+        async function deleteMessage(msgId) {
+            if (!confirm('⚠️ هل أنت متأكد من حذف هذه الرسالة؟')) return;
+            appData.messages = appData.messages?.filter(m => m.id !== msgId) || [];
+            changedTables.add('messages');
+            await saveToSupabaseAdmin(['messages']);
+            renderMessagesList();
+            showToast('✅ تم حذف الرسالة', 'success');
+        }
+
+        async function markAllAsRead() {
+            if (!appData.messages?.length) {
+                showToast('⚠️ لا توجد رسائل لتحديثها', 'warning');
+                return;
+            }
+            appData.messages.forEach(m => m.status = 'read');
+            changedTables.add('messages');
+            await saveToSupabaseAdmin(['messages']);
+            renderMessagesList();
+            showToast('✅ تم تحديث جميع الرسائل كمقروءة', 'success');
+        }
+
+        async function deleteAllMessages() {
+            if (!appData.messages?.length) {
+                showToast('⚠️ لا توجد رسائل لحذفها', 'warning');
+                return;
+            }
+            if (!confirm('⚠️ هل أنت متأكد من حذف جميع الرسائل نهائياً؟')) return;
+            appData.messages = [];
+            changedTables.add('messages');
+            await saveToSupabaseAdmin(['messages']);
+            renderMessagesList();
+            showToast('✅ تم حذف جميع الرسائل', 'success');
+        }
+
+        // ============================================================
+        // 18. إحصائيات التنزيلات
+        // ============================================================
+        function renderStatsSummary() {
+            let totalDownloads = 0,
+                totalApps = 0;
+            const stats = [];
+            for (const storeId in appData.products) {
+                (appData.products[storeId] || []).forEach(p => {
+                    totalApps++;
+                    totalDownloads += p.downloadCount || 0;
+                    stats.push({ name: p.name, downloads: p.downloadCount || 0, id: p.id });
+                });
+            }
+            document.getElementById('totalDownloads').textContent = totalDownloads;
+            document.getElementById('totalApps').textContent = totalApps;
+            stats.sort((a, b) => b.downloads - a.downloads);
+            const top5 = stats.slice(0, 5);
+            const container = document.getElementById('topAppsList');
+            if (!container) return;
+            if (!top5.length) { container.innerHTML = '<p style="color:var(--text-muted);">لا توجد تطبيقات</p>'; return; }
+            container.innerHTML = top5.map((app, i) => `
+                    <div class="admin-item" style="padding:6px 12px;">
+                        <div class="item-info">
+                            <span>${i+1}. ${app.name}</span>
+                        </div>
+                        <span style="color:#3b82f6; font-weight:700;">⬇️ ${app.downloads}</span>
+                    </div>
+                `).join('');
+        }
+
+        // ============================================================
+        // 19. عداد الزوار
+        // ============================================================
+        document.getElementById('resetVisitorBtn').addEventListener('click', () => {
+            if (!confirm('إعادة تعيين عداد الزوار؟')) return;
+            if (appData.settings) appData.settings.visitorCount = 0;
+            else appData.settings = { visitorCount: 0 };
+            changedTables.add('settings');
+            saveToSupabaseAdmin(['settings']);
+            document.getElementById('visitorCountAdmin').textContent = '0';
+            showToast('✅ تم إعادة تعيين العداد', 'success');
+        });
+
+        // ============================================================
+        // 20. سجل الأخطاء
+        // ============================================================
+        function renderAdminErrors() {
+            const container = document.getElementById('adminErrorsList');
+            if (!container) return;
+            const errors = appData.adminErrors || [];
+            if (!errors.length) { container.innerHTML = '<p style="color:var(--text-muted);">لا توجد أخطاء مسجلة.</p>'; return; }
+            container.innerHTML = errors.map(err => `
+                    <div class="admin-item" style="font-size:0.8rem; border-radius:16px;">
+                        <div class="item-info">
+                            <span><strong>${err.time}</strong> - ${err.context}</span>
+                        </div>
+                        <div style="color:#94a3b8; word-break:break-all;">${err.message}</div>
+                    </div>
+                `).join('');
+        }
+
+        document.getElementById('clearAdminErrors').addEventListener('click', () => {
+            if (!confirm('مسح سجل الأخطاء؟')) return;
+            appData.adminErrors = [];
+            changedTables.add('adminErrors');
+            saveToSupabaseAdmin(['adminErrors']);
+            renderAdminErrors();
+            showToast('✅ تم مسح السجل', 'success');
+        });
+
+        // ============================================================
+        // 21. دوال إضافية (حفظ، مزامنة، تصدير، استيراد)
+        // ============================================================
+        async function forceSaveAll() {
+            const allTables = ['settings', 'categories', 'stores', 'products', 'testimonials', 'carousel', 'marquee', 'footer',
+                'design', 'adminErrors', 'purchasedProducts', 'updates', 'partners', 'messages'
+            ];
+            changedTables.clear();
+            allTables.forEach(t => changedTables.add(t));
+            await saveToSupabaseAdmin(allTables);
+            showToast('✅ تم حفظ ومزامنة جميع البيانات', 'success');
+        }
+
+        async function syncWithSupabase() {
+            await forceSaveAll();
+        }
+
+        async function previewChanges() {
+            await forceSaveAll();
+            window.open('index.html?preview=' + Date.now(), '_blank');
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ramzplay-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('✅ تم تصدير الملف', 'success');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!imported.categories || !imported.stores || !imported.products) {
+                        throw new Error('ملف غير صالح');
+                    }
+                    appData = imported;
+                    changedTables.clear();
+                    const allTables = ['settings', 'categories', 'stores', 'products', 'testimonials', 'carousel', 'marquee',
+                        'footer', 'design', 'adminErrors', 'purchasedProducts', 'updates', 'partners', 'messages'
+                    ];
+                    allTables.forEach(t => changedTables.add(t));
+                    await saveToSupabaseAdmin(allTables);
+                    refreshAllLists();
+                    document.getElementById('visitorCountAdmin').textContent = appData.settings?.visitorCount || 0;
+                    showToast('✅ تم استيراد البيانات بنجاح', 'success');
+                } catch (err) {
+                    showToast('❌ فشل استيراد الملف: ' + err.message, 'error');
+                    if (typeof window.logAdminError === 'function') window.logAdminError(err, 'importData');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ===== ربط أحداث القوائم المنسدلة =====
+        document.getElementById('productCategorySelect').addEventListener('change', (e) => {
+            populateStoreSelect(e.target.value);
+        });
+
+        document.getElementById('storeCategorySelect').addEventListener('change', (e) => {
+            renderStoresList(e.target.value);
+        });
+
+        // ===== إعداد رفع الصور =====
+        setupImageUpload('categoryFeaturedImageFile', 'categoryFeaturedImage', 'categories');
+        setupImageUpload('storeLogoFile', 'storeLogo', 'stores');
+        setupImageUpload('productImageFile', 'productImage', 'products');
+        setupImageUpload('carouselImageFile', 'carouselImage', 'carousel');
+        setupImageUpload('marqueeIconFile', 'marqueeIcon', 'marquee');
+        setupImageUpload('testimonialImageFile', 'testimonialImage', 'testimonials');
+        setupImageUpload('blogImageFile', 'blogImage', 'blog');
+        setupImageUpload('partnerLogoFile', 'partnerLogo', 'partners');
+
+        // ===== تحديث جميع القوائم =====
+        function refreshAllLists() {
+            if (!appData) return;
+            updateLogoPreview();
+            renderCategoriesList();
+            renderStoresList(document.getElementById('storeCategorySelect').value);
+            renderProductsList();
+            renderCarouselList();
+            renderMarqueeList();
+            renderTestimonialsList();
+            renderBlogList();
+            renderUpdatesList();
+            renderPartnersList();
+            renderMessagesList();
+            populateCategorySelects();
+            populateGeneralSettings();
+            populateDesignSettings();
+            populateMenuSettings();
+            populateFooterSettings();
+            populateFooterLinks();
+            renderSocialFields();
+            renderStatsSummary();
+            renderAdminErrors();
+            const vc = document.getElementById('visitorCountAdmin');
+            if (vc) vc.textContent = appData.settings?.visitorCount || 0;
+        }
+
+        // ===== تسجيل الدخول =====
+        window.checkLogin = async function() {
+            const code = document.getElementById('secretCodeInput').value;
+            const isValid = await window.verifyPassword(code);
+            if (isValid) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                document.getElementById('loginError').style.display = 'none';
+                try {
+                    appData = await window.loadAppData();
+                    refreshAllLists();
+                    updateConnectionStatus(true);
+                    window.broadcastChannel = new BroadcastChannel('markets_channel');
+                    window.broadcastChannel.onmessage = (event) => {
+                        if (event.data.type === 'DB_UPDATE') {
+                            window.loadAppData().then(data => { appData = data;
+                                refreshAllLists();
+                                showToast('تم تحديث البيانات من جهة أخرى', 'success'); });
+                        }
+                    };
+                    setInterval(() => { if (changedTables.size > 0) saveToSupabaseAdmin(); }, 30000);
+                    showToast('✅ تم تحميل البيانات بنجاح', 'success');
+                } catch (err) {
+                    console.error(err);
+                    showToast('⚠️ فشل تحميل البيانات: ' + err.message, 'error');
+                    if (typeof window.logAdminError === 'function') window.logAdminError(err, 'checkLogin');
+                }
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('secretCodeInput').value = '';
+                document.getElementById('secretCodeInput').focus();
+            }
+        };
+
+        document.getElementById('secretCodeInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkLogin();
+        });
+
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            checkLogin();
+        }
+
+        window.addEventListener('online', () => {
+            updateConnectionStatus(true);
+            showToast('🔄 تم استعادة الاتصال، جاري المزامنة...', 'success');
+            if (appData) saveToSupabaseAdmin();
+        });
+        window.addEventListener('offline', () => {
+            updateConnectionStatus(false);
+            showToast('⚠️ أنت غير متصل، سيتم حفظ البيانات محلياً', 'warning');
+        });
+
+        console.log('🔧 لوحة تحكم Ramzplay – الإدارة الشاملة جاهزة (مع شعار الموقع وCarousel)');
+        console.log('🔑 رمز الدخول:', window.ADMIN_CODE || '77353');
+    </script>
+</body>
+</html>

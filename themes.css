@@ -1,0 +1,214 @@
+/* ============================================================
+   themes.css - جميع ثيمات Play Ramz في ملف واحد
+   جميع الحقوق محفوظة للمهندس رمزي الصلاحي © 2026
+   ============================================================ */
+
+/* ===== الثيم الافتراضي (الأخضر) ===== */
+body.theme-default {
+    --primary-color: #4CAF50;
+    --primary-dark: #388E3C;
+    --primary-light: #81C784;
+    --secondary-color: #0f172a;
+    --text-color: #1e293b;
+    --text-light: #e2e8f0;
+    --bg-body: #f1f5f9;
+    --bg-card: #ffffff;
+    --border-color: #e2e8f0;
+    --shadow-color: rgba(0,0,0,0.05);
+    --shadow-hover: rgba(0,0,0,0.1);
+    --gradient-primary: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+    --gradient-dark: linear-gradient(145deg, #0b1a33, #1e2b3c);
+    --nav-bg: #ffffff;
+    --footer-bg: #0f172a;
+    --footer-text: #cbd5e1;
+}
+
+/* ===== الثيم الداكن ===== */
+body.theme-dark {
+    --primary-color: #66BB6A;
+    --primary-dark: #43A047;
+    --primary-light: #A5D6A7;
+    --secondary-color: #1e293b;
+    --text-color: #e2e8f0;
+    --text-light: #94a3b8;
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --border-color: #334155;
+    --shadow-color: rgba(0,0,0,0.3);
+    --shadow-hover: rgba(0,0,0,0.5);
+    --gradient-primary: linear-gradient(145deg, #1e293b, #0f172a);
+    --gradient-dark: linear-gradient(145deg, #0b1a33, #1e2b3c);
+    --nav-bg: #1e293b;
+    --footer-bg: #0b1a33;
+    --footer-text: #94a3b8;
+}
+
+/* ===== الثيم الأزرق ===== */
+body.theme-blue {
+    --primary-color: #3B82F6;
+    --primary-dark: #2563EB;
+    --primary-light: #93C5FD;
+    --secondary-color: #0f172a;
+    --text-color: #1e293b;
+    --text-light: #e2e8f0;
+    --bg-body: #f0f4ff;
+    --bg-card: #ffffff;
+    --border-color: #dbeafe;
+    --shadow-color: rgba(59,130,246,0.05);
+    --shadow-hover: rgba(59,130,246,0.1);
+    --gradient-primary: linear-gradient(145deg, #e8f0fe, #dbeafe);
+    --gradient-dark: linear-gradient(145deg, #0b1a33, #1e2b3c);
+    --nav-bg: #ffffff;
+    --footer-bg: #0f172a;
+    --footer-text: #cbd5e1;
+}
+
+/* ===== الثيم البنفسجي ===== */
+body.theme-purple {
+    --primary-color: #8B5CF6;
+    --primary-dark: #7C3AED;
+    --primary-light: #C4B5FD;
+    --secondary-color: #0f172a;
+    --text-color: #1e293b;
+    --text-light: #e2e8f0;
+    --bg-body: #faf5ff;
+    --bg-card: #ffffff;
+    --border-color: #ede9fe;
+    --shadow-color: rgba(139,92,246,0.05);
+    --shadow-hover: rgba(139,92,246,0.1);
+    --gradient-primary: linear-gradient(145deg, #f5f3ff, #ede9fe);
+    --gradient-dark: linear-gradient(145deg, #0b1a33, #1e2b3c);
+    --nav-bg: #ffffff;
+    --footer-bg: #0f172a;
+    --footer-text: #cbd5e1;
+}
+
+/* ===== الثيم الأحمر (إضافي) ===== */
+body.theme-red {
+    --primary-color: #EF4444;
+    --primary-dark: #DC2626;
+    --primary-light: #FCA5A5;
+    --secondary-color: #0f172a;
+    --text-color: #1e293b;
+    --text-light: #e2e8f0;
+    --bg-body: #fef2f2;
+    --bg-card: #ffffff;
+    --border-color: #fecaca;
+    --shadow-color: rgba(239,68,68,0.05);
+    --shadow-hover: rgba(239,68,68,0.1);
+    --gradient-primary: linear-gradient(145deg, #fef2f2, #fecaca);
+    --gradient-dark: linear-gradient(145deg, #0b1a33, #1e2b3c);
+    --nav-bg: #ffffff;
+    --footer-bg: #0f172a;
+    --footer-text: #cbd5e1;
+}
+
+/* ===== الثيم الذهبي ===== */
+body.theme-gold {
+    --primary-color: #F59E0B;
+    --primary-dark: #D97706;
+    --primary-light: #FCD34D;
+    --secondary-color: #0f172a;
+    --text-color: #1e293b;
+    --text-light: #e2e8f0;
+    --bg-body: #fffbeb;
+    --bg-card: #ffffff;
+    --border-color: #fde68a;
+    --shadow-color: rgba(245,158,11,0.05);
+    --shadow-hover: rgba(245,158,11,0.1);
+    --gradient-primary: linear-gradient(145deg, #fffbeb, #fde68a);
+    --gradient-dark: linear-gradient(145deg, #0b1a33, #1e2b3c);
+    --nav-bg: #ffffff;
+    --footer-bg: #0f172a;
+    --footer-text: #cbd5e1;
+}
+
+/* ============================================================
+   أنماط مشتركة لجميع الثيمات (تعتمد على المتغيرات)
+   ============================================================ */
+
+/* نطبق المتغيرات على العناصر الأساسية */
+body {
+    background: var(--bg-body);
+    color: var(--text-color);
+    font-family: 'Cairo', sans-serif;
+    transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+/* الهيدر */
+.navbar {
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* البطاقات والأقسام */
+.section-block,
+.admin-card,
+.content-card,
+.blog-card,
+.card-horizontal {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* الأزرار الأساسية */
+.btn-primary,
+.primary-btn,
+.action-btn button {
+    background: var(--primary-color);
+    color: white;
+}
+.btn-primary:hover,
+.primary-btn:hover,
+.action-btn button:hover {
+    background: var(--primary-dark);
+}
+
+/* الروابط */
+a {
+    color: var(--primary-color);
+}
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* الشريط السفلي */
+.bottom-nav {
+    background: var(--bg-card);
+    border-top-color: var(--border-color);
+}
+
+/* التذييل */
+.footer {
+    background: var(--footer-bg);
+    color: var(--footer-text);
+}
+
+/* انتقال سلس بين الثيمات */
+* {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* تحسينات إضافية للثيمات */
+.category-card:hover,
+.store-card:hover,
+.card-horizontal:hover {
+    box-shadow: 0 8px 20px var(--shadow-hover);
+}
+
+/* تنسيق الهاشتاجات */
+.hashtag {
+    background: var(--border-color);
+    color: var(--text-color);
+}
+.hashtag:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* إعلانات مخصصة */
+.custom-ad {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}

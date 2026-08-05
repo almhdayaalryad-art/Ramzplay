@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>المدونة – Ramzplay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        /* ===== إعادة ضبط ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Cairo', sans-serif; background: #f1f5f9; color: #1e293b; direction: rtl; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+        .container { max-width: 1100px; margin: 0 auto; width: 100%; flex: 1; }
+
+        /* ===== الهيدر ===== */
+        .header { background: white; padding: 16px 24px; border-radius: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+        .header .logo { display: flex; align-items: center; gap: 8px; font-size: 1.4rem; font-weight: 800; color: #0f172a; }
+        .header .logo i { color: #4CAF50; font-size: 1.6rem; }
+        .header .logo span { color: #4CAF50; }
+        .header .back-link { background: #4CAF50; color: white; padding: 8px 20px; border-radius: 40px; text-decoration: none; font-weight: 600; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .header .back-link:hover { background: #388E3C; transform: translateY(-2px); }
+
+        /* ===== عنوان الصفحة ===== */
+        .page-title { text-align: center; margin-bottom: 30px; }
+        .page-title h1 { font-size: 2.2rem; font-weight: 800; color: #0f172a; }
+        .page-title h1 i { color: #4CAF50; margin-left: 8px; }
+        .page-title p { color: #64748b; font-size: 1.1rem; margin-top: 4px; }
+
+        /* ===== شبكة المقالات ===== */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        /* ===== بطاقة المقال ===== */
+        .blog-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .blog-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+
+        .blog-card .card-image { width: 100%; height: 200px; object-fit: cover; background: #e2e8f0; }
+        .blog-card .card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
+        .blog-card .card-body .card-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 0.8rem; color: #94a3b8; margin-bottom: 6px; }
+        .blog-card .card-body .card-meta .author { color: #0f172a; font-weight: 600; }
+        .blog-card .card-body .card-meta .category { background: #4CAF50; color: white; padding: 1px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 700; }
+        .blog-card .card-body .card-title { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin: 4px 0 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .blog-card .card-body .card-excerpt { font-size: 0.9rem; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+        .blog-card .card-body .card-footer { margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .blog-card .card-body .card-footer .read-more { color: #4CAF50; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; }
+        .blog-card .card-body .card-footer .read-more:hover { gap: 10px; }
+        .blog-card .card-body .card-footer .tags { display: flex; gap: 4px; flex-wrap: wrap; }
+        .blog-card .card-body .card-footer .tags .tag { background: #f1f5f9; padding: 2px 10px; border-radius: 20px; font-size: 0.65rem; color: #475569; }
+
+        /* ===== حالة عدم وجود مقالات ===== */
+        .no-posts { text-align: center; padding: 60px 20px; background: white; border-radius: 24px; }
+        .no-posts i { font-size: 4rem; color: #94a3b8; margin-bottom: 12px; }
+        .no-posts h3 { font-size: 1.5rem; color: #0f172a; }
+        .no-posts p { color: #94a3b8; }
+
+        /* ===== مودال عرض المقال (منبثق) ===== */
+        .post-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        .post-modal.open { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .post-modal .modal-content {
+            background: white;
+            border-radius: 28px;
+            max-width: 820px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 0;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            position: relative;
+        }
+        .post-modal .modal-content::-webkit-scrollbar { width: 4px; }
+        .post-modal .modal-content::-webkit-scrollbar-thumb { background: #4CAF50; border-radius: 10px; }
+
+        .post-modal .modal-close {
+            position: sticky;
+            top: 12px;
+            left: 16px;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            z-index: 10;
+            float: left;
+            margin: 12px 12px 0 0;
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+        }
+        .post-modal .modal-close:hover { background: rgba(0,0,0,0.85); transform: scale(1.1); }
+
+        .post-modal .modal-image { width: 100%; height: 240px; object-fit: cover; background: #e2e8f0; }
+        .post-modal .modal-body { padding: 24px 32px 32px; }
+        .post-modal .modal-body .modal-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; color: #94a3b8; margin-bottom: 4px; }
+        .post-modal .modal-body .modal-meta .author { color: #0f172a; font-weight: 600; }
+        .post-modal .modal-body .modal-meta .category { background: #4CAF50; color: white; padding: 1px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+        .post-modal .modal-body .modal-title { font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 6px 0 12px; }
+        .post-modal .modal-body .modal-content-text { color: #475569; line-height: 1.9; }
+        .post-modal .modal-body .modal-content-text p { margin-bottom: 14px; }
+        .post-modal .modal-body .modal-content-text ul { list-style: none; padding: 0; margin-bottom: 14px; }
+        .post-modal .modal-body .modal-content-text ul li { padding: 4px 0; display: flex; align-items: flex-start; gap: 10px; }
+        .post-modal .modal-body .modal-content-text ul li::before { content: "✓"; color: #4CAF50; font-weight: 700; font-size: 1.2rem; flex-shrink: 0; }
+        .post-modal .modal-body .modal-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid #f1f5f9; }
+        .post-modal .modal-body .modal-tags .tag { background: #f1f5f9; padding: 3px 14px; border-radius: 20px; font-size: 0.75rem; color: #475569; }
+
+        /* ===== التذييل ===== */
+        .footer { text-align: center; color: #94a3b8; font-size: 0.85rem; padding: 16px 0; border-top: 1px solid #e2e8f0; margin-top: 8px; }
+        .footer a { color: #4CAF50; text-decoration: none; font-weight: 600; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* ===== التجاوب ===== */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .header { padding: 12px 16px; flex-direction: column; align-items: stretch; text-align: center; }
+            .header .back-link { justify-content: center; }
+            .page-title h1 { font-size: 1.6rem; }
+            .blog-grid { grid-template-columns: 1fr; gap: 16px; }
+            .post-modal .modal-body { padding: 16px 18px 24px; }
+            .post-modal .modal-body .modal-title { font-size: 1.3rem; }
+            .post-modal .modal-image { height: 180px; }
+        }
+        @media (max-width: 480px) {
+            .page-title h1 { font-size: 1.3rem; }
+            .blog-card .card-image { height: 160px; }
+            .post-modal .modal-image { height: 140px; }
+            .post-modal .modal-body .modal-title { font-size: 1.1rem; }
+            .post-modal .modal-body { padding: 12px 14px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== الهيدر ===== -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>Ramz</span>play
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-right"></i> العودة إلى المتجر
+            </a>
+        </header>
+
+        <!-- ===== عنوان الصفحة ===== -->
+        <div class="page-title">
+            <h1><i class="fas fa-blog"></i> مدونة Ramzplay</h1>
+            <p>اكتشف آخر المقالات والتحديثات في عالم التطبيقات والتقنية</p>
+        </div>
+
+        <!-- ===== شبكة المقالات ===== -->
+        <div id="blogGrid" class="blog-grid">
+            <!-- سيتم ملؤه بواسطة JavaScript -->
+            <div class="no-posts" id="loadingIndicator">
+                <i class="fas fa-spinner fa-spin"></i>
+                <h3>جاري تحميل المقالات...</h3>
+            </div>
+        </div>
+
+        <!-- ===== مودال عرض المقال (منبثق) ===== -->
+        <div class="post-modal" id="postModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeModal()">✕</button>
+                <img class="modal-image" id="modalImage" src="" alt="صورة المقال" />
+                <div class="modal-body">
+                    <div class="modal-meta" id="modalMeta"></div>
+                    <h2 class="modal-title" id="modalTitle"></h2>
+                    <div class="modal-content-text" id="modalContent"></div>
+                    <div class="modal-tags" id="modalTags"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== التذييل ===== -->
+        <div class="footer">
+            &copy; 2026 <a href="index.html">Ramzplay</a> – جميع الحقوق محفوظة للمهندس رمزي الصلاحي.
+            <br>
+            <span style="font-size:0.75rem; color:#cbd5e1;">
+                <i class="fas fa-shield-alt"></i> 
+                <a href="policy.html" style="color:#4CAF50;">سياسة الخصوصية</a> &bull;
+                <a href="terms.html" style="color:#4CAF50;">الشروط والأحكام</a>
+            </span>
+        </div>
+
+    </div>
+
+    <!-- ===== تحميل common.js ===== -->
+    <script src="common.js"></script>
+
+    <!-- ===== كود التشغيل ===== -->
+    <script>
+        // ============================================================
+        // blog.html – عرض جميع مقالات المدونة
+        // ============================================================
+
+        let allPosts = [];
+        let modalOpen = false;
+
+        // ---- تحميل البيانات وعرض المقالات ----
+        async function loadBlog() {
+            try {
+                const data = await window.loadAppData ? await window.loadAppData() : JSON.parse(localStorage.getItem('ramzplay_data') || '{}');
+                allPosts = data.settings?.blogPosts || [];
+
+                const grid = document.getElementById('blogGrid');
+
+                if (!allPosts.length) {
+                    grid.innerHTML = `
+                        <div class="no-posts" style="grid-column: 1 / -1;">
+                            <i class="fas fa-newspaper"></i>
+                            <h3>لا توجد مقالات بعد</h3>
+                            <p>سيتم إضافة مقالات جديدة قريباً، تابعونا!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // ترتيب المقالات من الأحدث إلى الأقدم
+                const sorted = [...allPosts].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                grid.innerHTML = sorted.map((post, index) => `
+                    <div class="blog-card" onclick="openPost(${index})">
+                        <img class="card-image" src="${post.image || 'https://placehold.co/600x200/e2e8f0/94a3b8?text=Ramzplay'}" alt="${post.title}" onerror="this.src='https://placehold.co/600x200/e2e8f0/94a3b8?text=Ramzplay'" />
+                        <div class="card-body">
+                            <div class="card-meta">
+                                <span class="author"><i class="fas fa-user"></i> ${post.author || 'Ramzplay'}</span>
+                                <span><i class="fas fa-calendar-alt"></i> ${post.date || ''}</span>
+                            </div>
+                            <h3 class="card-title">${post.title}</h3>
+                            <p class="card-excerpt">${(post.content || '').substring(0, 120)}${(post.content || '').length > 120 ? '...' : ''}</p>
+                            <div class="card-footer">
+                                <span class="read-more">اقرأ المزيد <i class="fas fa-arrow-left"></i></span>
+                                <div class="tags">
+                                    ${(post.hashtags || []).slice(0, 2).map(t => `<span class="tag">${t}</span>`).join('')}
+                                    ${(post.hashtags || []).length > 2 ? `<span class="tag">+${(post.hashtags || []).length - 2}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error('خطأ في تحميل المقالات:', err);
+                document.getElementById('blogGrid').innerHTML = `
+                    <div class="no-posts" style="grid-column: 1 / -1;">
+                        <i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i>
+                        <h3>حدث خطأ أثناء تحميل المقالات</h3>
+                        <p>يرجى تحديث الصفحة والمحاولة مرة أخرى.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ---- فتح المقال في المودال ----
+        function openPost(index) {
+            const post = allPosts[index];
+            if (!post) return;
+
+            document.getElementById('modalImage').src = post.image || 'https://placehold.co/820x240/e2e8f0/94a3b8?text=Ramzplay';
+            document.getElementById('modalImage').alt = post.title;
+
+            document.getElementById('modalMeta').innerHTML = `
+                <span class="author"><i class="fas fa-user"></i> ${post.author || 'Ramzplay'}</span>
+                <span><i class="fas fa-calendar-alt"></i> ${post.date || ''}</span>
+            `;
+
+            document.getElementById('modalTitle').textContent = post.title;
+
+            // تحويل المحتوى النصي إلى HTML مع فواصل الأسطر
+            const contentHtml = (post.content || '').split('\n').map(line => {
+                line = line.trim();
+                if (!line) return '<br>';
+                // تحويل النقاط التي تبدأ بـ - أو • إلى قائمة
+                if (line.startsWith('- ') || line.startsWith('• ')) {
+                    return `<li>${line.substring(2)}</li>`;
+                }
+                return `<p>${line}</p>`;
+            }).join('');
+
+            // إذا كان هناك عناصر قائمة، نلفها في <ul>
+            const hasList = contentHtml.includes('<li>');
+            let finalContent = contentHtml;
+            if (hasList) {
+                // نستخرج العناصر التي هي <li> ونلفها في <ul>
+                const listItems = contentHtml.match(/<li>.*?<\/li>/g);
+                if (listItems) {
+                    const listHtml = `<ul>${listItems.join('')}</ul>`;
+                    // استبدال عناصر القائمة في النص
+                    let temp = contentHtml;
+                    listItems.forEach(item => {
+                        temp = temp.replace(item, '');
+                    });
+                    // إزالة <br> الزائدة
+                    temp = temp.replace(/<br><br>/g, '<br>');
+                    finalContent = temp + listHtml;
+                }
+            }
+
+            document.getElementById('modalContent').innerHTML = finalContent;
+
+            document.getElementById('modalTags').innerHTML = (post.hashtags || []).map(t =>
+                `<span class="tag">${t}</span>`
+            ).join('');
+
+            document.getElementById('postModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            modalOpen = true;
+        }
+
+        // ---- إغلاق المودال ----
+        function closeModal() {
+            document.getElementById('postModal').classList.remove('open');
+            document.body.style.overflow = '';
+            modalOpen = false;
+        }
+
+        // ---- إغلاق المودال عند الضغط على الخلفية ----
+        document.getElementById('postModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ---- إغلاق المودال بالضغط على Escape ----
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modalOpen) closeModal();
+        });
+
+        // ---- بدء التحميل ----
+        loadBlog();
+
+        console.log('📰 مدونة Ramzplay جاهزة!');
+    </script>
+
+</body>
+</html>
