@@ -19,10 +19,55 @@
         /* ===== الهيدر ===== */
         .navbar { background: white; padding: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; }
         .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+        
+        /* الشعار القديم (جهة اليمين) */
         .logo { display: flex; align-items: center; gap: 8px; font-size: 1.5rem; font-weight: 800; color: #0f172a; }
         .logo i { color: #4CAF50; font-size: 1.8rem; }
         .logo span { color: #4CAF50; }
-        .nav-actions { display: flex; gap: 12px; align-items: center; }
+
+        /* الأقسام الجانبية (جهة اليسار) */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* ===== الشعار النصي الجديد "play Ramz" (جهة اليسار) ===== */
+        .brand-text-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1;
+            margin-left: 0;
+            font-family: 'Cairo', sans-serif;
+            flex-shrink: 0;
+        }
+        .brand-text-left .play-small {
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            margin-bottom: -2px;
+        }
+        .brand-text-left .ramz-big {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #4CAF50;
+            line-height: 1;
+            margin-top: -2px;
+        }
+
+        /* تحسينات التجاوب للشعار النصي الجديد */
+        @media (max-width: 768px) {
+            .brand-text-left .play-small { font-size: 0.45rem; }
+            .brand-text-left .ramz-big { font-size: 1.1rem; }
+        }
+        @media (max-width: 480px) {
+            .brand-text-left .play-small { font-size: 0.4rem; }
+            .brand-text-left .ramz-big { font-size: 0.9rem; }
+        }
+
         .nav-actions img#logoImageHeader {
             height: 45px;
             width: auto;
@@ -933,11 +978,21 @@
     <!-- ===== الهيدر ===== -->
     <header class="navbar">
         <div class="container">
+            <!-- الشعار القديم (جهة اليمين) -->
             <div class="logo" id="logoDisplay">
                 <i class="fas fa-gamepad"></i>
                 <span>Ramz</span>play
             </div>
+
+            <!-- الأقسام الجانبية (جهة اليسار) -->
             <div class="nav-actions">
+                <!-- الشعار النصي الجديد "play Ramz" (جهة اليسار) -->
+                <div class="brand-text-left" id="brandTextLeft">
+                    <span class="play-small">play</span>
+                    <span class="ramz-big">Ramz</span>
+                </div>
+
+                <!-- شعار الصورة (يظهر إذا تم رفعه من لوحة التحكم) -->
                 <img id="logoImageHeader" src="" alt="شعار الموقع" style="display: none;" onclick="openSideMenu()" />
             </div>
         </div>
@@ -1025,6 +1080,13 @@
             <i class="fas fa-handshake"></i>
             <span>الشركاء</span>
             <span class="item-badge coming">قريباً</span>
+        </button>
+
+        <!-- زر تحديث البيانات (من الموقع) - تم إضافته لتحديث يدوي سريع -->
+        <button class="menu-item" onclick="refreshDataManually()" style="background: #1e293b; margin-top: 8px;">
+            <i class="fas fa-sync-alt" style="color: #4CAF50;"></i>
+            <span style="color: white;">تحديث البيانات</span>
+            <span class="item-badge" style="background: #3b82f6;">يدوي</span>
         </button>
 
         <div class="menu-divider"></div>
@@ -1130,7 +1192,7 @@
             <span class="nav-label">الرئيسية</span>
         </button>
         <button class="nav-item" data-tab="apps" onclick="switchTab('apps')">
-            <i class="fas fa-th-large"></i>  <!-- ✅ تم التعديل -->
+            <i class="fas fa-th-large"></i>
             <span class="nav-label">التطبيقات</span>
         </button>
         <button class="nav-item" data-tab="stores" onclick="switchTab('stores')">
@@ -1153,7 +1215,7 @@
     <!-- ===== كود التشغيل الرئيسي ===== -->
     <script>
         // ============================================================
-        // كود index.html – يعتمد على common.js
+        // كود index.html – يعتمد على common.js مع تحسينات
         // ============================================================
 
         let appData = {};
@@ -1174,9 +1236,169 @@
         let testimonialsScrollContainer = null;
         let testimonialsAutoScroll = true;
 
+        // ============================================================
+        // دوال متقدمة لتحميل البيانات وحل مشكلة عدم ظهور التطبيقات
+        // ============================================================
+
+        // محاولة تحميل البيانات من عدة مفاتيح محتملة في localStorage
+        function tryLoadFromLocalStorage() {
+            const possibleKeys = ['ramzplay_appData', 'appData', 'ramzplay_data', 'productsData'];
+            for (let key of possibleKeys) {
+                try {
+                    const raw = localStorage.getItem(key);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        // تأكد من وجود products
+                        if (parsed && typeof parsed === 'object' && parsed.products) {
+                            console.log(`✅ تم تحميل البيانات من localStorage بالمفتاح: "${key}"`);
+                            return parsed;
+                        }
+                    }
+                } catch (e) { /* تجاهل */ }
+            }
+            return null;
+        }
+
+        // دالة تحميل البيانات الرئيسية (تجاوز لدالة common.js)
+        async function loadAppDataFixed() {
+            // 1. حاول من localStorage أولاً (الأسرع والأحدث)
+            let data = tryLoadFromLocalStorage();
+            if (data) {
+                // تأكد من وجود الحقول الأساسية
+                if (!data.products) data.products = {};
+                if (!data.categories) data.categories = [];
+                if (!data.stores) data.stores = {};
+                if (!data.settings) data.settings = {};
+                if (!data.carousel) data.carousel = [];
+                if (!data.marquee) data.marquee = [];
+                if (!data.testimonials) data.testimonials = [];
+                console.log('📦 البيانات المحملة من localStorage تحتوي على عدد المنتجات:',
+                    Object.values(data.products).reduce((acc, arr) => acc + arr.length, 0));
+                return data;
+            }
+
+            // 2. إذا لم توجد في localStorage، حاول جلبها من common.js (إن وجدت)
+            if (typeof window.loadAppData === 'function' && window.loadAppData !== loadAppDataFixed) {
+                try {
+                    const fallbackData = await window.loadAppData();
+                    if (fallbackData && fallbackData.products) {
+                        console.log('📦 تم تحميل البيانات من common.js (fallback)');
+                        return fallbackData;
+                    }
+                } catch (e) { /* تجاهل */ }
+            }
+
+            // 3. أخيراً، أرجع هيكل بيانات فارغاً مع تحذير
+            console.warn('⚠️ لم يتم العثور على بيانات في أي مصدر. سيتم استخدام بيانات افتراضية فارغة.');
+            return {
+                products: {},
+                categories: [],
+                stores: {},
+                settings: { logoText1: 'Ramz', logoText2: 'play' },
+                carousel: [],
+                marquee: [],
+                testimonials: [],
+                footer: {},
+                purchasedProducts: []
+            };
+        }
+
+        // دالة قوية لحفظ البيانات (تضمن الحفظ في localStorage بالمفتاح الصحيح)
+        function saveAppDataFixed(newData) {
+            try {
+                // حفظ في المفتاح الأساسي الذي تستخدمه لوحة التحكم غالباً
+                localStorage.setItem('ramzplay_appData', JSON.stringify(newData));
+                // أيضاً حفظ في مفتاح احتياطي
+                localStorage.setItem('appData', JSON.stringify(newData));
+                console.log('💾 تم حفظ البيانات بنجاح في localStorage (مفتاحان)');
+                return true;
+            } catch (e) {
+                console.error('❌ فشل حفظ البيانات:', e);
+                return false;
+            }
+        }
+
+        // دالة تحديث يدوي (يمكن استدعاؤها من وحدة التحكم أو الزر)
+        async function refreshDataManually() {
+            console.log('🔄 جاري تحديث البيانات يدوياً...');
+            const freshData = await loadAppDataFixed();
+            if (freshData && freshData.products) {
+                // دمج مع البيانات الحالية للحفاظ على purchasedProducts وغيرها
+                if (appData && appData.purchasedProducts) {
+                    freshData.purchasedProducts = appData.purchasedProducts;
+                }
+                appData = freshData;
+                renderAll();
+                console.log('✅ تم تحديث الموقع بالبيانات الجديدة!');
+                // عرض عدد التطبيقات الحالية للتأكد
+                const count = Object.values(appData.products).reduce((acc, arr) => acc + arr.length, 0);
+                console.log(`📱 عدد التطبيقات المعروضة حالياً: ${count}`);
+                alert(`✅ تم تحديث الموقع بنجاح! عدد التطبيقات: ${count}`);
+            } else {
+                alert('⚠️ لم يتم العثور على بيانات جديدة. تأكد من رفع التطبيقات في لوحة التحكم.');
+            }
+        }
+
+        // ============================================================
+        // دالة renderLogo (للشعار القديم والجديد)
+        // ============================================================
+        function renderLogo() {
+            const s = appData.settings || {};
+            const el = document.getElementById('logoDisplay');
+            const logoImg = document.getElementById('logoImageHeader');
+            const brandTextEl = document.getElementById('brandTextLeft');
+            const imageUrl = s.logoImage || '';
+
+            // --- تحديث الشعار القديم (النصي) ---
+            if (el) {
+                const icon = s.logoIcon || 'fa-gamepad';
+                const text1 = s.logoText1 || 'Ramz';
+                const text2 = s.logoText2 || 'play';
+                el.innerHTML = `<i class="fas ${icon}"></i> <span>${text1}</span>${text2}`;
+            }
+
+            // --- تحديث الشعار النصي الجديد (الموجود في اليسار) ---
+            if (brandTextEl) {
+                const bigText = s.logoText1 || 'Ramz';
+                const smallText = s.logoText2 || 'play';
+                brandTextEl.innerHTML = `
+                    <span class="play-small">${smallText}</span>
+                    <span class="ramz-big">${bigText}</span>
+                `;
+            }
+
+            // --- تحديث شعار الصورة (يظهر بدلاً من الشعار النصي القديم إذا وُجد) ---
+            if (logoImg) {
+                if (imageUrl && imageUrl.trim() !== '') {
+                    logoImg.src = imageUrl;
+                    logoImg.style.display = 'block';
+                    if (el) el.style.display = 'none';
+                } else {
+                    logoImg.style.display = 'none';
+                    logoImg.src = '';
+                    if (el) el.style.display = 'flex';
+                }
+            }
+
+            document.title = (s.appName || 'Ramzplay') + ' - متجر التطبيقات';
+        }
+
         // ---- تحميل البيانات وعرض الموقع ----
         async function init() {
-            appData = await window.loadAppData();
+            // استخدام دالة التحميل المحسّنة بدلاً من common.js
+            appData = await loadAppDataFixed();
+
+            // التأكد من وجود الحقول الأساسية
+            if (!appData.products) appData.products = {};
+            if (!appData.categories) appData.categories = [];
+            if (!appData.stores) appData.stores = {};
+            if (!appData.settings) appData.settings = { logoText1: 'Ramz', logoText2: 'play' };
+            if (!appData.carousel) appData.carousel = [];
+            if (!appData.marquee) appData.marquee = [];
+            if (!appData.testimonials) appData.testimonials = [];
+            if (!appData.purchasedProducts) appData.purchasedProducts = [];
+            if (!appData.footer) appData.footer = {};
+
             // زيادة عداد الزوار (مرة واحدة لكل جلسة)
             if (!sessionStorage.getItem('visitorCounted')) {
                 if (window.incrementVisitorCount) {
@@ -1184,20 +1406,42 @@
                 }
                 sessionStorage.setItem('visitorCounted', 'true');
             }
+
             // تحميل حالة المستخدم من localStorage
             loadUserState();
             renderAll();
             setupEventListeners();
-            setInterval(async () => {
-                const fresh = await window.loadAppData();
-                if (JSON.stringify(fresh) !== JSON.stringify(appData)) {
-                    appData = fresh;
-                    renderAll();
-                }
-            }, 60000);
 
-            // التأكد من تحميل Font Awesome مع ثلاثة مصادر
+            // تحديث دوري كل 30 ثانية مع تحسين المقارنة
+            setInterval(async () => {
+                const fresh = await loadAppDataFixed();
+                if (fresh && fresh.products) {
+                    const oldCount = Object.values(appData.products).reduce((acc, arr) => acc + arr.length, 0);
+                    const newCount = Object.values(fresh.products).reduce((acc, arr) => acc + arr.length, 0);
+                    if (newCount !== oldCount) {
+                        console.log(`🔄 تغير عدد التطبيقات: ${oldCount} -> ${newCount}`);
+                        if (appData.purchasedProducts) {
+                            fresh.purchasedProducts = appData.purchasedProducts;
+                        }
+                        appData = fresh;
+                        renderAll();
+                    }
+                }
+            }, 30000); // كل 30 ثانية
+
+            // التأكد من تحميل Font Awesome
             ensureFontAwesome();
+
+            // اختصار لوحة المفاتيح لتحديث يدوي (Ctrl+Shift+R)
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+                    e.preventDefault();
+                    refreshDataManually();
+                }
+            });
+
+            console.log('🚀 Ramzplay جاهز! استخدم Ctrl+Shift+R لتحديث البيانات يدوياً.');
+            console.log('📊 البيانات الحالية:', appData);
         }
 
         function renderAll() {
@@ -1214,7 +1458,6 @@
         // دالة التأكد من تحميل Font Awesome + ثلاثة مصادر احتياطية
         // ============================================================
         function ensureFontAwesome() {
-            // اختبر وجود أيقونة معروفة (fa-th-large موجودة في جميع الإصدارات)
             const testEl = document.createElement('span');
             testEl.className = 'fas fa-th-large';
             testEl.style.display = 'none';
@@ -1224,7 +1467,6 @@
             document.body.removeChild(testEl);
 
             if (!hasFont) {
-                // المصدر الثاني (jsdelivr)
                 let link = document.createElement('link');
                 link.rel = 'stylesheet';
                 link.href = 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css';
@@ -1232,7 +1474,6 @@
                 document.head.appendChild(link);
                 console.log('⏳ Loading Font Awesome from second CDN (jsdelivr)...');
 
-                // المصدر الثالث (use.fontawesome.com) – في حال فشل الثاني
                 setTimeout(() => {
                     const checkAgain = document.createElement('span');
                     checkAgain.className = 'fas fa-th-large';
@@ -1254,37 +1495,6 @@
             } else {
                 console.log('✅ Font Awesome loaded successfully from primary CDN (cdnjs)');
             }
-        }
-
-        // ============================================================
-        // دالة renderLogo (للشعار)
-        // ============================================================
-        function renderLogo() {
-            const s = appData.settings || {};
-            const el = document.getElementById('logoDisplay');
-            const logoImg = document.getElementById('logoImageHeader');
-            const imageUrl = s.logoImage || '';
-
-            if (el) {
-                const icon = s.logoIcon || 'fa-gamepad';
-                const text1 = s.logoText1 || 'Ramz';
-                const text2 = s.logoText2 || 'play';
-                el.innerHTML = `<i class="fas ${icon}"></i> <span>${text1}</span> ${text2}`;
-            }
-
-            if (logoImg) {
-                if (imageUrl && imageUrl.trim() !== '') {
-                    logoImg.src = imageUrl;
-                    logoImg.style.display = 'block';
-                    if (el) el.style.display = 'none';
-                } else {
-                    logoImg.style.display = 'none';
-                    logoImg.src = '';
-                    if (el) el.style.display = 'flex';
-                }
-            }
-
-            document.title = (s.appName || 'Ramzplay') + ' - متجر التطبيقات';
         }
 
         // ============================================================
@@ -1614,14 +1824,11 @@
             }
         }
 
-        // ============================================================
-        // 🔧 [الإصلاح النهائي] دالة فتح لوحة التحكم
-        // ============================================================
+        // ---- فتح لوحة التحكم ----
         function openAdminLogin() {
-            closeSideMenu(); // إغلاق القائمة الجانبية أولاً
-            window.location.href = 'admin.html'; // الانتقال المباشر لصفحة تسجيل الدخول
+            closeSideMenu();
+            window.location.href = 'admin.html';
         }
-        // ============================================================
 
         // ============================================================
         // دوال الكاروسيل والماركي والتذييل
@@ -2892,12 +3099,14 @@
         window.sendOrderViaChat = sendOrderViaChat;
         window.showComingSoon = showComingSoon;
         window.scrollToBlog = scrollToBlog;
-        window.openAdminLogin = openAdminLogin; // تصدير الدالة المُصلحة
+        window.openAdminLogin = openAdminLogin;
         window.handleUserAction = handleUserAction;
         window.switchUserMode = switchUserMode;
+        window.refreshDataManually = refreshDataManually;
 
-        console.log('🚀 Ramzplay - النسخة النهائية مع ثلاثة مصادر لـ Font Awesome');
+        console.log('🚀 Ramzplay - النسخة النهائية مع إصلاح مشكلة التطبيقات والشعار النصي');
         console.log('© 2026 جميع الحقوق محفوظة للمهندس رمزي الصلاحي');
+        console.log('💡 استخدم Ctrl+Shift+R لتحديث البيانات يدوياً من أي مكان');
     </script>
 </body>
 </html>
