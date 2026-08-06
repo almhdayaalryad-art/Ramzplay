@@ -7,67 +7,85 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
-    <!-- رابط Font Awesome الأساسي (cdnjs) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- ===== Font Awesome v6.5.1 (محدث) ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-        /* ===== الأساسيات ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Cairo', sans-serif; background: #f1f5f9; color: #1e293b; padding-bottom: 70px; direction: rtl; overflow-x: hidden; }
-        a { text-decoration: none; color: inherit; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+        /* === الأساسيات === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding-bottom: 70px;
+            direction: rtl;
+            overflow-x: hidden;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
 
-        /* ===== الهيدر ===== */
-        .navbar { background: white; padding: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; }
-        .navbar .container { display: flex; align-items: center; justify-content: space-between; }
-        
-        /* الشعار القديم (جهة اليمين) */
-        .logo { display: flex; align-items: center; gap: 8px; font-size: 1.5rem; font-weight: 800; color: #0f172a; }
-        .logo i { color: #4CAF50; font-size: 1.8rem; }
-        .logo span { color: #4CAF50; }
+        /* === أيقونات احتياطية في حال فشل Font Awesome === */
+        .icon-fallback {
+            display: none;
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+        @supports not (font-family: 'Font Awesome 6 Free') {
+            .bottom-nav .nav-item i.fa-solid,
+            .bottom-nav .nav-item i.fas,
+            .bottom-nav .nav-item i.far,
+            .bottom-nav .nav-item i.fab {
+                display: none;
+            }
+            .bottom-nav .nav-item .icon-fallback {
+                display: inline-block;
+            }
+        }
 
-        /* الأقسام الجانبية (جهة اليسار) */
-        .nav-actions {
+        /* === هيدر === */
+        .navbar {
+            background: white;
+            padding: 12px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar .container {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
         }
-
-        /* ===== الشعار النصي الجديد "play Ramz" (جهة اليسار) ===== */
-        .brand-text-left {
+        .logo {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            line-height: 1;
-            margin-left: 0;
-            font-family: 'Cairo', sans-serif;
-            flex-shrink: 0;
-        }
-        .brand-text-left .play-small {
-            font-size: 0.55rem;
-            font-weight: 700;
-            color: #94a3b8;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            margin-bottom: -2px;
-        }
-        .brand-text-left .ramz-big {
-            font-size: 1.4rem;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.5rem;
             font-weight: 800;
+            color: #0f172a;
+        }
+        .logo i {
             color: #4CAF50;
-            line-height: 1;
-            margin-top: -2px;
+            font-size: 1.8rem;
         }
-
-        /* تحسينات التجاوب للشعار النصي الجديد */
-        @media (max-width: 768px) {
-            .brand-text-left .play-small { font-size: 0.45rem; }
-            .brand-text-left .ramz-big { font-size: 1.1rem; }
+        .logo span {
+            color: #4CAF50;
         }
-        @media (max-width: 480px) {
-            .brand-text-left .play-small { font-size: 0.4rem; }
-            .brand-text-left .ramz-big { font-size: 0.9rem; }
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
         }
-
         .nav-actions img#logoImageHeader {
             height: 45px;
             width: auto;
@@ -78,37 +96,166 @@
             transition: transform 0.2s ease;
             background: transparent;
         }
-        .nav-actions img#logoImageHeader:hover { transform: scale(1.05); }
+        .nav-actions img#logoImageHeader:hover {
+            transform: scale(1.05);
+        }
 
-        /* ===== كاروسيل ===== */
-        .carousel-section { padding: 16px 0 8px; background: white; }
-        .carousel-wrapper { position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); max-width: 100%; margin: 0 auto; }
-        .carousel-slides { display: flex; transition: transform 0.4s ease; }
-        .carousel-slide { min-width: 100%; height: 180px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #94a3b8; }
-        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; font-size: 1.5rem; padding: 6px 12px; cursor: pointer; border-radius: 50%; z-index: 5; }
-        .carousel-btn:hover { background: rgba(0,0,0,0.7); }
-        .carousel-btn.prev { left: 8px; }
-        .carousel-btn.next { right: 8px; }
-        .carousel-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
-        .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.6); border: none; cursor: pointer; padding: 0; }
-        .carousel-dot.active { background: white; transform: scale(1.2); }
+        /* === كاروسيل === */
+        .carousel-section {
+            padding: 16px 0 8px;
+            background: white;
+        }
+        .carousel-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.4s ease;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            height: 180px;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 5;
+        }
+        .carousel-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .carousel-btn.prev {
+            left: 8px;
+        }
+        .carousel-btn.next {
+            right: 8px;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 5;
+        }
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .carousel-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
 
-        /* ===== شريط إعلاني متحرك ===== */
-        .marquee-section { background: #f8fafc; padding: 8px 0; border-bottom: 1px solid #e2e8f0; overflow: hidden; }
-        .marquee-track { display: flex; gap: 20px; animation: marquee 20s linear infinite; width: max-content; }
-        .marquee-item { display: flex; align-items: center; gap: 12px; background: white; padding: 4px 16px 4px 12px; border-radius: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); white-space: nowrap; font-size: 0.85rem; }
-        .marquee-item img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: #e2e8f0; }
-        .marquee-item .marquee-btn { background: #4CAF50; color: white; border: none; padding: 2px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        /* === شريط إعلاني متحرك === */
+        .marquee-section {
+            background: #f8fafc;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .marquee-track {
+            display: flex;
+            gap: 20px;
+            animation: marquee 20s linear infinite;
+            width: max-content;
+        }
+        .marquee-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 4px 16px 4px 12px;
+            border-radius: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+        .marquee-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e2e8f0;
+        }
+        .marquee-item .marquee-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
 
-        /* ===== الأقسام ===== */
-        .section-block { margin: 20px 0; background: white; border-radius: 16px; padding: 12px 0 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 16px 8px; border-bottom: 1px solid #f1f5f9; }
-        .section-header h3 { font-size: 1.1rem; font-weight: 700; }
-        .section-header a { color: #4CAF50; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+        /* === الأقسام === */
+        .section-block {
+            margin: 20px 0;
+            background: white;
+            border-radius: 16px;
+            padding: 12px 0 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px 8px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .section-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .section-header a {
+            color: #4CAF50;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-        /* ===== الفئات ===== */
+        /* ========================================================== */
+        /* 1. الفئات (شكلها السابق - شبكة عادية) */
+        /* ========================================================== */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -120,16 +267,30 @@
             border-radius: 12px;
             padding: 12px;
             text-align: center;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
             transition: 0.2s;
             cursor: pointer;
         }
-        .category-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .category-card i { font-size: 2rem; color: #4CAF50; }
-        .category-card .cat-name { font-weight: 600; margin-top: 4px; }
-        .category-card .cat-count { font-size: 0.7rem; color: #94a3b8; }
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .category-card i {
+            font-size: 2rem;
+            color: #4CAF50;
+        }
+        .category-card .cat-name {
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .category-card .cat-count {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
 
-        /* ===== المطورين (صفين) ===== */
+        /* ========================================================== */
+        /* 2. المطورين (بطاقات أفقية - صفين) */
+        /* ========================================================== */
         .horizontal-scroll-2rows {
             display: grid;
             grid-auto-flow: column;
@@ -142,9 +303,13 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .horizontal-scroll-2rows::-webkit-scrollbar { display: none; }
+        .horizontal-scroll-2rows::-webkit-scrollbar {
+            display: none;
+        }
 
-        /* ===== التطبيقات (3 صفوف) ===== */
+        /* ========================================================== */
+        /* 3. التطبيقات (بطاقات أفقية - 3 صفوف مع عرض موسع) */
+        /* ========================================================== */
         .horizontal-scroll-3rows {
             display: grid;
             grid-auto-flow: column;
@@ -158,11 +323,20 @@
             -ms-overflow-style: none;
             margin: 0 -8px 0 0;
         }
-        .horizontal-scroll-3rows::-webkit-scrollbar { display: none; }
-        .horizontal-scroll-3rows .card-horizontal { width: 380px; flex-shrink: 0; }
-        .horizontal-scroll-3rows .card-horizontal:last-child { margin-left: 16px; }
+        .horizontal-scroll-3rows::-webkit-scrollbar {
+            display: none;
+        }
+        .horizontal-scroll-3rows .card-horizontal {
+            width: 380px;
+            flex-shrink: 0;
+        }
+        .horizontal-scroll-3rows .card-horizontal:last-child {
+            margin-left: 16px;
+        }
 
-        /* ===== آراء المستخدمين (صف واحد) ===== */
+        /* ========================================================== */
+        /* 4. آراء المستخدمين (صف واحد) */
+        /* ========================================================== */
         .horizontal-scroll-1row {
             display: flex;
             flex-wrap: nowrap;
@@ -174,14 +348,18 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .horizontal-scroll-1row::-webkit-scrollbar { display: none; }
+        .horizontal-scroll-1row::-webkit-scrollbar {
+            display: none;
+        }
 
-        /* ===== البطاقة الأفقية الموحدة ===== */
+        /* ========================================================== */
+        /* البطاقة الأفقية الموحدة */
+        /* ========================================================== */
         .card-horizontal {
             background: #ffffff;
             border-radius: 16px;
             padding: 12px 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             border: 1px solid #f1f5f9;
             transition: all 0.25s ease;
             cursor: pointer;
@@ -194,7 +372,7 @@
         }
         .card-horizontal:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             border-color: #d1d5db;
         }
         .card-horizontal .card-icon {
@@ -209,10 +387,14 @@
             justify-content: center;
             font-size: 2.2rem;
             color: #94a3b8;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             flex-shrink: 0;
         }
-        .card-horizontal .card-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .card-horizontal .card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .card-horizontal .card-info {
             flex: 1;
             min-width: 0;
@@ -256,8 +438,16 @@
             color: #94a3b8;
             flex-wrap: wrap;
         }
-        .card-horizontal .card-info .row3 .rating-stars { color: #f59e0b; font-weight: 600; display: flex; align-items: center; gap: 2px; }
-        .card-horizontal .card-info .row3 .action-btn { margin-right: auto; }
+        .card-horizontal .card-info .row3 .rating-stars {
+            color: #f59e0b;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .card-horizontal .card-info .row3 .action-btn {
+            margin-right: auto;
+        }
         .card-horizontal .card-info .row3 .action-btn button {
             background: #4CAF50;
             color: white;
@@ -270,13 +460,26 @@
             transition: 0.2s;
             white-space: nowrap;
         }
-        .card-horizontal .card-info .row3 .action-btn button:hover { opacity: 0.85; background: #388E3C; }
-        .card-horizontal .card-info .row3 .action-btn button.installed { background: #e2e8f0; color: #475569; }
-        .card-horizontal .card-info .row3 .action-btn button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .card-horizontal .card-info .row3 .action-btn button.payment-required { background: #f59e0b; }
-        .card-horizontal .card-info .row3 .action-btn button.payment-required:hover { background: #d97706; }
+        .card-horizontal .card-info .row3 .action-btn button:hover {
+            opacity: 0.85;
+            background: #388E3C;
+        }
+        .card-horizontal .card-info .row3 .action-btn button.installed {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        .card-horizontal .card-info .row3 .action-btn button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .card-horizontal .card-info .row3 .action-btn button.payment-required {
+            background: #f59e0b;
+        }
+        .card-horizontal .card-info .row3 .action-btn button.payment-required:hover {
+            background: #d97706;
+        }
 
-        /* ===== المدونة ===== */
+        /* === المدونة === */
         .blog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -287,37 +490,73 @@
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             transition: 0.2s;
         }
-        .blog-card:hover { transform: translateY(-4px); }
-        .blog-card img { width: 100%; height: 120px; object-fit: cover; }
-        .blog-card .blog-body { padding: 10px; }
-        .blog-card .blog-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
-        .blog-card .blog-excerpt { font-size: 0.85rem; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .blog-card:hover {
+            transform: translateY(-4px);
+        }
+        .blog-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .blog-card .blog-body {
+            padding: 10px;
+        }
+        .blog-card .blog-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .blog-card .blog-excerpt {
+            font-size: 0.85rem;
+            color: #64748b;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
-        /* ===== صفحة التطبيقات ===== */
+        /* ========================================================== */
+        /* صفحة التطبيقات */
+        /* ========================================================== */
         #appsPage {
             display: none;
             padding: 0 0 20px 0;
             animation: fadeIn 0.3s ease;
         }
-        #appsPage.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #appsPage.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-        /* ===== شاشة تفاصيل التطبيق ===== */
+        /* ========================================================== */
+        /* شاشة تفاصيل التطبيق (ثلاثة أثلاث) */
+        /* ========================================================== */
         .app-detail-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 500;
             justify-content: center;
             align-items: center;
             padding: 16px;
             animation: fadeIn 0.3s ease;
         }
-        .app-detail-overlay.open { display: flex; }
+        .app-detail-overlay.open {
+            display: flex;
+        }
         .app-detail-container {
             background: white;
             border-radius: 28px;
@@ -326,17 +565,19 @@
             max-height: 95vh;
             overflow-y: auto;
             padding: 0;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
             position: relative;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .app-detail-container::-webkit-scrollbar { display: none; }
+        .app-detail-container::-webkit-scrollbar {
+            display: none;
+        }
         .app-detail-close {
             position: sticky;
             top: 12px;
             left: 16px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             border: none;
             color: white;
             width: 36px;
@@ -350,7 +591,10 @@
             backdrop-filter: blur(4px);
             transition: 0.2s;
         }
-        .app-detail-close:hover { background: rgba(0,0,0,0.8); transform: scale(1.1); }
+        .app-detail-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
 
         .app-detail-top {
             padding: 20px 20px 16px;
@@ -358,10 +602,34 @@
             background: linear-gradient(145deg, #f8fafc, #ffffff);
             border-radius: 28px 28px 0 0;
         }
-        .app-detail-top .detail-icon { width: 100px; height: 100px; border-radius: 24px; background: #e2e8f0; overflow: hidden; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #94a3b8; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-        .app-detail-top .detail-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .app-detail-top .detail-name { font-size: 1.4rem; font-weight: 800; }
-        .app-detail-top .detail-desc { font-size: 0.9rem; color: #64748b; margin: 4px 0 8px; }
+        .app-detail-top .detail-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 24px;
+            background: #e2e8f0;
+            overflow: hidden;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #94a3b8;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .app-detail-top .detail-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .app-detail-top .detail-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .app-detail-top .detail-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin: 4px 0 8px;
+        }
         .app-detail-top .detail-status {
             display: inline-block;
             padding: 2px 14px;
@@ -372,10 +640,24 @@
             color: white;
             margin-bottom: 6px;
         }
-        .app-detail-top .detail-status.restricted { background: #ef4444; }
-        .app-detail-top .detail-status.payment { background: #f59e0b; }
-        .app-detail-top .detail-price { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 4px 0 10px; }
-        .app-detail-top .detail-price .old-price { text-decoration: line-through; color: #94a3b8; font-size: 0.9rem; margin-left: 8px; }
+        .app-detail-top .detail-status.restricted {
+            background: #ef4444;
+        }
+        .app-detail-top .detail-status.payment {
+            background: #f59e0b;
+        }
+        .app-detail-top .detail-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 4px 0 10px;
+        }
+        .app-detail-top .detail-price .old-price {
+            text-decoration: line-through;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-left: 8px;
+        }
         .app-detail-top .detail-install-btn {
             background: #4CAF50;
             color: white;
@@ -390,12 +672,25 @@
             max-width: 280px;
             margin: 0 auto;
         }
-        .app-detail-top .detail-install-btn:hover { background: #388E3C; }
-        .app-detail-top .detail-install-btn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
-        .app-detail-top .detail-install-btn.payment-required { background: #f59e0b; }
-        .app-detail-top .detail-install-btn.payment-required:hover { background: #d97706; }
+        .app-detail-top .detail-install-btn:hover {
+            background: #388E3C;
+        }
+        .app-detail-top .detail-install-btn:disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        .app-detail-top .detail-install-btn.payment-required {
+            background: #f59e0b;
+        }
+        .app-detail-top .detail-install-btn.payment-required:hover {
+            background: #d97706;
+        }
 
-        .app-detail-middle { padding: 16px 20px; background: #f8fafc; }
+        .app-detail-middle {
+            padding: 16px 20px;
+            background: #f8fafc;
+        }
         .app-detail-middle .detail-images-scroll {
             display: flex;
             gap: 10px;
@@ -404,7 +699,9 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .app-detail-middle .detail-images-scroll::-webkit-scrollbar { display: none; }
+        .app-detail-middle .detail-images-scroll::-webkit-scrollbar {
+            display: none;
+        }
         .app-detail-middle .detail-images-scroll img {
             flex: 0 0 auto;
             width: 130px;
@@ -413,7 +710,7 @@
             object-fit: cover;
             background: #e2e8f0;
             border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
         .app-detail-middle .detail-about-btn {
             display: block;
@@ -430,9 +727,14 @@
             font-size: 0.9rem;
             margin-top: 4px;
         }
-        .app-detail-middle .detail-about-btn:hover { border-color: #4CAF50; color: #4CAF50; }
+        .app-detail-middle .detail-about-btn:hover {
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
 
-        .app-detail-bottom { padding: 16px 20px 20px; }
+        .app-detail-bottom {
+            padding: 16px 20px 20px;
+        }
         .app-detail-bottom .share-section {
             display: flex;
             gap: 8px;
@@ -440,7 +742,11 @@
             margin-bottom: 14px;
             flex-wrap: wrap;
         }
-        .app-detail-bottom .share-section .share-label { font-weight: 600; font-size: 0.9rem; color: #0f172a; }
+        .app-detail-bottom .share-section .share-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #0f172a;
+        }
         .app-detail-bottom .share-section .share-btn {
             background: #3b82f6;
             color: white;
@@ -455,7 +761,9 @@
             align-items: center;
             gap: 6px;
         }
-        .app-detail-bottom .share-section .share-btn:hover { background: #2563eb; }
+        .app-detail-bottom .share-section .share-btn:hover {
+            background: #2563eb;
+        }
 
         .app-detail-bottom .rating-filter {
             display: flex;
@@ -475,8 +783,14 @@
             font-family: inherit;
             color: #475569;
         }
-        .app-detail-bottom .rating-filter .star-btn:hover { background: #e2e8f0; }
-        .app-detail-bottom .rating-filter .star-btn.active { background: #f59e0b; color: white; border-color: #f59e0b; }
+        .app-detail-bottom .rating-filter .star-btn:hover {
+            background: #e2e8f0;
+        }
+        .app-detail-bottom .rating-filter .star-btn.active {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
 
         .app-detail-bottom .detail-reviews-scroll {
             display: flex;
@@ -486,7 +800,9 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .app-detail-bottom .detail-reviews-scroll::-webkit-scrollbar { display: none; }
+        .app-detail-bottom .detail-reviews-scroll::-webkit-scrollbar {
+            display: none;
+        }
         .app-detail-bottom .detail-reviews-scroll .review-card {
             flex: 0 0 auto;
             width: 200px;
@@ -496,11 +812,29 @@
             text-align: center;
             border: 1px solid #f1f5f9;
         }
-        .app-detail-bottom .detail-reviews-scroll .review-card .review-name { font-weight: 600; font-size: 0.85rem; }
-        .app-detail-bottom .detail-reviews-scroll .review-card .review-stars { color: #f59e0b; font-size: 0.75rem; }
-        .app-detail-bottom .detail-reviews-scroll .review-card .review-text { font-size: 0.75rem; color: #64748b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .app-detail-bottom .detail-reviews-scroll .review-card .review-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .app-detail-bottom .detail-reviews-scroll .review-card .review-stars {
+            color: #f59e0b;
+            font-size: 0.75rem;
+        }
+        .app-detail-bottom .detail-reviews-scroll .review-card .review-text {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
 
-        .app-detail-bottom .similar-apps-title { font-weight: 700; font-size: 1rem; margin: 14px 0 8px; color: #0f172a; }
+        .app-detail-bottom .similar-apps-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin: 14px 0 8px;
+            color: #0f172a;
+        }
         .app-detail-bottom .similar-apps-scroll {
             display: flex;
             gap: 12px;
@@ -509,7 +843,9 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        .app-detail-bottom .similar-apps-scroll::-webkit-scrollbar { display: none; }
+        .app-detail-bottom .similar-apps-scroll::-webkit-scrollbar {
+            display: none;
+        }
         .app-detail-bottom .similar-apps-scroll .similar-card {
             flex: 0 0 auto;
             width: 140px;
@@ -521,22 +857,54 @@
             transition: 0.2s;
             border: 1px solid #f1f5f9;
         }
-        .app-detail-bottom .similar-apps-scroll .similar-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-        .app-detail-bottom .similar-apps-scroll .similar-card .sim-icon { width: 56px; height: 56px; border-radius: 14px; background: #e2e8f0; margin: 0 auto 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: #94a3b8; }
-        .app-detail-bottom .similar-apps-scroll .similar-card .sim-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .app-detail-bottom .similar-apps-scroll .similar-card .sim-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .app-detail-bottom .similar-apps-scroll .similar-card .sim-rating { font-size: 0.65rem; color: #f59e0b; }
+        .app-detail-bottom .similar-apps-scroll .similar-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: #e2e8f0;
+            margin: 0 auto 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #94a3b8;
+        }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .app-detail-bottom .similar-apps-scroll .similar-card .sim-rating {
+            font-size: 0.65rem;
+            color: #f59e0b;
+        }
 
-        /* ===== القائمة الجانبية ===== */
+        /* ========================================================== */
+        /* القائمة الجانبية (Side Menu) */
+        /* ========================================================== */
         .side-menu-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 800;
             animation: fadeIn 0.25s ease;
         }
-        .side-menu-overlay.open { display: block; }
+        .side-menu-overlay.open {
+            display: block;
+        }
 
         .side-menu {
             position: fixed;
@@ -551,13 +919,20 @@
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
             padding: 20px 16px 30px;
-            box-shadow: 4px 0 30px rgba(0,0,0,0.3);
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.3);
             scrollbar-width: thin;
             scrollbar-color: #4CAF50 transparent;
         }
-        .side-menu::-webkit-scrollbar { width: 4px; }
-        .side-menu::-webkit-scrollbar-thumb { background: #4CAF50; border-radius: 10px; }
-        .side-menu.open { transform: translateX(0); }
+        .side-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+        .side-menu::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 10px;
+        }
+        .side-menu.open {
+            transform: translateX(0);
+        }
 
         .side-menu .menu-logo {
             text-align: center;
@@ -577,7 +952,9 @@
             font-weight: 800;
             margin-top: 4px;
         }
-        .side-menu .menu-logo .logo-text span { color: #4CAF50; }
+        .side-menu .menu-logo .logo-text span {
+            color: #4CAF50;
+        }
 
         .side-menu .menu-item {
             display: flex;
@@ -633,18 +1010,22 @@
             font-size: 0.7rem;
         }
 
-        /* ===== مودال المستخدم ===== */
+        /* ========================================================== */
+        /* مودال المستخدم (تسجيل الدخول) */
+        /* ========================================================== */
         .user-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 700;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .user-modal.open { display: flex; }
+        .user-modal.open {
+            display: flex;
+        }
         .user-modal-content {
             background: white;
             border-radius: 28px;
@@ -652,9 +1033,12 @@
             width: 100%;
             padding: 30px 24px;
             text-align: center;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
-        .user-modal-content h3 { font-size: 1.3rem; margin-bottom: 4px; }
+        .user-modal-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
         .user-modal-content .user-avatar {
             width: 80px;
             height: 80px;
@@ -678,7 +1062,10 @@
             background: #f8fafc;
             transition: 0.2s;
         }
-        .user-modal-content input:focus { outline: none; border-color: #4CAF50; }
+        .user-modal-content input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
         .user-modal-content .user-btn {
             background: #4CAF50;
             color: white;
@@ -692,14 +1079,18 @@
             transition: 0.2s;
             font-family: inherit;
         }
-        .user-modal-content .user-btn:hover { background: #388E3C; }
+        .user-modal-content .user-btn:hover {
+            background: #388E3C;
+        }
         .user-modal-content .user-btn.outline {
             background: transparent;
             color: #4CAF50;
             border: 2px solid #4CAF50;
             margin-top: 8px;
         }
-        .user-modal-content .user-btn.outline:hover { background: #f0fdf4; }
+        .user-modal-content .user-btn.outline:hover {
+            background: #f0fdf4;
+        }
         .user-modal-content .user-close {
             margin-top: 12px;
             background: #e2e8f0;
@@ -711,18 +1102,22 @@
             font-family: inherit;
         }
 
-        /* ===== مودال السلة ===== */
+        /* ========================================================== */
+        /* مودال السلة (Cart) */
+        /* ========================================================== */
         .cart-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 700;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .cart-modal.open { display: flex; }
+        .cart-modal.open {
+            display: flex;
+        }
         .cart-modal-content {
             background: white;
             border-radius: 28px;
@@ -730,19 +1125,28 @@
             width: 100%;
             max-height: 85vh;
             padding: 24px 20px 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
         }
-        .cart-modal-content h3 { font-size: 1.3rem; margin-bottom: 12px; text-align: center; }
+        .cart-modal-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            text-align: center;
+        }
         .cart-items {
             flex: 1;
             overflow-y: auto;
             margin-bottom: 12px;
             scrollbar-width: thin;
         }
-        .cart-items::-webkit-scrollbar { width: 4px; }
-        .cart-items::-webkit-scrollbar-thumb { background: #4CAF50; border-radius: 10px; }
+        .cart-items::-webkit-scrollbar {
+            width: 4px;
+        }
+        .cart-items::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 10px;
+        }
         .cart-item {
             display: flex;
             align-items: center;
@@ -753,14 +1157,57 @@
             margin-bottom: 8px;
             border: 1px solid #f1f5f9;
         }
-        .cart-item .ci-icon { width: 40px; height: 40px; border-radius: 10px; background: #e2e8f0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #94a3b8; flex-shrink: 0; }
-        .cart-item .ci-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .cart-item .ci-info { flex: 1; min-width: 0; }
-        .cart-item .ci-info .ci-name { font-weight: 600; font-size: 0.9rem; }
-        .cart-item .ci-info .ci-price { font-size: 0.8rem; color: #64748b; }
-        .cart-item .ci-remove { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.1rem; padding: 4px; }
-        .cart-empty { text-align: center; color: #94a3b8; padding: 30px 0; }
-        .cart-total { font-weight: 700; font-size: 1.1rem; text-align: center; padding: 10px 0; border-top: 2px solid #f1f5f9; margin-bottom: 12px; }
+        .cart-item .ci-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #e2e8f0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+        .cart-item .ci-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .cart-item .ci-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item .ci-info .ci-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .cart-item .ci-info .ci-price {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .cart-item .ci-remove {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px;
+        }
+        .cart-empty {
+            text-align: center;
+            color: #94a3b8;
+            padding: 30px 0;
+        }
+        .cart-total {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 10px 0;
+            border-top: 2px solid #f1f5f9;
+            margin-bottom: 12px;
+        }
         .cart-actions {
             display: flex;
             flex-direction: column;
@@ -780,27 +1227,51 @@
             justify-content: center;
             gap: 8px;
         }
-        .cart-actions .btn-whatsapp { background: #25D366; color: white; }
-        .cart-actions .btn-whatsapp:hover { background: #1da851; }
-        .cart-actions .btn-email { background: #3b82f6; color: white; }
-        .cart-actions .btn-email:hover { background: #2563eb; }
-        .cart-actions .btn-chat { background: #8b5cf6; color: white; }
-        .cart-actions .btn-chat:hover { background: #7c3aed; }
-        .cart-actions .btn-close-cart { background: #e2e8f0; color: #475569; }
-        .cart-actions .btn-close-cart:hover { background: #cbd5e1; }
+        .cart-actions .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        .cart-actions .btn-whatsapp:hover {
+            background: #1da851;
+        }
+        .cart-actions .btn-email {
+            background: #3b82f6;
+            color: white;
+        }
+        .cart-actions .btn-email:hover {
+            background: #2563eb;
+        }
+        .cart-actions .btn-chat {
+            background: #8b5cf6;
+            color: white;
+        }
+        .cart-actions .btn-chat:hover {
+            background: #7c3aed;
+        }
+        .cart-actions .btn-close-cart {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        .cart-actions .btn-close-cart:hover {
+            background: #cbd5e1;
+        }
 
-        /* ===== مودال الدفع ===== */
+        /* ========================================================== */
+        /* مودال الدفع (محاكاة) */
+        /* ========================================================== */
         .payment-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             z-index: 600;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .payment-modal.open { display: flex; }
+        .payment-modal.open {
+            display: flex;
+        }
         .payment-modal-content {
             background: white;
             border-radius: 28px;
@@ -808,11 +1279,24 @@
             width: 100%;
             padding: 30px 24px;
             text-align: center;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
-        .payment-modal-content h3 { font-size: 1.3rem; margin-bottom: 8px; }
-        .payment-modal-content .payment-amount { font-size: 2rem; font-weight: 800; color: #0f172a; margin: 12px 0; }
-        .payment-modal-content .payment-methods { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+        .payment-modal-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        .payment-modal-content .payment-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 12px 0;
+        }
+        .payment-modal-content .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0;
+        }
         .payment-modal-content .payment-methods button {
             background: #f8fafc;
             border: 2px solid #e2e8f0;
@@ -827,25 +1311,116 @@
             justify-content: center;
             gap: 10px;
         }
-        .payment-modal-content .payment-methods button:hover { border-color: #4CAF50; background: #f0fdf4; }
-        .payment-modal-content .payment-methods button i { font-size: 1.2rem; }
-        .payment-modal-content .payment-close { margin-top: 16px; background: #e2e8f0; border: none; padding: 10px 30px; border-radius: 40px; font-weight: 600; cursor: pointer; font-family: inherit; }
+        .payment-modal-content .payment-methods button:hover {
+            border-color: #4CAF50;
+            background: #f0fdf4;
+        }
+        .payment-modal-content .payment-methods button i {
+            font-size: 1.2rem;
+        }
+        .payment-modal-content .payment-close {
+            margin-top: 16px;
+            background: #e2e8f0;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
 
-        /* ===== مودال التطبيق القديم ===== */
-        .app-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
-        .app-modal.open { display: flex; }
-        .app-modal-content { background: white; border-radius: 24px; max-width: 400px; width: 100%; padding: 30px 24px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.3); position: relative; }
-        .app-modal-content .modal-close { position: absolute; top: 12px; left: 16px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
-        .app-modal-content .modal-icon { width: 80px; height: 80px; border-radius: 20px; background: #e2e8f0; margin: 0 auto 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #94a3b8; }
-        .app-modal-content .modal-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .app-modal-content h3 { font-size: 1.4rem; margin-bottom: 4px; }
-        .app-modal-content p { color: #64748b; font-size: 0.9rem; margin-bottom: 8px; }
-        .app-modal-content .modal-meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px; }
-        .app-modal-content .modal-download { background: #4CAF50; color: white; border: none; padding: 12px 32px; border-radius: 40px; font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%; transition: 0.2s; }
-        .app-modal-content .modal-download:hover { background: #388E3C; }
-        .app-modal-content .modal-download.disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+        /* ========================================================== */
+        /* مودال التطبيق (القديم) */
+        /* ========================================================== */
+        .app-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .app-modal.open {
+            display: flex;
+        }
+        .app-modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .app-modal-content .modal-close {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .app-modal-content .modal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: #e2e8f0;
+            margin: 0 auto 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #94a3b8;
+        }
+        .app-modal-content .modal-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .app-modal-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+        .app-modal-content p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        .app-modal-content .modal-meta {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+        .app-modal-content .modal-download {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .app-modal-content .modal-download:hover {
+            background: #388E3C;
+        }
+        .app-modal-content .modal-download.disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
 
-        /* ===== الشريط السفلي – أيقونات Font Awesome فقط ===== */
+        /* ========================================================== */
+        /* الشريط السفلي */
+        /* ========================================================== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -857,7 +1432,7 @@
             justify-content: space-around;
             padding: 8px 0 10px;
             z-index: 200;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
         }
         .bottom-nav .nav-item {
             display: flex;
@@ -871,44 +1446,65 @@
             border: none;
             background: none;
             font-family: inherit;
-            padding: 4px 8px;
-            border-radius: 12px;
-            min-width: 50px;
         }
         .bottom-nav .nav-item i {
-            font-size: 1.5rem;
-            transition: 0.2s;
+            font-size: 1.4rem;
+        }
+        .bottom-nav .nav-item .icon-fallback {
+            display: none;
+            font-size: 1.4rem;
+            font-weight: 900;
         }
         .bottom-nav .nav-item.active {
             color: #4CAF50;
         }
-        .bottom-nav .nav-item.active i {
-            transform: scale(1.1);
-        }
         .bottom-nav .nav-item:hover {
             color: #4CAF50;
         }
-        .bottom-nav .nav-item .nav-label {
-            font-size: 0.6rem;
-            font-weight: 600;
-        }
 
-        /* ===== التذييل ===== */
+        /* === التذييل === */
         .footer {
             background: #0f172a;
             color: #cbd5e1;
             padding: 30px 16px 20px;
             margin-top: 20px;
         }
-        .footer .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
-        .footer h4 { color: white; margin-bottom: 8px; }
-        .footer ul { list-style: none; padding: 0; }
-        .footer ul li { margin-bottom: 4px; }
-        .footer ul li a { color: #94a3b8; transition: 0.2s; }
-        .footer ul li a:hover { color: #4CAF50; }
-        .footer .social-icons { display: flex; gap: 12px; flex-wrap: wrap; }
-        .footer .social-icons a { color: #94a3b8; font-size: 1.4rem; transition: 0.2s; }
-        .footer .social-icons a:hover { color: #4CAF50; }
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        .footer h4 {
+            color: white;
+            margin-bottom: 8px;
+        }
+        .footer ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer ul li {
+            margin-bottom: 4px;
+        }
+        .footer ul li a {
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .footer ul li a:hover {
+            color: #4CAF50;
+        }
+        .footer .social-icons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .footer .social-icons a {
+            color: #94a3b8;
+            font-size: 1.4rem;
+            transition: 0.2s;
+        }
+        .footer .social-icons a:hover {
+            color: #4CAF50;
+        }
         .footer .copyright {
             text-align: center;
             border-top: 1px solid #1e293b;
@@ -917,60 +1513,168 @@
             font-size: 0.85rem;
             color: #64748b;
         }
-        .footer .copyright .developer-credit {
-            color: #4CAF50;
-            font-weight: 700;
-        }
 
-        /* ===== تحسينات متجاوبة ===== */
+        /* === تحسينات متجاوبة === */
         @media (max-width: 768px) {
-            .carousel-slide { height: 140px; }
-            .marquee-item { font-size: 0.75rem; padding: 2px 12px; }
-            .marquee-item img { width: 26px; height: 26px; }
-            .nav-actions img#logoImageHeader { height: 35px; max-width: 120px; }
-            .category-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
-            .card-horizontal { width: 220px; padding: 10px 12px; }
-            .card-horizontal .card-icon { flex: 0 0 54px; width: 54px; height: 54px; font-size: 1.6rem; }
-            .card-horizontal .card-info .row1 { font-size: 0.9rem; }
-            .horizontal-scroll-3rows .card-horizontal { width: 320px; }
-            .bottom-nav .nav-item i { font-size: 1.3rem; }
-            .bottom-nav .nav-item { min-width: 44px; }
-            .app-detail-container { max-width: 100%; border-radius: 20px 20px 0 0; max-height: 98vh; }
-            .app-detail-top .detail-icon { width: 80px; height: 80px; }
-            .side-menu { width: 280px; }
+            .carousel-slide {
+                height: 140px;
+            }
+            .marquee-item {
+                font-size: 0.75rem;
+                padding: 2px 12px;
+            }
+            .marquee-item img {
+                width: 26px;
+                height: 26px;
+            }
+            .nav-actions img#logoImageHeader {
+                height: 35px;
+                max-width: 120px;
+            }
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            .card-horizontal {
+                width: 220px;
+                padding: 10px 12px;
+            }
+            .card-horizontal .card-icon {
+                flex: 0 0 54px;
+                width: 54px;
+                height: 54px;
+                font-size: 1.6rem;
+            }
+            .card-horizontal .card-info .row1 {
+                font-size: 0.9rem;
+            }
+            .horizontal-scroll-3rows .card-horizontal {
+                width: 320px;
+            }
+            .bottom-nav .nav-item i {
+                font-size: 1.2rem;
+            }
+            .app-detail-container {
+                max-width: 100%;
+                border-radius: 20px 20px 0 0;
+                max-height: 98vh;
+            }
+            .app-detail-top .detail-icon {
+                width: 80px;
+                height: 80px;
+            }
+            .side-menu {
+                width: 280px;
+            }
         }
         @media (max-width: 480px) {
-            .carousel-slide { height: 120px; }
-            .section-header h3 { font-size: 0.95rem; }
-            .nav-actions img#logoImageHeader { height: 30px; max-width: 100px; }
-            .category-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-            .category-card { padding: 8px; }
-            .card-horizontal { width: 180px; padding: 8px 10px; gap: 8px; }
-            .card-horizontal .card-icon { flex: 0 0 44px; width: 44px; height: 44px; font-size: 1.2rem; }
-            .card-horizontal .card-info .row1 { font-size: 0.8rem; }
-            .card-horizontal .card-info .row2 { font-size: 0.65rem; }
-            .card-horizontal .card-info .row3 { font-size: 0.65rem; gap: 6px; }
-            .card-horizontal .card-info .row3 .action-btn button { font-size: 0.6rem; padding: 2px 12px; }
-            .horizontal-scroll-3rows .card-horizontal { width: 260px; }
-            .app-detail-top .detail-icon { width: 70px; height: 70px; font-size: 2rem; }
-            .app-detail-top .detail-name { font-size: 1.1rem; }
-            .app-detail-middle .detail-images-scroll img { width: 100px; height: 70px; }
-            .side-menu { width: 260px; padding: 16px 12px; }
-            .side-menu .menu-item { padding: 12px 12px; font-size: 0.9rem; }
-            .bottom-nav .nav-item i { font-size: 1.1rem; }
-            .bottom-nav .nav-item { min-width: 38px; padding: 2px 4px; }
-            .bottom-nav .nav-item .nav-label { font-size: 0.5rem; }
+            .carousel-slide {
+                height: 120px;
+            }
+            .section-header h3 {
+                font-size: 0.95rem;
+            }
+            .nav-actions img#logoImageHeader {
+                height: 30px;
+                max-width: 100px;
+            }
+            .category-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            .category-card {
+                padding: 8px;
+            }
+            .card-horizontal {
+                width: 180px;
+                padding: 8px 10px;
+                gap: 8px;
+            }
+            .card-horizontal .card-icon {
+                flex: 0 0 44px;
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+            .card-horizontal .card-info .row1 {
+                font-size: 0.8rem;
+            }
+            .card-horizontal .card-info .row2 {
+                font-size: 0.65rem;
+            }
+            .card-horizontal .card-info .row3 {
+                font-size: 0.65rem;
+                gap: 6px;
+            }
+            .card-horizontal .card-info .row3 .action-btn button {
+                font-size: 0.6rem;
+                padding: 2px 12px;
+            }
+            .horizontal-scroll-3rows .card-horizontal {
+                width: 260px;
+            }
+            .app-detail-top .detail-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+            .app-detail-top .detail-name {
+                font-size: 1.1rem;
+            }
+            .app-detail-middle .detail-images-scroll img {
+                width: 100px;
+                height: 70px;
+            }
+            .side-menu {
+                width: 260px;
+                padding: 16px 12px;
+            }
+            .side-menu .menu-item {
+                padding: 12px 12px;
+                font-size: 0.9rem;
+            }
         }
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
-        .mt-8 { margin-top: 8px; }
-        .mb-8 { margin-bottom: 8px; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .gap-8 { gap: 8px; }
-        .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
-        .filter-bar button { background: #e2e8f0; border: none; padding: 4px 14px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .filter-bar button.active { background: #4CAF50; color: white; }
-        .filter-bar button:hover { opacity: 0.8; }
+        .hidden {
+            display: none !important;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 16px;
+        }
+        .filter-bar button {
+            background: #e2e8f0;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-bar button.active {
+            background: #4CAF50;
+            color: white;
+        }
+        .filter-bar button:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -978,21 +1682,11 @@
     <!-- ===== الهيدر ===== -->
     <header class="navbar">
         <div class="container">
-            <!-- الشعار القديم (جهة اليمين) -->
             <div class="logo" id="logoDisplay">
                 <i class="fas fa-gamepad"></i>
                 <span>Ramz</span>play
             </div>
-
-            <!-- الأقسام الجانبية (جهة اليسار) -->
             <div class="nav-actions">
-                <!-- الشعار النصي الجديد "play Ramz" (جهة اليسار) -->
-                <div class="brand-text-left" id="brandTextLeft">
-                    <span class="play-small">play</span>
-                    <span class="ramz-big">Ramz</span>
-                </div>
-
-                <!-- شعار الصورة (يظهر إذا تم رفعه من لوحة التحكم) -->
                 <img id="logoImageHeader" src="" alt="شعار الموقع" style="display: none;" onclick="openSideMenu()" />
             </div>
         </div>
@@ -1057,7 +1751,7 @@
 
         <!-- التحديثات -->
         <button class="menu-item" onclick="showComingSoon('التحديثات')">
-            <i class="fas fa-sync-alt"></i>
+            <i class="fas fa-rotate"></i>
             <span>التحديثات</span>
             <span class="item-badge coming">قريباً</span>
         </button>
@@ -1082,18 +1776,13 @@
             <span class="item-badge coming">قريباً</span>
         </button>
 
-        <!-- زر تحديث البيانات (من الموقع) - تم إضافته لتحديث يدوي سريع -->
-        <button class="menu-item" onclick="refreshDataManually()" style="background: #1e293b; margin-top: 8px;">
-            <i class="fas fa-sync-alt" style="color: #4CAF50;"></i>
-            <span style="color: white;">تحديث البيانات</span>
-            <span class="item-badge" style="background: #3b82f6;">يدوي</span>
-        </button>
-
         <div class="menu-divider"></div>
 
         <div class="menu-footer">
             <span>Ramzplay v2.0</span>
-            <span style="display:block; font-size:0.6rem; color:#475569; margin-top:4px;">جميع الحقوق محفوظة للمهندس رمزي الصلاحي © 2026</span>
+            <span style="display:block; font-size:0.6rem; color:#475569; margin-top:4px;">
+                جميع الحقوق محفوظة للمهندس رمزي الصلاحي © 2026
+            </span>
         </div>
     </div>
 
@@ -1184,28 +1873,33 @@
     </div>
 
     <!-- ========================================================== -->
-    <!-- الشريط السفلي – أيقونات Font Awesome (محدثة) -->
+    <!-- الشريط السفلي (تم تحديث الأيقونات) -->
     <!-- ========================================================== -->
     <nav class="bottom-nav" id="bottomNav">
         <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
             <i class="fas fa-house"></i>
-            <span class="nav-label">الرئيسية</span>
+            <span class="icon-fallback">🏠</span>
+            <span>الرئيسية</span>
         </button>
         <button class="nav-item" data-tab="apps" onclick="switchTab('apps')">
-            <i class="fas fa-th-large"></i>
-            <span class="nav-label">التطبيقات</span>
+            <i class="fas fa-grid-2"></i>
+            <span class="icon-fallback">📱</span>
+            <span>التطبيقات</span>
         </button>
         <button class="nav-item" data-tab="stores" onclick="switchTab('stores')">
             <i class="fas fa-store"></i>
-            <span class="nav-label">المطورين</span>
+            <span class="icon-fallback">🏪</span>
+            <span>المطورين</span>
         </button>
         <button class="nav-item" data-tab="search" onclick="switchTab('search')">
             <i class="fas fa-search"></i>
-            <span class="nav-label">بحث</span>
+            <span class="icon-fallback">🔍</span>
+            <span>بحث</span>
         </button>
         <button class="nav-item" onclick="openSideMenu()">
             <i class="fas fa-bars"></i>
-            <span class="nav-label">القائمة</span>
+            <span class="icon-fallback">☰</span>
+            <span>القائمة</span>
         </button>
     </nav>
 
@@ -1215,7 +1909,7 @@
     <!-- ===== كود التشغيل الرئيسي ===== -->
     <script>
         // ============================================================
-        // كود index.html – يعتمد على common.js مع تحسينات
+        // كود index.html – يعتمد على common.js
         // ============================================================
 
         let appData = {};
@@ -1236,169 +1930,9 @@
         let testimonialsScrollContainer = null;
         let testimonialsAutoScroll = true;
 
-        // ============================================================
-        // دوال متقدمة لتحميل البيانات وحل مشكلة عدم ظهور التطبيقات
-        // ============================================================
-
-        // محاولة تحميل البيانات من عدة مفاتيح محتملة في localStorage
-        function tryLoadFromLocalStorage() {
-            const possibleKeys = ['ramzplay_appData', 'appData', 'ramzplay_data', 'productsData'];
-            for (let key of possibleKeys) {
-                try {
-                    const raw = localStorage.getItem(key);
-                    if (raw) {
-                        const parsed = JSON.parse(raw);
-                        // تأكد من وجود products
-                        if (parsed && typeof parsed === 'object' && parsed.products) {
-                            console.log(`✅ تم تحميل البيانات من localStorage بالمفتاح: "${key}"`);
-                            return parsed;
-                        }
-                    }
-                } catch (e) { /* تجاهل */ }
-            }
-            return null;
-        }
-
-        // دالة تحميل البيانات الرئيسية (تجاوز لدالة common.js)
-        async function loadAppDataFixed() {
-            // 1. حاول من localStorage أولاً (الأسرع والأحدث)
-            let data = tryLoadFromLocalStorage();
-            if (data) {
-                // تأكد من وجود الحقول الأساسية
-                if (!data.products) data.products = {};
-                if (!data.categories) data.categories = [];
-                if (!data.stores) data.stores = {};
-                if (!data.settings) data.settings = {};
-                if (!data.carousel) data.carousel = [];
-                if (!data.marquee) data.marquee = [];
-                if (!data.testimonials) data.testimonials = [];
-                console.log('📦 البيانات المحملة من localStorage تحتوي على عدد المنتجات:',
-                    Object.values(data.products).reduce((acc, arr) => acc + arr.length, 0));
-                return data;
-            }
-
-            // 2. إذا لم توجد في localStorage، حاول جلبها من common.js (إن وجدت)
-            if (typeof window.loadAppData === 'function' && window.loadAppData !== loadAppDataFixed) {
-                try {
-                    const fallbackData = await window.loadAppData();
-                    if (fallbackData && fallbackData.products) {
-                        console.log('📦 تم تحميل البيانات من common.js (fallback)');
-                        return fallbackData;
-                    }
-                } catch (e) { /* تجاهل */ }
-            }
-
-            // 3. أخيراً، أرجع هيكل بيانات فارغاً مع تحذير
-            console.warn('⚠️ لم يتم العثور على بيانات في أي مصدر. سيتم استخدام بيانات افتراضية فارغة.');
-            return {
-                products: {},
-                categories: [],
-                stores: {},
-                settings: { logoText1: 'Ramz', logoText2: 'play' },
-                carousel: [],
-                marquee: [],
-                testimonials: [],
-                footer: {},
-                purchasedProducts: []
-            };
-        }
-
-        // دالة قوية لحفظ البيانات (تضمن الحفظ في localStorage بالمفتاح الصحيح)
-        function saveAppDataFixed(newData) {
-            try {
-                // حفظ في المفتاح الأساسي الذي تستخدمه لوحة التحكم غالباً
-                localStorage.setItem('ramzplay_appData', JSON.stringify(newData));
-                // أيضاً حفظ في مفتاح احتياطي
-                localStorage.setItem('appData', JSON.stringify(newData));
-                console.log('💾 تم حفظ البيانات بنجاح في localStorage (مفتاحان)');
-                return true;
-            } catch (e) {
-                console.error('❌ فشل حفظ البيانات:', e);
-                return false;
-            }
-        }
-
-        // دالة تحديث يدوي (يمكن استدعاؤها من وحدة التحكم أو الزر)
-        async function refreshDataManually() {
-            console.log('🔄 جاري تحديث البيانات يدوياً...');
-            const freshData = await loadAppDataFixed();
-            if (freshData && freshData.products) {
-                // دمج مع البيانات الحالية للحفاظ على purchasedProducts وغيرها
-                if (appData && appData.purchasedProducts) {
-                    freshData.purchasedProducts = appData.purchasedProducts;
-                }
-                appData = freshData;
-                renderAll();
-                console.log('✅ تم تحديث الموقع بالبيانات الجديدة!');
-                // عرض عدد التطبيقات الحالية للتأكد
-                const count = Object.values(appData.products).reduce((acc, arr) => acc + arr.length, 0);
-                console.log(`📱 عدد التطبيقات المعروضة حالياً: ${count}`);
-                alert(`✅ تم تحديث الموقع بنجاح! عدد التطبيقات: ${count}`);
-            } else {
-                alert('⚠️ لم يتم العثور على بيانات جديدة. تأكد من رفع التطبيقات في لوحة التحكم.');
-            }
-        }
-
-        // ============================================================
-        // دالة renderLogo (للشعار القديم والجديد)
-        // ============================================================
-        function renderLogo() {
-            const s = appData.settings || {};
-            const el = document.getElementById('logoDisplay');
-            const logoImg = document.getElementById('logoImageHeader');
-            const brandTextEl = document.getElementById('brandTextLeft');
-            const imageUrl = s.logoImage || '';
-
-            // --- تحديث الشعار القديم (النصي) ---
-            if (el) {
-                const icon = s.logoIcon || 'fa-gamepad';
-                const text1 = s.logoText1 || 'Ramz';
-                const text2 = s.logoText2 || 'play';
-                el.innerHTML = `<i class="fas ${icon}"></i> <span>${text1}</span>${text2}`;
-            }
-
-            // --- تحديث الشعار النصي الجديد (الموجود في اليسار) ---
-            if (brandTextEl) {
-                const bigText = s.logoText1 || 'Ramz';
-                const smallText = s.logoText2 || 'play';
-                brandTextEl.innerHTML = `
-                    <span class="play-small">${smallText}</span>
-                    <span class="ramz-big">${bigText}</span>
-                `;
-            }
-
-            // --- تحديث شعار الصورة (يظهر بدلاً من الشعار النصي القديم إذا وُجد) ---
-            if (logoImg) {
-                if (imageUrl && imageUrl.trim() !== '') {
-                    logoImg.src = imageUrl;
-                    logoImg.style.display = 'block';
-                    if (el) el.style.display = 'none';
-                } else {
-                    logoImg.style.display = 'none';
-                    logoImg.src = '';
-                    if (el) el.style.display = 'flex';
-                }
-            }
-
-            document.title = (s.appName || 'Ramzplay') + ' - متجر التطبيقات';
-        }
-
         // ---- تحميل البيانات وعرض الموقع ----
         async function init() {
-            // استخدام دالة التحميل المحسّنة بدلاً من common.js
-            appData = await loadAppDataFixed();
-
-            // التأكد من وجود الحقول الأساسية
-            if (!appData.products) appData.products = {};
-            if (!appData.categories) appData.categories = [];
-            if (!appData.stores) appData.stores = {};
-            if (!appData.settings) appData.settings = { logoText1: 'Ramz', logoText2: 'play' };
-            if (!appData.carousel) appData.carousel = [];
-            if (!appData.marquee) appData.marquee = [];
-            if (!appData.testimonials) appData.testimonials = [];
-            if (!appData.purchasedProducts) appData.purchasedProducts = [];
-            if (!appData.footer) appData.footer = {};
-
+            appData = await window.loadAppData();
             // زيادة عداد الزوار (مرة واحدة لكل جلسة)
             if (!sessionStorage.getItem('visitorCounted')) {
                 if (window.incrementVisitorCount) {
@@ -1406,42 +1940,17 @@
                 }
                 sessionStorage.setItem('visitorCounted', 'true');
             }
-
             // تحميل حالة المستخدم من localStorage
             loadUserState();
             renderAll();
             setupEventListeners();
-
-            // تحديث دوري كل 30 ثانية مع تحسين المقارنة
             setInterval(async () => {
-                const fresh = await loadAppDataFixed();
-                if (fresh && fresh.products) {
-                    const oldCount = Object.values(appData.products).reduce((acc, arr) => acc + arr.length, 0);
-                    const newCount = Object.values(fresh.products).reduce((acc, arr) => acc + arr.length, 0);
-                    if (newCount !== oldCount) {
-                        console.log(`🔄 تغير عدد التطبيقات: ${oldCount} -> ${newCount}`);
-                        if (appData.purchasedProducts) {
-                            fresh.purchasedProducts = appData.purchasedProducts;
-                        }
-                        appData = fresh;
-                        renderAll();
-                    }
+                const fresh = await window.loadAppData();
+                if (JSON.stringify(fresh) !== JSON.stringify(appData)) {
+                    appData = fresh;
+                    renderAll();
                 }
-            }, 30000); // كل 30 ثانية
-
-            // التأكد من تحميل Font Awesome
-            ensureFontAwesome();
-
-            // اختصار لوحة المفاتيح لتحديث يدوي (Ctrl+Shift+R)
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-                    e.preventDefault();
-                    refreshDataManually();
-                }
-            });
-
-            console.log('🚀 Ramzplay جاهز! استخدم Ctrl+Shift+R لتحديث البيانات يدوياً.');
-            console.log('📊 البيانات الحالية:', appData);
+            }, 60000);
         }
 
         function renderAll() {
@@ -1455,46 +1964,34 @@
         }
 
         // ============================================================
-        // دالة التأكد من تحميل Font Awesome + ثلاثة مصادر احتياطية
+        // دالة renderLogo (للشعار)
         // ============================================================
-        function ensureFontAwesome() {
-            const testEl = document.createElement('span');
-            testEl.className = 'fas fa-th-large';
-            testEl.style.display = 'none';
-            document.body.appendChild(testEl);
-            const computed = window.getComputedStyle(testEl);
-            const hasFont = computed.fontFamily.includes('Font Awesome');
-            document.body.removeChild(testEl);
+        function renderLogo() {
+            const s = appData.settings || {};
+            const el = document.getElementById('logoDisplay');
+            const logoImg = document.getElementById('logoImageHeader');
+            const imageUrl = s.logoImage || '';
 
-            if (!hasFont) {
-                let link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css';
-                link.crossOrigin = 'anonymous';
-                document.head.appendChild(link);
-                console.log('⏳ Loading Font Awesome from second CDN (jsdelivr)...');
-
-                setTimeout(() => {
-                    const checkAgain = document.createElement('span');
-                    checkAgain.className = 'fas fa-th-large';
-                    checkAgain.style.display = 'none';
-                    document.body.appendChild(checkAgain);
-                    const stillMissing = window.getComputedStyle(checkAgain).fontFamily.includes('Font Awesome');
-                    document.body.removeChild(checkAgain);
-                    if (!stillMissing) {
-                        const link3 = document.createElement('link');
-                        link3.rel = 'stylesheet';
-                        link3.href = 'https://use.fontawesome.com/releases/v6.5.1/css/all.css';
-                        link3.crossOrigin = 'anonymous';
-                        document.head.appendChild(link3);
-                        console.log('✅ Font Awesome loaded from third CDN (use.fontawesome.com)');
-                    } else {
-                        console.log('✅ Font Awesome loaded from second CDN (jsdelivr)');
-                    }
-                }, 800);
-            } else {
-                console.log('✅ Font Awesome loaded successfully from primary CDN (cdnjs)');
+            if (el) {
+                const icon = s.logoIcon || 'fa-gamepad';
+                const text1 = s.logoText1 || 'Ramz';
+                const text2 = s.logoText2 || 'play';
+                el.innerHTML = `<i class="fas ${icon}"></i> <span>${text1}</span> ${text2}`;
             }
+
+            if (logoImg) {
+                if (imageUrl && imageUrl.trim() !== '') {
+                    logoImg.src = imageUrl;
+                    logoImg.style.display = 'block';
+                    if (el) el.style.display = 'none';
+                } else {
+                    logoImg.style.display = 'none';
+                    logoImg.src = '';
+                    if (el) el.style.display = 'flex';
+                }
+            }
+
+            document.title = (s.appName || 'Ramzplay') + ' - متجر التطبيقات';
         }
 
         // ============================================================
@@ -1735,17 +2232,17 @@
                 const price = item.price || 0;
                 total += price;
                 html += `
-                    <div class="cart-item">
-                        <div class="ci-icon">
-                            ${item.image ? `<img src="${item.image}" alt="${item.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
+                        <div class="cart-item">
+                            <div class="ci-icon">
+                                ${item.image ? `<img src="${item.image}" alt="${item.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
+                            </div>
+                            <div class="ci-info">
+                                <div class="ci-name">${item.name}</div>
+                                <div class="ci-price">${price > 0 ? price + ' ' + item.currency : 'مجاني'}</div>
+                            </div>
+                            <button class="ci-remove" onclick="removeFromCart('${item.id}')"><i class="fas fa-times"></i></button>
                         </div>
-                        <div class="ci-info">
-                            <div class="ci-name">${item.name}</div>
-                            <div class="ci-price">${price > 0 ? price + ' ' + item.currency : 'مجاني'}</div>
-                        </div>
-                        <button class="ci-remove" onclick="removeFromCart('${item.id}')"><i class="fas fa-times"></i></button>
-                    </div>
-                `;
+                    `;
             });
 
             container.innerHTML = html;
@@ -1824,7 +2321,9 @@
             }
         }
 
-        // ---- فتح لوحة التحكم ----
+        // ============================================================
+        // دالة فتح لوحة التحكم
+        // ============================================================
         function openAdminLogin() {
             closeSideMenu();
             window.location.href = 'admin.html';
@@ -1903,12 +2402,12 @@
             }
             const doubled = [...items, ...items];
             track.innerHTML = doubled.map((item, i) => `
-                <div class="marquee-item">
-                    <img src="${item.icon || 'https://placehold.co/64/e2e8f0/94a3b8?text=?'}" alt="${item.name}" />
-                    <span>${item.name}</span>
-                    <button class="marquee-btn" onclick="event.stopPropagation();handleMarqueeClick('${item.link}')">تحميل</button>
-                </div>
-            `).join('');
+                    <div class="marquee-item">
+                        <img src="${item.icon || 'https://placehold.co/64/e2e8f0/94a3b8?text=?'}" alt="${item.name}" />
+                        <span>${item.name}</span>
+                        <button class="marquee-btn" onclick="event.stopPropagation();handleMarqueeClick('${item.link}')">تحميل</button>
+                    </div>
+                `).join('');
         }
 
         function handleMarqueeClick(link) {
@@ -1954,29 +2453,29 @@
             });
 
             container.innerHTML = `
-                <div>
-                    <h4>روابط سريعة</h4>
-                    <ul>${linkHtml}</ul>
-                </div>
-                <div>
-                    <h4>تواصل معنا</h4>
-                    <ul>
-                        ${f.email ? `<li><i class="fas fa-envelope"></i> <a href="mailto:${f.email}">${f.email}</a></li>` : ''}
-                        ${f.phone ? `<li><i class="fas fa-phone"></i> <a href="tel:${f.phone}">${f.phone}</a></li>` : ''}
-                        ${f.whatsapp ? `<li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/${f.whatsapp}" target="_blank">واتساب</a></li>` : ''}
-                    </ul>
-                    <div class="social-icons">${socialHtml}</div>
-                </div>
-                <div>
-                    <h4>طرق الدفع</h4>
-                    <ul>
-                        ${(f.payments || []).map(p => `<li>${p}</li>`).join('')}
-                    </ul>
-                </div>
-                <div class="copyright">
-                    ${s.footerText || '© 2026 Ramzplay – جميع الحقوق محفوظة للمهندس رمزي الصلاحي'}
-                </div>
-            `;
+                    <div>
+                        <h4>روابط سريعة</h4>
+                        <ul>${linkHtml}</ul>
+                    </div>
+                    <div>
+                        <h4>تواصل معنا</h4>
+                        <ul>
+                            ${f.email ? `<li><i class="fas fa-envelope"></i> <a href="mailto:${f.email}">${f.email}</a></li>` : ''}
+                            ${f.phone ? `<li><i class="fas fa-phone"></i> <a href="tel:${f.phone}">${f.phone}</a></li>` : ''}
+                            ${f.whatsapp ? `<li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/${f.whatsapp}" target="_blank">واتساب</a></li>` : ''}
+                        </ul>
+                        <div class="social-icons">${socialHtml}</div>
+                    </div>
+                    <div>
+                        <h4>طرق الدفع</h4>
+                        <ul>
+                            ${(f.payments || []).map(p => `<li>${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="copyright">
+                        ${s.footerText || '© 2026 Ramzplay - جميع الحقوق محفوظة للمهندس رمزي الصلاحي'}
+                    </div>
+                `;
         }
 
         // ---- التبويبات ----
@@ -2048,62 +2547,62 @@
         function categoryCardOld(cat) {
             const count = countProductsInCategory(cat.id);
             return `
-                <div class="category-card" onclick="filterByCategory('${cat.id}')">
-                    <i class="${cat.icon || 'fas fa-tag'}" style="color:${cat.color || '#4CAF50'}"></i>
-                    <div class="cat-name">${cat.name}</div>
-                    <div class="cat-count">${count} تطبيق</div>
-                </div>
-            `;
+                    <div class="category-card" onclick="filterByCategory('${cat.id}')">
+                        <i class="${cat.icon || 'fas fa-tag'}" style="color:${cat.color || '#4CAF50'}"></i>
+                        <div class="cat-name">${cat.name}</div>
+                        <div class="cat-count">${count} تطبيق</div>
+                    </div>
+                `;
         }
 
         function storeCardHtml(store) {
             const count = (appData.products[store.id] || []).length;
             return `
-                <div class="card-horizontal" onclick="filterByStore('${store.id}')">
-                    <div class="card-icon">
-                        ${store.logo ? `<img src="${store.logo}" alt="${store.name}" />` : `<i class="fas fa-store"></i>`}
-                    </div>
-                    <div class="card-info">
-                        <div class="row1">${store.name}</div>
-                        <div class="row2">
-                            <span class="badge">${count} تطبيق</span>
-                            ${store.description ? `<span>${store.description}</span>` : ''}
+                    <div class="card-horizontal" onclick="filterByStore('${store.id}')">
+                        <div class="card-icon">
+                            ${store.logo ? `<img src="${store.logo}" alt="${store.name}" />` : `<i class="fas fa-store"></i>`}
                         </div>
-                        <div class="row3">
-                            <span style="color:#64748b; font-size:0.7rem;">${store.hidden ? '🔒 مخفي' : 'نشط'}</span>
-                            <div class="action-btn">
-                                <button onclick="event.stopPropagation();filterByStore('${store.id}')">زيارة</button>
+                        <div class="card-info">
+                            <div class="row1">${store.name}</div>
+                            <div class="row2">
+                                <span class="badge">${count} تطبيق</span>
+                                ${store.description ? `<span>${store.description}</span>` : ''}
+                            </div>
+                            <div class="row3">
+                                <span style="color:#64748b; font-size:0.7rem;">${store.hidden ? '🔒 مخفي' : 'نشط'}</span>
+                                <div class="action-btn">
+                                    <button onclick="event.stopPropagation();filterByStore('${store.id}')">زيارة</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
         }
 
         function testimonialCardHtml(t) {
             const stars = '★'.repeat(Math.floor(t.rating || 0)) + (t.rating % 1 >= 0.5 ? '½' : '');
             return `
-                <div class="card-horizontal">
-                    <div class="card-icon" style="border-radius:50%;">
-                        ${t.image ? `<img src="${t.image}" alt="${t.name}" />` : `<i class="fas fa-user"></i>`}
-                    </div>
-                    <div class="card-info">
-                        <div class="row1">${t.name}</div>
-                        <div class="row2">
-                            <span class="rating-stars">${stars}</span>
-                            <span>⭐ ${t.rating}</span>
+                    <div class="card-horizontal">
+                        <div class="card-icon" style="border-radius:50%;">
+                            ${t.image ? `<img src="${t.image}" alt="${t.name}" />` : `<i class="fas fa-user"></i>`}
                         </div>
-                        <div class="row3">
-                            <span style="font-size:0.7rem; color:#475569; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
-                                ${t.review || ''}
-                            </span>
-                            <div class="action-btn">
-                                <button onclick="event.stopPropagation();alert('${t.review}')">قراءة</button>
+                        <div class="card-info">
+                            <div class="row1">${t.name}</div>
+                            <div class="row2">
+                                <span class="rating-stars">${stars}</span>
+                                <span>⭐ ${t.rating}</span>
+                            </div>
+                            <div class="row3">
+                                <span style="font-size:0.7rem; color:#475569; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                                    ${t.review || ''}
+                                </span>
+                                <div class="action-btn">
+                                    <button onclick="event.stopPropagation();alert('${t.review}')">قراءة</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
         }
 
         function appCardHtml(app) {
@@ -2132,27 +2631,27 @@
             }
 
             return `
-                <div class="card-horizontal" onclick="openAppDetail('${app.id}')">
-                    <div class="card-icon">
-                        ${app.image ? `<img src="${app.image}" alt="${app.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
-                    </div>
-                    <div class="card-info">
-                        <div class="row1">${app.name}</div>
-                        <div class="row2">
-                            ${categoryName ? `<span class="badge">${categoryName}</span>` : ''}
-                            <span>${app.desc || ''}</span>
+                    <div class="card-horizontal" onclick="openAppDetail('${app.id}')">
+                        <div class="card-icon">
+                            ${app.image ? `<img src="${app.image}" alt="${app.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
                         </div>
-                        <div class="row3">
-                            <span class="rating-stars">${ratingStars || '☆'}</span>
-                            <span><i class="fas fa-download"></i> ${downloadsText || app.downloadCount || 0}</span>
-                            <div class="action-btn">
-                                ${actionHtml}
-                                ${!app.restricted ? `<button onclick="event.stopPropagation();addToCart('${app.id}')" style="background:#3b82f6; padding:4px 10px; font-size:0.6rem;"><i class="fas fa-cart-plus"></i></button>` : ''}
+                        <div class="card-info">
+                            <div class="row1">${app.name}</div>
+                            <div class="row2">
+                                ${categoryName ? `<span class="badge">${categoryName}</span>` : ''}
+                                <span>${app.desc || ''}</span>
+                            </div>
+                            <div class="row3">
+                                <span class="rating-stars">${ratingStars || '☆'}</span>
+                                <span><i class="fas fa-download"></i> ${downloadsText || app.downloadCount || 0}</span>
+                                <div class="action-btn">
+                                    ${actionHtml}
+                                    ${!app.restricted ? `<button onclick="event.stopPropagation();addToCart('${app.id}')" style="background:#3b82f6; padding:4px 10px; font-size:0.6rem;"><i class="fas fa-cart-plus"></i></button>` : ''}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
         }
 
         // ============================================================
@@ -2164,13 +2663,13 @@
             const categories = appData.categories || [];
             if (categories.length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📂 الفئات</h3><a onclick="switchTab('apps')">استعراض التطبيقات</a></div>
-                        <div class="category-grid">
-                            ${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📂 الفئات</h3><a onclick="switchTab('apps')">استعراض التطبيقات</a></div>
+                            <div class="category-grid">
+                                ${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             const stores = [];
@@ -2179,13 +2678,13 @@
             }
             if (stores.length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>🏢 المطورين</h3><a onclick="switchTab('stores')">عرض الكل</a></div>
-                        <div class="horizontal-scroll-2rows">
-                            ${stores.slice(0, 14).map(store => storeCardHtml(store)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>🏢 المطورين</h3><a onclick="switchTab('stores')">عرض الكل</a></div>
+                            <div class="horizontal-scroll-2rows">
+                                ${stores.slice(0, 14).map(store => storeCardHtml(store)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             const allProducts = [];
@@ -2198,47 +2697,47 @@
             const topProducts = sortedProducts.slice(0, 21);
             if (topProducts.length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>🔥 الأكثر تحميلاً</h3></div>
-                        <div class="horizontal-scroll-3rows">
-                            ${topProducts.map(app => appCardHtml(app)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>🔥 الأكثر تحميلاً</h3></div>
+                            <div class="horizontal-scroll-3rows">
+                                ${topProducts.map(app => appCardHtml(app)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             const testimonials = appData.testimonials || [];
             if (testimonials.length) {
                 const duplicated = [...testimonials, ...testimonials, ...testimonials];
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>⭐ آراء المستخدمين</h3></div>
-                        <div class="horizontal-scroll-1row" id="testimonialsScroll">
-                            ${duplicated.map(t => testimonialCardHtml(t)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>⭐ آراء المستخدمين</h3></div>
+                            <div class="horizontal-scroll-1row" id="testimonialsScroll">
+                                ${duplicated.map(t => testimonialCardHtml(t)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             const blogPosts = appData.settings?.blogPosts || [];
             if (blogPosts.length) {
                 html += `
-                    <div class="section-block" id="blogSection">
-                        <div class="section-header"><h3>المدونة</h3></div>
-                        <div class="blog-grid">
-                            ${blogPosts.slice(0, 4).map(post => `
-                                <div class="blog-card">
-                                    <img src="${post.image || 'https://placehold.co/400x200/e2e8f0/94a3b8?text=?'}" alt="${post.title}" />
-                                    <div class="blog-body">
-                                        <div class="blog-title">${post.title}</div>
-                                        <div class="blog-excerpt">${post.content ? post.content.substring(0,60)+'...' : ''}</div>
-                                        <div style="font-size:0.7rem;color:#94a3b8;margin-top:4px;">${post.date || ''}</div>
-                                    </div>
-                                </div>
-                            `).join('')}
+                        <div class="section-block" id="blogSection">
+                            <div class="section-header"><h3>المدونة</h3></div>
+                            <div class="blog-grid">
+                                ${blogPosts.slice(0, 4).map(post => `
+                                        <div class="blog-card">
+                                            <img src="${post.image || 'https://placehold.co/400x200/e2e8f0/94a3b8?text=?'}" alt="${post.title}" />
+                                            <div class="blog-body">
+                                                <div class="blog-title">${post.title}</div>
+                                                <div class="blog-excerpt">${post.content ? post.content.substring(0,60)+'...' : ''}</div>
+                                                <div style="font-size:0.7rem;color:#94a3b8;margin-top:4px;">${post.date || ''}</div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             container.innerHTML = html;
@@ -2277,115 +2776,115 @@
 
             if (categories.length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📂 الفئات</h3></div>
-                        <div class="category-grid">
-                            ${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📂 الفئات</h3></div>
+                            <div class="category-grid">
+                                ${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             if (appChunks.length > 0 && appChunks[0].length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📱 التطبيقات</h3></div>
-                        <div class="horizontal-scroll-3rows">
-                            ${appChunks[0].map(app => appCardHtml(app)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📱 التطبيقات</h3></div>
+                            <div class="horizontal-scroll-3rows">
+                                ${appChunks[0].map(app => appCardHtml(app)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             if (carouselImages.length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📸 إعلانات مميزة</h3></div>
-                        <div style="padding:12px 16px;">
-                            <div class="carousel-wrapper" style="max-height:200px;">
-                                <div class="carousel-slides" style="display:flex; transition:transform 0.4s ease;" id="appsCarouselSlides">
-                                    ${carouselImages.map(slide => `
-                                        <div class="carousel-slide" style="min-width:100%; height:180px; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
-                                            <img src="${slide.image}" alt="${slide.name}" style="width:100%; height:100%; object-fit:cover;" />
-                                        </div>
-                                    `).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📸 إعلانات مميزة</h3></div>
+                            <div style="padding:12px 16px;">
+                                <div class="carousel-wrapper" style="max-height:200px;">
+                                    <div class="carousel-slides" style="display:flex; transition:transform 0.4s ease;" id="appsCarouselSlides">
+                                        ${carouselImages.map(slide => `
+                                                <div class="carousel-slide" style="min-width:100%; height:180px; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
+                                                    <img src="${slide.image}" alt="${slide.name}" style="width:100%; height:100%; object-fit:cover;" />
+                                                </div>
+                                            `).join('')}
+                                    </div>
+                                    <button class="carousel-btn prev" onclick="changeAppsCarousel(-1)">&#10094;</button>
+                                    <button class="carousel-btn next" onclick="changeAppsCarousel(1)">&#10095;</button>
                                 </div>
-                                <button class="carousel-btn prev" onclick="changeAppsCarousel(-1)">&#10094;</button>
-                                <button class="carousel-btn next" onclick="changeAppsCarousel(1)">&#10095;</button>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             if (appChunks.length > 1 && appChunks[1].length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📱 تطبيقات مميزة</h3></div>
-                        <div class="horizontal-scroll-3rows">
-                            ${appChunks[1].map(app => appCardHtml(app)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📱 تطبيقات مميزة</h3></div>
+                            <div class="horizontal-scroll-3rows">
+                                ${appChunks[1].map(app => appCardHtml(app)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             if (blogPosts.length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📝 مقالات</h3></div>
-                        <div class="blog-grid">
-                            ${blogPosts.slice(0, 4).map(post => `
-                                <div class="blog-card">
-                                    <img src="${post.image || 'https://placehold.co/400x200/e2e8f0/94a3b8?text=?'}" alt="${post.title}" />
-                                    <div class="blog-body">
-                                        <div class="blog-title">${post.title}</div>
-                                        <div class="blog-excerpt">${post.content ? post.content.substring(0,60)+'...' : ''}</div>
-                                        <div style="font-size:0.7rem;color:#94a3b8;margin-top:4px;">${post.date || ''}</div>
-                                    </div>
-                                </div>
-                            `).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📝 مقالات</h3></div>
+                            <div class="blog-grid">
+                                ${blogPosts.slice(0, 4).map(post => `
+                                        <div class="blog-card">
+                                            <img src="${post.image || 'https://placehold.co/400x200/e2e8f0/94a3b8?text=?'}" alt="${post.title}" />
+                                            <div class="blog-body">
+                                                <div class="blog-title">${post.title}</div>
+                                                <div class="blog-excerpt">${post.content ? post.content.substring(0,60)+'...' : ''}</div>
+                                                <div style="font-size:0.7rem;color:#94a3b8;margin-top:4px;">${post.date || ''}</div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             if (appChunks.length > 2 && appChunks[2].length) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📱 المزيد من التطبيقات</h3></div>
-                        <div class="horizontal-scroll-3rows">
-                            ${appChunks[2].map(app => appCardHtml(app)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📱 المزيد من التطبيقات</h3></div>
+                            <div class="horizontal-scroll-3rows">
+                                ${appChunks[2].map(app => appCardHtml(app)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             if (carouselImages.length > 1) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>🎯 إعلان مميز</h3></div>
-                        <div style="padding:12px 16px;">
-                            <div style="background:linear-gradient(135deg, #4CAF50, #388E3C); border-radius:16px; padding:30px 20px; text-align:center; color:white;">
-                                <h3 style="font-size:1.3rem;">${carouselImages[1].name || 'إعلان مميز'}</h3>
-                                <p style="margin:8px 0;">اكتشف المزيد من التطبيقات المذهلة</p>
-                                <button style="background:white; color:#4CAF50; border:none; padding:8px 30px; border-radius:40px; font-weight:700; cursor:pointer;" onclick="window.location.href='${carouselImages[1].link || '#'}'">استعراض</button>
+                        <div class="section-block">
+                            <div class="section-header"><h3>🎯 إعلان مميز</h3></div>
+                            <div style="padding:12px 16px;">
+                                <div style="background:linear-gradient(135deg, #4CAF50, #388E3C); border-radius:16px; padding:30px 20px; text-align:center; color:white;">
+                                    <h3 style="font-size:1.3rem;">${carouselImages[1].name || 'إعلان مميز'}</h3>
+                                    <p style="margin:8px 0;">اكتشف المزيد من التطبيقات المذهلة</p>
+                                    <button style="background:white; color:#4CAF50; border:none; padding:8px 30px; border-radius:40px; font-weight:700; cursor:pointer;" onclick="window.location.href='${carouselImages[1].link || '#'}'">استعراض</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             if (appChunks.length > 3) {
                 for (let i = 3; i < appChunks.length; i++) {
                     if (appChunks[i].length) {
                         html += `
-                            <div class="section-block">
-                                <div class="section-header"><h3>📱 تطبيقات إضافية</h3></div>
-                                <div class="horizontal-scroll-3rows">
-                                    ${appChunks[i].map(app => appCardHtml(app)).join('')}
+                                <div class="section-block">
+                                    <div class="section-header"><h3>📱 تطبيقات إضافية</h3></div>
+                                    <div class="horizontal-scroll-3rows">
+                                        ${appChunks[i].map(app => appCardHtml(app)).join('')}
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
                     }
                 }
             }
@@ -2502,26 +3001,26 @@
                 if (appData.stores[cat]) stores.push(...appData.stores[cat]);
             }
             let html = `
-                <div class="section-block">
-                    <div class="section-header"><h3>جميع المطورين</h3></div>
-                    <div class="horizontal-scroll-2rows">
-                        ${stores.map(store => storeCardHtml(store)).join('')}
+                    <div class="section-block">
+                        <div class="section-header"><h3>جميع المطورين</h3></div>
+                        <div class="horizontal-scroll-2rows">
+                            ${stores.map(store => storeCardHtml(store)).join('')}
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
             container.innerHTML = html;
         }
 
         function renderSearchPage(container) {
             container.innerHTML = `
-                <div class="section-block">
-                    <div class="section-header"><h3>بحث</h3></div>
-                    <div style="padding:12px 16px;">
-                        <input type="text" id="searchInput" placeholder="ابحث عن تطبيق..." style="width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:1rem;font-family:inherit;" oninput="doSearch(this.value)" />
-                        <div id="searchResults" style="margin-top:16px;"></div>
+                    <div class="section-block">
+                        <div class="section-header"><h3>بحث</h3></div>
+                        <div style="padding:12px 16px;">
+                            <input type="text" id="searchInput" placeholder="ابحث عن تطبيق..." style="width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:12px;font-size:1rem;font-family:inherit;" oninput="doSearch(this.value)" />
+                            <div id="searchResults" style="margin-top:16px;"></div>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
         }
 
         function doSearch(query) {
@@ -2654,75 +3153,75 @@
             const reviews = appData.testimonials || [];
 
             container.innerHTML = `
-                <div class="app-detail-top">
-                    <div class="detail-icon">
-                        ${app.image ? `<img src="${app.image}" alt="${app.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
-                    </div>
-                    <div class="detail-name">${app.name}</div>
-                    <div class="detail-desc">${app.desc || 'لا يوجد وصف'}</div>
-                    <div class="detail-status ${statusClass}">${statusHtml}</div>
-                    ${priceHtml}
-                    ${installBtnHtml}
-                </div>
-
-                <div class="app-detail-middle">
-                    <div class="detail-images-scroll">
-                        ${images.map(img => `
-                            <img src="${img}" alt="${app.name}" onerror="this.src='https://placehold.co/400x300/e2e8f0/94a3b8?text=?'" />
-                        `).join('')}
-                    </div>
-                    <button class="detail-about-btn" onclick="alert('${app.desc || 'لمحة عن التطبيق: ' + app.name}')">
-                        📖 لمحة عن التطبيق
-                    </button>
-                </div>
-
-                <div class="app-detail-bottom">
-                    <div class="share-section">
-                        <span class="share-label">🔗 مشاركة التطبيق:</span>
-                        <button class="share-btn" onclick="shareApp('${app.id}')">
-                            <i class="fas fa-share-alt"></i> مشاركة الرابط
-                        </button>
-                        <button class="share-btn" style="background:#1DA1F2;" onclick="shareOnTwitter('${app.id}')">
-                            <i class="fab fa-twitter"></i>
-                        </button>
-                        <button class="share-btn" style="background:#25D366;" onclick="shareOnWhatsApp('${app.id}')">
-                            <i class="fab fa-whatsapp"></i>
-                        </button>
-                    </div>
-
-                    <div class="rating-filter">
-                        <button class="star-btn active" onclick="filterReviews(this, 0)">⭐ الكل</button>
-                        <button class="star-btn" onclick="filterReviews(this, 4)">★★★★★</button>
-                        <button class="star-btn" onclick="filterReviews(this, 3)">★★★★</button>
-                        <button class="star-btn" onclick="filterReviews(this, 2)">★★★</button>
-                    </div>
-
-                    <div class="detail-reviews-scroll" id="detailReviewsScroll">
-                        ${reviews.map(r => `
-                            <div class="review-card" data-rating="${Math.floor(r.rating||0)}">
-                                <div class="review-name">${r.name || 'مستخدم'}</div>
-                                <div class="review-stars">${'★'.repeat(Math.floor(r.rating||0))}</div>
-                                <div class="review-text">${r.review || ''}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-
-                    ${topSimilar.length > 0 ? `
-                        <div class="similar-apps-title">📱 تطبيقات مشابهة</div>
-                        <div class="similar-apps-scroll">
-                            ${topSimilar.map(sim => `
-                                <div class="similar-card" onclick="closeAppDetail(); setTimeout(() => openAppDetail('${sim.id}'), 300);">
-                                    <div class="sim-icon">
-                                        ${sim.image ? `<img src="${sim.image}" alt="${sim.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
-                                    </div>
-                                    <div class="sim-name">${sim.name}</div>
-                                    <div class="sim-rating">${sim.rating ? '★'.repeat(Math.floor(sim.rating)) : '☆'}</div>
-                                </div>
-                            `).join('')}
+                    <div class="app-detail-top">
+                        <div class="detail-icon">
+                            ${app.image ? `<img src="${app.image}" alt="${app.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
                         </div>
-                    ` : ''}
-                </div>
-            `;
+                        <div class="detail-name">${app.name}</div>
+                        <div class="detail-desc">${app.desc || 'لا يوجد وصف'}</div>
+                        <div class="detail-status ${statusClass}">${statusHtml}</div>
+                        ${priceHtml}
+                        ${installBtnHtml}
+                    </div>
+
+                    <div class="app-detail-middle">
+                        <div class="detail-images-scroll">
+                            ${images.map(img => `
+                                    <img src="${img}" alt="${app.name}" onerror="this.src='https://placehold.co/400x300/e2e8f0/94a3b8?text=?'" />
+                                `).join('')}
+                        </div>
+                        <button class="detail-about-btn" onclick="alert('${app.desc || 'لمحة عن التطبيق: ' + app.name}')">
+                            📖 لمحة عن التطبيق
+                        </button>
+                    </div>
+
+                    <div class="app-detail-bottom">
+                        <div class="share-section">
+                            <span class="share-label">🔗 مشاركة التطبيق:</span>
+                            <button class="share-btn" onclick="shareApp('${app.id}')">
+                                <i class="fas fa-share-alt"></i> مشاركة الرابط
+                            </button>
+                            <button class="share-btn" style="background:#1DA1F2;" onclick="shareOnTwitter('${app.id}')">
+                                <i class="fab fa-twitter"></i>
+                            </button>
+                            <button class="share-btn" style="background:#25D366;" onclick="shareOnWhatsApp('${app.id}')">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                        </div>
+
+                        <div class="rating-filter">
+                            <button class="star-btn active" onclick="filterReviews(this, 0)">⭐ الكل</button>
+                            <button class="star-btn" onclick="filterReviews(this, 4)">★★★★★</button>
+                            <button class="star-btn" onclick="filterReviews(this, 3)">★★★★</button>
+                            <button class="star-btn" onclick="filterReviews(this, 2)">★★★</button>
+                        </div>
+
+                        <div class="detail-reviews-scroll" id="detailReviewsScroll">
+                            ${reviews.map(r => `
+                                    <div class="review-card" data-rating="${Math.floor(r.rating||0)}">
+                                        <div class="review-name">${r.name || 'مستخدم'}</div>
+                                        <div class="review-stars">${'★'.repeat(Math.floor(r.rating||0))}</div>
+                                        <div class="review-text">${r.review || ''}</div>
+                                    </div>
+                                `).join('')}
+                        </div>
+
+                        ${topSimilar.length > 0 ? `
+                                <div class="similar-apps-title">📱 تطبيقات مشابهة</div>
+                                <div class="similar-apps-scroll">
+                                    ${topSimilar.map(sim => `
+                                            <div class="similar-card" onclick="closeAppDetail(); setTimeout(() => openAppDetail('${sim.id}'), 300);">
+                                                <div class="sim-icon">
+                                                    ${sim.image ? `<img src="${sim.image}" alt="${sim.name}" />` : `<i class="fas fa-mobile-alt"></i>`}
+                                                </div>
+                                                <div class="sim-name">${sim.name}</div>
+                                                <div class="sim-rating">${sim.rating ? '★'.repeat(Math.floor(sim.rating)) : '☆'}</div>
+                                            </div>
+                                        `).join('')}
+                                </div>
+                            ` : ''}
+                    </div>
+                `;
 
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -2865,28 +3364,28 @@
             if (store) title = `تطبيقات من "${store.name}"`;
 
             let html = `
-                <div class="section-block">
-                    <div class="section-header">
-                        <h3>${title}</h3>
-                        <a onclick="clearFilters()">إلغاء التصفية</a>
+                    <div class="section-block">
+                        <div class="section-header">
+                            <h3>${title}</h3>
+                            <a onclick="clearFilters()">إلغاء التصفية</a>
+                        </div>
+                        ${filteredApps.length === 0 ? '<div style="padding:12px 16px;color:#94a3b8;">لا توجد تطبيقات</div>' : ''}
+                        <div class="horizontal-scroll-3rows">
+                            ${filteredApps.map(app => appCardHtml(app)).join('')}
+                        </div>
                     </div>
-                    ${filteredApps.length === 0 ? '<div style="padding:12px 16px;color:#94a3b8;">لا توجد تطبيقات</div>' : ''}
-                    <div class="horizontal-scroll-3rows">
-                        ${filteredApps.map(app => appCardHtml(app)).join('')}
-                    </div>
-                </div>
-            `;
+                `;
 
             const categories = appData.categories || [];
             if (categories.length && !categoryId) {
                 html += `
-                    <div class="section-block">
-                        <div class="section-header"><h3>📂 تصفح حسب الفئة</h3></div>
-                        <div class="category-grid">
-                            ${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}
+                        <div class="section-block">
+                            <div class="section-header"><h3>📂 تصفح حسب الفئة</h3></div>
+                            <div class="category-grid">
+                                ${categories.slice(0, 12).map(cat => categoryCardOld(cat)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
             }
 
             container.innerHTML = html;
@@ -2933,10 +3432,10 @@
             document.getElementById('modalName').textContent = app.name;
             document.getElementById('modalDesc').textContent = app.desc || '';
             document.getElementById('modalMeta').textContent =
-            `★ ${app.rating || '?'} · ${app.appSize || ''} · ⬇ ${app.downloadCount||0}`;
+                `★ ${app.rating || '?'} · ${app.appSize || ''} · ⬇ ${app.downloadCount||0}`;
             const iconEl = document.getElementById('modalIcon');
             iconEl.innerHTML = app.image ? `<img src="${app.image}" alt="${app.name}" />` :
-            `<i class="fas fa-mobile-alt"></i>`;
+                `<i class="fas fa-mobile-alt"></i>`;
             const btn = document.getElementById('modalDownloadBtn');
             if (app.restricted) {
                 btn.textContent = 'مقيد';
@@ -3102,11 +3601,9 @@
         window.openAdminLogin = openAdminLogin;
         window.handleUserAction = handleUserAction;
         window.switchUserMode = switchUserMode;
-        window.refreshDataManually = refreshDataManually;
 
-        console.log('🚀 Ramzplay - النسخة النهائية مع إصلاح مشكلة التطبيقات والشعار النصي');
+        console.log('🚀 Ramzplay - النسخة النهائية مع إصلاح الأيقونات وحقوق الملكية');
         console.log('© 2026 جميع الحقوق محفوظة للمهندس رمزي الصلاحي');
-        console.log('💡 استخدم Ctrl+Shift+R لتحديث البيانات يدوياً من أي مكان');
     </script>
 </body>
 </html>
